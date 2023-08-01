@@ -14,7 +14,7 @@ import javax.persistence.Id;
 @NoArgsConstructor
 public class HotelEntity extends Auditable{ //숙소
     @Id
-    private int hotelId; //숙소식별자
+    private int id; //숙소식별자
 
     @Column
     private int maxPeople; //최대인원

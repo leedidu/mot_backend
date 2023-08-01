@@ -1,6 +1,7 @@
 package com.umc.mot.hotel.entity;
 
 
+import com.umc.mot.auditable.Auditable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,24 +12,27 @@ import javax.persistence.Id;
 @Getter
 @Setter
 @NoArgsConstructor
-public class HotelEntity {
+public class HotelEntity extends Auditable{ //숙소
     @Id
-    private int hotelId;
+    private int hotelId; //숙소식별자
 
     @Column
-    private int maxPeople;
+    private int maxPeople; //최대인원
 
     @Column
-    private int minPeople;
+    private int minPeople; //최소인원
 
     @Column
-    private int hotelPrice;
+    private int price; //가격
 
     @Column
-    private String hotelName;
+    private String name; //숙소이름
 
     @Column
     private int star; //별점
+
+    @Column
+    private String map; //지도
 
     @Column
     private String transfer; //이동수단

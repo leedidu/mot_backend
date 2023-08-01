@@ -21,7 +21,7 @@ public class SellMember extends Auditable{
     private int sellMemberId;  //판매자회원식별자
 
     @Column
-    private int id; //회원 아이디
+    private String id; //회원 아이디
 
     @Column
     private String name; //회원 이름
@@ -44,6 +44,6 @@ public class SellMember extends Auditable{
     @Column
     private String token; //회원 토큰
 
-    @OneToMany(mappedBy = "sell_member", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "sellMember", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Hotel> hotels = new ArrayList<>();
 }

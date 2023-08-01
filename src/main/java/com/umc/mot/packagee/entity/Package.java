@@ -15,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
+@Entity(name = "packages")
 public class Package extends Auditable { //패키지
 
     @Id
@@ -37,6 +37,6 @@ public class Package extends Auditable { //패키지
     @JoinColumn(name = "HOTEL_ID")
     private Hotel hotel;
 
-    @OneToMany(mappedBy = "package", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "packages", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<RoomPackage> roomPackages = new ArrayList<>();
 }

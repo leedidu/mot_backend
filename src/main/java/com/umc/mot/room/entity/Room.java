@@ -30,7 +30,7 @@ public class Room extends Auditable {
     private int maxPeople; //최대인원
 
     @Column
-    private int roomPrice; //비용
+    private int price; //비용
 
     @ManyToOne
     @JoinColumn(name = "HOTEL_ID")

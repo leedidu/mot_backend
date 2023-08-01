@@ -5,14 +5,12 @@ import com.umc.mot.exception.ExceptionCode;
 import com.umc.mot.sellMember.entity.SellMember;
 import com.umc.mot.sellMember.repository.SellMemberRepository;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-@Builder
 public class SellMemberService {
 
     private final SellMemberRepository sellMemberRepository;

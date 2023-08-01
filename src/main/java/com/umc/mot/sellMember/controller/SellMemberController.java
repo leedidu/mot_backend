@@ -29,7 +29,7 @@ public class SellMemberController {
     @PostMapping
     public ResponseEntity postMember(@Valid @RequestBody SellMemberRequestDto.Post post) {
         SellMember member = sellMemberService.createSellMember(sellMemberMapper.SellMemberRequestDtoPostToSellMember(post));
-        SellMemberResponseDto.Response response = sellMemberMapper.SellMemberToSellMemberDtoResponse(member);
+        SellMemberResponseDto.Response response = sellMemberMapper.SellMemberToSellMemberResponseDto(member);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -38,7 +38,7 @@ public class SellMemberController {
     @GetMapping
     public ResponseEntity getMember(@Positive @RequestParam int memberId) {
         SellMember member = sellMemberService.findMember(memberId);
-        SellMemberResponseDto.Response response = sellMemberMapper.SellMemberToSellMemberDtoResponse(member);
+        SellMemberResponseDto.Response response = sellMemberMapper.SellMemberToSellMemberResponseDto(member);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -49,7 +49,7 @@ public class SellMemberController {
                                       @RequestBody SellMemberRequestDto.Patch patch) {
         patch.setSellMemberId(memberId);
         SellMember member = sellMemberService.patchMember(sellMemberMapper.SellMemberRequestDtoPatchToSellMember(patch));
-        SellMemberResponseDto.Response response = sellMemberMapper.SellMemberToSellMemberDtoResponse(member);
+        SellMemberResponseDto.Response response = sellMemberMapper.SellMemberToSellMemberResponseDto(member);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

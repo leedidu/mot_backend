@@ -15,6 +15,4 @@ public class HeartEntity extends Auditable { //좋아요
 
     @Id
     private int id; //좋아요식별아이디
-
-
 }

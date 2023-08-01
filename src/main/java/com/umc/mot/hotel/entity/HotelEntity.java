@@ -42,9 +42,4 @@ public class HotelEntity extends Auditable{ //숙소
 
     @Column
     private String info; //기본정보
-
-
-
-
-
 }

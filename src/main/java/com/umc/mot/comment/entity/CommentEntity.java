@@ -11,7 +11,6 @@ import javax.persistence.Id;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity(name="comment")
 public class CommentEntity {
 
     @Id

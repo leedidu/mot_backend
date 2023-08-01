@@ -9,7 +9,6 @@ import javax.persistence.Id;
 
 @Getter
 @Setter
-@Entity(name="category")
 public class CategoryEntity {
 
     @Id

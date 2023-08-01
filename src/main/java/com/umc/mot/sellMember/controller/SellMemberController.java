@@ -9,12 +9,13 @@ import com.umc.mot.sellMember.service.SellMemberService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 
 @RestController
 @RequestMapping("/sellMember")
@@ -35,38 +36,29 @@ public class SellMemberController {
 
     // Read
     @GetMapping
-    public ResponseEntity getMember(@Positive @RequestParam long memberId) {
-        MemberEntity member = memberService.findMember(memberId);
-        MemberDto.Response response = memberMapper.memberToMemberDtoResponse(member);
+    public ResponseEntity getMember(@Positive @RequestParam int memberId) {
+        SellMember member = sellMemberService.findMember(memberId);
+        SellMemberResponseDto.Response response = sellMemberMapper.SellMemberToSellMemberDtoResponse(member);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     // Update
     @PatchMapping("/{member-id}")
-    public ResponseEntity patchMember(@Positive @PathVariable("member-id") long memberId,
-                                      @RequestBody MemberDto.Patch patch) {
-        patch.setMemberId(memberId);
-        MemberEntity member = memberService.patchMember(memberMapper.memberDtoPatchToMember(patch));
-        MemberDto.Response response = memberMapper.memberToMemberDtoResponse(member);
+    public ResponseEntity patchMember(@Positive @PathVariable("member-id") int memberId,
+                                      @RequestBody SellMemberRequestDto.Patch patch) {
+        patch.setSellMemberId(memberId);
+        SellMember member = sellMemberService.patchMember(sellMemberMapper.SellMemberRequestDtoPatchToSellMember(patch));
+        SellMemberResponseDto.Response response = sellMemberMapper.SellMemberToSellMemberDtoResponse(member);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PutMapping("/{member-id}")
-    public ResponseEntity putMember(@Positive @PathVariable("member-id") long memberId,
-                                    @Valid @RequestBody MemberDto.Put put) {
-        put.setMemberId(memberId);
-        MemberEntity member = memberService.putMember(memberMapper.memberDtoPutToMember(put));
-        MemberDto.Response response = memberMapper.memberToMemberDtoResponse(member);
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
 
     // Delete
     @DeleteMapping("/{member-id}")
-    public ResponseEntity deleteMember(@Positive @PathVariable("member-id") long memberId) {
-        memberService.deleteMember(memberId);
+    public ResponseEntity deleteMember(@Positive @PathVariable("member-id") int memberId) {
+        sellMemberService.deleteMember(memberId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

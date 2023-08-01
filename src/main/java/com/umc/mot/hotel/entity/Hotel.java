@@ -21,7 +21,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
-public class Hotel extends Auditable{ //숙소
+public class Hotel extends Auditable{ // 숙소
+
     @Id
     private int id; //숙소식별자
 

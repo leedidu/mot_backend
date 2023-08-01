@@ -1,4 +1,7 @@
 package com.umc.mot.comment.repository;
 
-public class CommentRepository {
+import com.umc.mot.comment.entity.CommentEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface CommentRepository extends JpaRepository<CommentEntity, Integer> {
 }

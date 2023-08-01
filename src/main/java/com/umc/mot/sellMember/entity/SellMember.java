@@ -14,7 +14,7 @@ import javax.persistence.Id;
 @Setter
 @NoArgsConstructor
 @Entity
-public class SellMemberEntity extends Auditable{
+public class SellMember extends Auditable{
 
     @Id
     private int sellMemberId;  //판매자회원식별자

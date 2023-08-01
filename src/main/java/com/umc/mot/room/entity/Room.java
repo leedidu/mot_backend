@@ -11,7 +11,7 @@ import javax.persistence.Id;
 @Getter
 @Setter
 @NoArgsConstructor
-public class RoomEntity extends Auditable {
+public class Room extends Auditable {
     @Id
     private int id; //객실 식별자
 

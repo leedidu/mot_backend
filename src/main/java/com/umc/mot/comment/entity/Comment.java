@@ -1,7 +1,9 @@
 package com.umc.mot.comment.entity;
 
 import com.umc.mot.auditable.Auditable;
+import com.umc.mot.hotel.entity.Hotel;
 import com.umc.mot.message.entity.Message;
+import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -38,7 +40,11 @@ public class Comment extends Auditable {
     private List<Message> messages = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "TAG_ID")
-    private
+    @JoinColumn(name = "PURCHASE_MEMBER_ID")
+    private PurchaseMember purchaseMember;
+
+    @ManyToOne
+    @JoinColumn(name = "HOTEL_ID")
+    private Hotel hotel;
 }
 

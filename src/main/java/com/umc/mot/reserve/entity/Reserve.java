@@ -8,12 +8,11 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class ReserveEntity extends Auditable {
+public class Reserve extends Auditable {
 
     @Id
     private int id; //예약 식별아이디

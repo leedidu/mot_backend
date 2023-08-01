@@ -16,5 +16,5 @@ public class CategoryEntity extends Auditable {
     private int categoryId;
 
     @Column
-    private String categoryName;
+    private String name;
 }

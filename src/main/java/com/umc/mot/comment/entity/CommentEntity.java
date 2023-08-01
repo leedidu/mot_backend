@@ -14,7 +14,7 @@ import javax.persistence.Id;
 public class CommentEntity {
 
     @Id
-    private int commentId;
+    private int id;
 
     @Column
     private String context;
@@ -29,6 +29,6 @@ public class CommentEntity {
     private int memberId;
 
     @Column
-    private boolean visible; //이거 enum으로 빼는게 좋지 않나?
+    private boolean visible; // true : 보임, false : 안보임
 }
 

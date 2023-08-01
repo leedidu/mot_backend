@@ -13,7 +13,7 @@ import javax.persistence.Id;
 public class CategoryEntity extends Auditable {
 
     @Id
-    private int categoryId;
+    private int Id;
 
     @Column
     private String name;

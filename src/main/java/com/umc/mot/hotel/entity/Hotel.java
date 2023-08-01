@@ -24,6 +24,7 @@ import java.util.List;
 public class Hotel extends Auditable{ // 숙소
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id; //숙소식별자
 
     @Column

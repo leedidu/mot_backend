@@ -17,6 +17,7 @@ import java.util.List;
 @Entity
 public class Room extends Auditable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id; //객실 식별자
 
     @Column

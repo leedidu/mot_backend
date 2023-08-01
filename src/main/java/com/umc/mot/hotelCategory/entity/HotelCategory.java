@@ -17,6 +17,7 @@ import javax.persistence.*;
 public class HotelCategory extends Auditable { //숙소_카테고리
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id; //숙소_카테고리식별자
 
     @ManyToOne

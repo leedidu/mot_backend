@@ -7,10 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -18,6 +15,7 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Heart extends Auditable { //좋아요
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id; //좋아요식별아이디
 
     @ManyToOne

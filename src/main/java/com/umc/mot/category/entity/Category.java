@@ -17,6 +17,7 @@ import java.util.List;
 public class Category extends Auditable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int Id;
 
     @Column

@@ -18,6 +18,7 @@ import java.util.List;
 public class SellMember extends Auditable{
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int sellMemberId;  //판매자회원식별자
 
     @Column

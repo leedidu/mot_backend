@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 public class Reserve extends Auditable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id; //예약 식별아이디
 
     @Column

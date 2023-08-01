@@ -19,6 +19,7 @@ import java.util.List;
 public class Package extends Auditable { //패키지
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id; //패키지 식별자
 
     @Column

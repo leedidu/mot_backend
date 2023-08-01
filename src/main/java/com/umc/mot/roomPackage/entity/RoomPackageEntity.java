@@ -13,6 +13,6 @@ import javax.persistence.Id;
 public class RoomPackageEntity extends Auditable {
 
     @Id
-    private int Id; //객실 패키지 식별자
+    private int id; //객실 패키지 식별자
 
 }

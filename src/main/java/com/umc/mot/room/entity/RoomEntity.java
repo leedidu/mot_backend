@@ -13,10 +13,10 @@ import javax.persistence.Id;
 @NoArgsConstructor
 public class RoomEntity extends Auditable {
     @Id
-    private int Id; //객실 식별자
+    private int id; //객실 식별자
 
     @Column
-    private String Name; //객실 이름
+    private String name; //객실 이름
 
     @Column
     private int minPeople;//최소인원

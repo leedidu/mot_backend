@@ -15,7 +15,7 @@ import javax.persistence.Id;
 public class SearchEntity extends Auditable {
 
     @Id
-    private int Id;
+    private int id;
 
     @Column
     private String context;

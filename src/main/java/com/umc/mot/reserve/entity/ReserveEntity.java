@@ -16,17 +16,17 @@ import java.time.LocalDateTime;
 public class ReserveEntity extends Auditable {
 
     @Id
-    private int Id; //예약 식별아이디
+    private int id; //예약 식별아이디
 
     @Column
-    private LocalDate CheckIn; //체크인
+    private LocalDate checkIn; //체크인
 
     @Column
-    private LocalDate CheckOut; //체크아웃
+    private LocalDate checkOut; //체크아웃
 
     @Column
-    private String Phone; //핸드폰
+    private String phone; //핸드폰
 
     @Column
-    private int PeopleNum; //예약인원
+    private int peopleNum; //예약인원
 }

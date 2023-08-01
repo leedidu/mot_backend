@@ -14,7 +14,7 @@ import javax.persistence.Id;
 public class HeartEntity extends Auditable { //좋아요
 
     @Id
-    private int Id; //좋아요식별아이디
+    private int id; //좋아요식별아이디
 
 
 }

@@ -14,6 +14,6 @@ import javax.persistence.Id;
 public class HotelCategoryEntity extends Auditable { //숙소_카테고리
 
     @Id
-    private int Id; //숙소_카테고리식별자
+    private int id; //숙소_카테고리식별자
 
 }

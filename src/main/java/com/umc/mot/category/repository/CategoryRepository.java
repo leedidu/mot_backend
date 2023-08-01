@@ -1,4 +1,4 @@
 package com.umc.mot.category.repository;
 
-public class CategoryRepository {
+public interface CategoryRepository extends JPA{
 }

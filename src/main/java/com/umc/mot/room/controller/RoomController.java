@@ -26,8 +26,8 @@ public class RoomController {
     // Create
     @PostMapping
     public ResponseEntity postRoom(@Valid @RequestBody RoomRequestDto.Post post) {
-        Room room = roomService.createRoom(roomMapper.RoomRequestDtoPostToRoom(post));
-        RoomResponseDto.Response response = roomMapper.RoomToRoomResponseDto(room);
+        Room room = roomService.createRoom(roomMapper.roomRequestDtoPostToRoom(post));
+        RoomResponseDto.Response response = roomMapper.roomToRoomResponseDto(room);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -36,7 +36,7 @@ public class RoomController {
     @GetMapping
     public ResponseEntity getRoom(@Positive @RequestParam int roomId) {
         Room room = roomService.findRoomId(roomId);
-        RoomResponseDto.Response response=roomMapper.RoomToRoomResponseDto(room);
+        RoomResponseDto.Response response=roomMapper.roomToRoomResponseDto(room);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -46,8 +46,8 @@ public class RoomController {
     public ResponseEntity patchMember(@Positive @PathVariable("room-id") int roomId,
                                       @RequestBody RoomRequestDto.Patch patch) {
         patch.setId(roomId);
-        Room room = roomService.patchRoom(roomMapper.RoomRequestDtoPatchToRoom(patch));
-        RoomResponseDto.Response response = roomMapper.RoomToRoomResponseDto(room);
+        Room room = roomService.patchRoom(roomMapper.roomRequestDtoPatchToRoom(patch));
+        RoomResponseDto.Response response = roomMapper.roomToRoomResponseDto(room);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

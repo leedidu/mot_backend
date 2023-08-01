@@ -2,6 +2,7 @@ package com.umc.mot.reserve.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import java.time.LocalDate;
@@ -18,6 +19,7 @@ public class ReserveRequestDto {
     }
 
     @Getter
+    @Setter
     @AllArgsConstructor
     public static class Patch {
         private int id; //예약 식별아이디

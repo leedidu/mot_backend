@@ -28,8 +28,8 @@ public class SellMemberController {
     // Create
     @PostMapping
     public ResponseEntity postMember(@Valid @RequestBody SellMemberRequestDto.Post post) {
-        SellMember member = sellMemberService.createSellMember(sellMemberMapper.SellMemberRequestDtoPostToSellMember(post));
-        SellMemberResponseDto.Response response = sellMemberMapper.SellMemberToSellMemberResponseDto(member);
+        SellMember member = sellMemberService.createSellMember(sellMemberMapper.sellMemberRequestDtoPostToSellMember(post));
+        SellMemberResponseDto.Response response = sellMemberMapper.sellMemberToSellMemberResponseDto(member);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -38,7 +38,7 @@ public class SellMemberController {
     @GetMapping
     public ResponseEntity getMember(@Positive @RequestParam int memberId) {
         SellMember member = sellMemberService.findMember(memberId);
-        SellMemberResponseDto.Response response = sellMemberMapper.SellMemberToSellMemberResponseDto(member);
+        SellMemberResponseDto.Response response = sellMemberMapper.sellMemberToSellMemberResponseDto(member);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -48,8 +48,8 @@ public class SellMemberController {
     public ResponseEntity patchMember(@Positive @PathVariable("member-id") int memberId,
                                       @RequestBody SellMemberRequestDto.Patch patch) {
         patch.setSellMemberId(memberId);
-        SellMember member = sellMemberService.patchMember(sellMemberMapper.SellMemberRequestDtoPatchToSellMember(patch));
-        SellMemberResponseDto.Response response = sellMemberMapper.SellMemberToSellMemberResponseDto(member);
+        SellMember member = sellMemberService.patchMember(sellMemberMapper.sellMemberRequestDtoPatchToSellMember(patch));
+        SellMemberResponseDto.Response response = sellMemberMapper.sellMemberToSellMemberResponseDto(member);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

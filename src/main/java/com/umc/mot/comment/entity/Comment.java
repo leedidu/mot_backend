@@ -1,18 +1,20 @@
 package com.umc.mot.comment.entity;
 
 import com.umc.mot.auditable.Auditable;
+import com.umc.mot.message.entity.Message;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class CommentEntity extends Auditable {
+@Entity
+public class Comment extends Auditable {
 
     @Id
     private int id;
@@ -31,5 +33,12 @@ public class CommentEntity extends Auditable {
 
     @Column
     private boolean visible; // true : 보임, false : 안보임
+
+    @OneToMany(mappedBy = "comment", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Message> messages = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "TAG_ID")
+    private
 }
 

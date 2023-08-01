@@ -12,7 +12,7 @@ import javax.persistence.Id;
 @Getter
 @Setter
 @NoArgsConstructor
-public class MessageEntity extends Auditable { //답글 엔티티
+public class Message extends Auditable { //답글 엔티티
 
     @Id
     private int messageId; //답글아이디

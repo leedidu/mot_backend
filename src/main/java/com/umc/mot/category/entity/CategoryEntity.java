@@ -1,5 +1,6 @@
 package com.umc.mot.category.entity;
 
+import com.umc.mot.auditable.Auditable;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +10,7 @@ import javax.persistence.Id;
 
 @Getter
 @Setter
-public class CategoryEntity {
+public class CategoryEntity extends Auditable {
 
     @Id
     private int categoryId;

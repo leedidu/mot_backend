@@ -49,7 +49,7 @@ public class Hotel extends Auditable{ // 숙소
     private String transfer; //이동수단
 
     @Column
-    private String hotelAddress; //주소
+    private String address; //주소
 
     @Column
     private String info; //기본정보

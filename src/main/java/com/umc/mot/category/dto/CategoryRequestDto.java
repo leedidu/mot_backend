@@ -2,6 +2,7 @@ package com.umc.mot.category.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 public class CategoryRequestDto {
 
@@ -14,6 +15,7 @@ public class CategoryRequestDto {
     }
 
     @Getter
+    @Setter
     @AllArgsConstructor
     public static class Patch {
         private int id;

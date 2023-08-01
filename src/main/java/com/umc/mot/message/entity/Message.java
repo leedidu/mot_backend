@@ -18,7 +18,7 @@ public class Message extends Auditable { //답글 엔티티
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int messageId; //답글아이디
+    private int id; //답글아이디
 
     @Column
     private String content; //내용

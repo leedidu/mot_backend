@@ -15,7 +15,7 @@ public class HotelResponseDto {
         private int star; //별점
         private String map; //지도
         private String transfer; //이동수단
-        private String hotelAddress; //주소
+        private String address; //주소
         private String info; //기본정보
     }
 }

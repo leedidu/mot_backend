@@ -2,6 +2,7 @@ package com.umc.mot.packagee.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -19,6 +20,7 @@ public class PackageRequestDto {
     }
 
     @Getter
+    @Setter
     @AllArgsConstructor
     public static class Patch {
         private int id; //패키지 식별자

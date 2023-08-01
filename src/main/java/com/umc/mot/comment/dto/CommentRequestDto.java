@@ -2,6 +2,7 @@ package com.umc.mot.comment.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 
@@ -19,6 +20,7 @@ public class CommentRequestDto {
     }
 
     @Getter
+    @Setter
     @AllArgsConstructor
     public static class Patch {
         private int id;

@@ -36,6 +36,7 @@ public class Room extends Auditable {
     @JoinColumn(name = "HOTEL_ID")
     private Hotel hotel;
 
+
     @OneToMany(mappedBy = "room", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<RoomPackage> roomPackages = new ArrayList<>();
 }

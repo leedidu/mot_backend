@@ -14,7 +14,7 @@ public class RoomRequestDto {
         private String name; //객실 이름
         private int minPeople;//최소인원
         private int maxPeople; //최대인원
-        private int roomPrice; //비용
+        private int price; //비용
     }
 
     @Getter
@@ -25,6 +25,6 @@ public class RoomRequestDto {
         private String name; //객실 이름
         private int minPeople;//최소인원
         private int maxPeople; //최대인원
-        private int roomPrice; //비용
+        private int price; //비용
     }
 }

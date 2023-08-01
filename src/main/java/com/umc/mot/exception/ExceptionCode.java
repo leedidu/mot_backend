@@ -6,6 +6,8 @@ import lombok.Getter;
 public enum ExceptionCode {
     SELL_MEMBER_NOT_FOUND(404, "Sell Member not found"),
     MESSAGE_NOT_FOUND(404, "Message not found"),
+    ROOM_NOT_FOUND(404, "Message not found"),
+    RESERVE_NOT_FOUND(404, "Reserve not found"),
     ROOM_NOT_FOUND(404, "Room not found"),
     PACKAGE_NOT_FOUND(404, "Package not found"),
     HOTEL_NOT_FOUND(404,"Hotel not found"),

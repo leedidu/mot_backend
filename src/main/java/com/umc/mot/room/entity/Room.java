@@ -1,16 +1,20 @@
 package com.umc.mot.room.entity;
 
 import com.umc.mot.auditable.Auditable;
+import com.umc.mot.hotel.entity.Hotel;
+import com.umc.mot.roomPackage.entity.RoomPackage;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@Entity
 public class Room extends Auditable {
     @Id
     private int id; //객실 식별자
@@ -27,4 +31,10 @@ public class Room extends Auditable {
     @Column
     private int roomPrice; //비용
 
+    @ManyToOne
+    @JoinColumn(name = "HOTEL_ID")
+    private Hotel hotel;
+
+    @OneToMany(mappedBy = "room", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<RoomPackage> roomPackages = new ArrayList<>();
 }

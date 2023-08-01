@@ -5,6 +5,7 @@ import com.umc.mot.auditable.Auditable;
 import com.umc.mot.comment.entity.Comment;
 import com.umc.mot.heart.entity.Heart;
 import com.umc.mot.hotelCategory.entity.HotelCategory;
+import com.umc.mot.packagee.entity.Package;
 import com.umc.mot.reserve.entity.Reserve;
 import com.umc.mot.room.entity.Room;
 import com.umc.mot.sellMember.entity.SellMember;

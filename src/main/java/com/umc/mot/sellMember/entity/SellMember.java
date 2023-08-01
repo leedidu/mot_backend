@@ -2,13 +2,14 @@ package com.umc.mot.sellMember.entity;
 
 
 import com.umc.mot.auditable.Auditable;
+import com.umc.mot.hotel.entity.Hotel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -43,5 +44,6 @@ public class SellMember extends Auditable{
     @Column
     private String token; //회원 토큰
 
-
+    @OneToMany(mappedBy = "sell_member", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Hotel> hotels = new ArrayList<>();
 }

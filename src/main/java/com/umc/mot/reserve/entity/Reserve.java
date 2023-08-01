@@ -1,17 +1,19 @@
 package com.umc.mot.reserve.entity;
 
 import com.umc.mot.auditable.Auditable;
+import com.umc.mot.hotel.entity.Hotel;
+import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@Entity
 public class Reserve extends Auditable {
 
     @Id
@@ -28,4 +30,12 @@ public class Reserve extends Auditable {
 
     @Column
     private int peopleNum; //예약인원
+
+    @ManyToOne
+    @JoinColumn(name = "HOTEL_ID")
+    private Hotel hotel;
+
+    @ManyToOne
+    @JoinColumn(name = "PURCHASE_MEMBER_ID")
+    private PurchaseMember purchaseMember;
 }

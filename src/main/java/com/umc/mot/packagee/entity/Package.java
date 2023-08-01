@@ -2,13 +2,15 @@ package com.umc.mot.packagee.entity;
 
 
 import com.umc.mot.auditable.Auditable;
+import com.umc.mot.hotel.entity.Hotel;
+import com.umc.mot.roomPackage.entity.RoomPackage;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -31,8 +33,10 @@ public class Package extends Auditable { //패키지
     @Column
     private int price;
 
+    @ManyToOne
+    @JoinColumn(name = "HOTEL_ID")
+    private Hotel hotel;
 
-
-
-
+    @OneToMany(mappedBy = "package", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<RoomPackage> roomPackages = new ArrayList<>();
 }

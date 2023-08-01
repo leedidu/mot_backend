@@ -1,13 +1,16 @@
 package com.umc.mot.purchaseMember.entity;
 
 import com.umc.mot.auditable.Auditable;
+import com.umc.mot.comment.entity.Comment;
+import com.umc.mot.heart.entity.Heart;
+import com.umc.mot.reserve.entity.Reserve;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -37,5 +40,12 @@ public class PurchaseMember extends Auditable {
 
     private String token; //토큰
 
+    @OneToMany(mappedBy = "purchase_member", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "purchase_member", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Heart> hearts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "purchase_member", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Reserve> reserves = new ArrayList<>();
 }

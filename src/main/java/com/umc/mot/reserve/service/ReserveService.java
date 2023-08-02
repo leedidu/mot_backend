@@ -31,6 +31,7 @@ public class ReserveService {
     public Reserve patchReserve(Reserve reserve) {
         Reserve findReserve = verifiedReserve(reserve.getId());
         Optional.ofNullable(reserve.getId()).ifPresent(findReserve::setId);
+        Optional.ofNullable(reserve.getPaymentPrice()).ifPresent(findReserve::setPaymentPrice);
         Optional.ofNullable(reserve.getCheckIn()).ifPresent(findReserve::setCheckIn);
         Optional.ofNullable(reserve.getCheckOut()).ifPresent(findReserve::setCheckOut);
         Optional.ofNullable(reserve.getPhone()).ifPresent(findReserve::setPhone);
@@ -49,6 +50,5 @@ public class ReserveService {
     public Reserve verifiedReserve(int reserveId) {
         Optional<Reserve> member = reserveRepository.findById(reserveId);
         return member.orElseThrow(() -> new BusinessLogicException(ExceptionCode.RESERVE_NOT_FOUND));
-
     }
 }

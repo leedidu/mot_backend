@@ -3,6 +3,7 @@ package com.umc.mot.packagee.entity;
 
 import com.umc.mot.auditable.Auditable;
 import com.umc.mot.hotel.entity.Hotel;
+import com.umc.mot.reserve.entity.Reserve;
 import com.umc.mot.roomPackage.entity.RoomPackage;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,9 +35,16 @@ public class Package extends Auditable { //패키지
     @Column
     private int price;
 
+    @Column
+    private String info; //기본정보
+
     @ManyToOne
     @JoinColumn(name = "HOTEL_ID")
     private Hotel hotel;
+
+    @ManyToOne
+    @JoinColumn(name = "RESERVE_ID")
+    private Reserve reserve;
 
     @OneToMany(mappedBy = "packages", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<RoomPackage> roomPackages = new ArrayList<>();

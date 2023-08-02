@@ -2,6 +2,7 @@ package com.umc.mot.room.entity;
 
 import com.umc.mot.auditable.Auditable;
 import com.umc.mot.hotel.entity.Hotel;
+import com.umc.mot.reserve.entity.Reserve;
 import com.umc.mot.roomPackage.entity.RoomPackage;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,10 +33,16 @@ public class Room extends Auditable {
     @Column
     private int price; //비용
 
+    @Column
+    private String info; //기본정보
+
     @ManyToOne
     @JoinColumn(name = "HOTEL_ID")
     private Hotel hotel;
 
+    @ManyToOne
+    @JoinColumn(name = "RESERVE_ID")
+    private Reserve reserve;
 
     @OneToMany(mappedBy = "room", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<RoomPackage> roomPackages = new ArrayList<>();

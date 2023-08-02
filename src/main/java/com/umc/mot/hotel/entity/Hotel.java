@@ -21,7 +21,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
-public class Hotel extends Auditable{ // 숙소
+public class Hotel extends Auditable { // 숙소
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,15 +54,18 @@ public class Hotel extends Auditable{ // 숙소
     @Column
     private String info; //기본정보
 
+    @Column
+    private int commentCount; // 댓글개수
+
+    @Column
+    private String distance; // 숙소이동거리
+
     @ManyToOne
     @JoinColumn(name = "SELLMEMBER_ID")
-    private SellMember  sellMember;
+    private SellMember sellMember;
 
     @OneToMany(mappedBy = "hotel", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Heart> hearts = new ArrayList<>();
-
-    @OneToMany(mappedBy = "hotel", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<Reserve> reserves = new ArrayList<>();
 
     @OneToMany(mappedBy = "hotel", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Comment> comments = new ArrayList<>();

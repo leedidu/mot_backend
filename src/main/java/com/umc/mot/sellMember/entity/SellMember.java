@@ -23,9 +23,6 @@ public class SellMember extends Auditable{
     private int sellMemberId;  //판매자회원식별자
 
     @Column
-    private String id; //회원 아이디
-
-    @Column
     private String name; //회원 이름
 
     @Column
@@ -36,9 +33,6 @@ public class SellMember extends Auditable{
 
     @Column
     private String phone; //회원 전화번호
-
-    @Column
-    private String pw; //회원 비밀번호
 
     @Column
     private String host; //회원역할

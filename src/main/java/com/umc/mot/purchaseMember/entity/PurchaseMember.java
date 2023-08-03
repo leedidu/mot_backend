@@ -31,10 +31,13 @@ public class PurchaseMember extends Auditable {
     private String imageUrl; //회원 이메일
 
     @Column
+    private String email; // 회원 이메일
+
+    @Column
     private String phone; //회원 전화번호
 
     @Column
-    private String Pw; //회원 비밀번호
+    private String pw; //회원 비밀번호
 
     @Column
     private String host; // 회원 역할

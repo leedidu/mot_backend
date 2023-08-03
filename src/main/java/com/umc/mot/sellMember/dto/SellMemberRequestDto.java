@@ -22,8 +22,6 @@ public class SellMemberRequestDto {
         private String phone; //회원 전화번호
         private String pw; //회원 비밀번호
         private String host; //회원역할
-        private String token; //회원 토큰
-
     }
 
     @Getter
@@ -39,7 +37,5 @@ public class SellMemberRequestDto {
         private String phone; //회원 전화번호
         private String pw; //회원 비밀번호
         private String host; //회원역할
-        private String token; //회원 토큰
     }
-
 }

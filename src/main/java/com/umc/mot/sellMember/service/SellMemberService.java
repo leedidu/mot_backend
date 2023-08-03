@@ -31,12 +31,10 @@ public class SellMemberService {
     // Update
     public SellMember patchMember(SellMember member) {
         SellMember findMember = verifiedMember(member.getSellMemberId());
-        Optional.ofNullable(member.getId()).ifPresent(findMember::setId);
         Optional.ofNullable(member.getName()).ifPresent(findMember::setName);
         Optional.ofNullable(member.getImageUrl()).ifPresent(findMember::setImageUrl);
         Optional.ofNullable(member.getEmail()).ifPresent(findMember::setEmail);
         Optional.ofNullable(member.getPhone()).ifPresent(findMember::setPhone);
-        Optional.ofNullable(member.getPw()).ifPresent(findMember::setPw);
         Optional.ofNullable(member.getHost()).ifPresent(findMember::setHost);
 
         return sellMemberRepository.save(findMember);

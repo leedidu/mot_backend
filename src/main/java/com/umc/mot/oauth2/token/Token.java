@@ -23,6 +23,12 @@ public class Token {
     @Column
     private String refreshToken;
 
+    @Column
+    private String loginId; // 로그인 ID
+
+    @Column
+    private String loginPw; // 로그인 PW
+
     @OneToOne
     @JoinColumn(name = "SELL_MEMBER_ID")
     private SellMember sellMember;

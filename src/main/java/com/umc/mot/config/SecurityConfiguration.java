@@ -1,17 +1,16 @@
 package com.umc.mot.config;
 
+import com.umc.mot.oauth2.filter.JwtAuthenticationFilter;
+import com.umc.mot.oauth2.handler.*;
 import com.umc.mot.utils.CustomCookie;
 import com.umc.mot.oauth2.filter.JwtVerificationFilter;
-import com.umc.mot.oauth2.handler.OAuth2MemberSuccessHandler;
-import com.umc.mot.oauth2.handler.MemberAccessDeniedHandler;
-import com.umc.mot.oauth2.handler.MemberAuthenticationEntryPoint;
-import com.umc.mot.oauth2.handler.MemberLogoutSuccessHandler;
 import com.umc.mot.oauth2.jwt.JwtTokenizer;
 import com.umc.mot.oauth2.utils.CustomAuthorityUtils;
 import com.umc.mot.purchaseMember.service.PurchaseMemberService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -55,20 +54,11 @@ public class SecurityConfiguration {
                 .clearAuthentication(true) // 로그아웃 시 권한 제거
                 .permitAll() // 모두 허용
                 .logoutSuccessHandler(new MemberLogoutSuccessHandler(memberService)) // 로그아웃 성공 후 핸들러
-                .logoutSuccessHandler(new MemberLogoutSuccessHandler(memberService)) // 로그아웃 성공 후 핸들러
                 .and()
                 .authorizeHttpRequests(authorize -> authorize // url authorization 전체 추가
 //                                .antMatchers(HttpMethod.POST, "/*/coffees").hasRole("ADMIN")
-//                                .antMatchers(HttpMethod.PATCH, "/*/coffees/**").hasRole("ADMIN")
 //                                .antMatchers(HttpMethod.GET, "/*/coffees/**").hasAnyRole("USER", "ADMIN")
 //                                .antMatchers(HttpMethod.GET, "/*/coffees").permitAll()
-//                                .antMatchers(HttpMethod.DELETE, "/*/coffees").hasRole("ADMIN")
-//                                .antMatchers(HttpMethod.POST, "/*/orders").hasRole("USER")
-//                                .antMatchers(HttpMethod.PATCH, "/*/orders").hasAnyRole("USER", "ADMIN")
-//                                .antMatchers(HttpMethod.GET, "/*/orders/**").hasAnyRole("USER", "ADMIN")
-//                                .antMatchers(HttpMethod.DELETE, "/*/orders").hasRole("USER")
-
-//                                .antMatchers(HttpMethod.POST, "/study").hasAnyRole("USER", "ADMIN")
                                 .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2
@@ -92,9 +82,20 @@ public class SecurityConfiguration {
     public class CustomFilterConfigurer extends AbstractHttpConfigurer<CustomFilterConfigurer, HttpSecurity> {
         @Override
         public void configure(HttpSecurity builder) throws Exception {
-            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils, memberService, cookie);
+            // 로그인
+            AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
-            builder.addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class); // (1)
+            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer, refreshTokenRepository);
+            jwtAuthenticationFilter.setFilterProcessesUrl("/login");          // login url
+
+            jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler());
+            jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
+
+            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils, memberService, cookie); // google OAuth2
+
+            builder
+                    .addFilter(jwtAuthenticationFilter) // 로그인
+                    .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class); // google OAuth2
         }
     }
 }

@@ -38,8 +38,6 @@ public class SellMemberService {
         Optional.ofNullable(member.getPhone()).ifPresent(findMember::setPhone);
         Optional.ofNullable(member.getPw()).ifPresent(findMember::setPw);
         Optional.ofNullable(member.getHost()).ifPresent(findMember::setHost);
-        Optional.ofNullable(member.getToken()).ifPresent(findMember::setToken);
-
 
         return sellMemberRepository.save(findMember);
     }

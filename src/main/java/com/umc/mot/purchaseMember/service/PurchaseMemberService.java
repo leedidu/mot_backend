@@ -53,7 +53,7 @@ public class PurchaseMemberService {
     // 멤버 검증
     public PurchaseMember verifiedMember(int purchaseMemberId) {
         Optional<PurchaseMember> member = purchaseMemberRepository.findById(purchaseMemberId);
-        return member.orElseThrow(() -> new BusinessLogicException(ExceptionCode.SELL_MEMBER_NOT_FOUND));
+        return member.orElseThrow(() -> new BusinessLogicException(ExceptionCode.PURCHASE_MEMBER_NOT_FOUND));
 
     }
 }

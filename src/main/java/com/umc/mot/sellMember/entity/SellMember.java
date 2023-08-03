@@ -3,6 +3,7 @@ package com.umc.mot.sellMember.entity;
 
 import com.umc.mot.auditable.Auditable;
 import com.umc.mot.hotel.entity.Hotel;
+import com.umc.mot.oauth2.jwt.token.Token;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -42,9 +43,9 @@ public class SellMember extends Auditable{
     @Column
     private String host; //회원역할
 
-    @Column
-    private String token; //회원 토큰
-
     @OneToMany(mappedBy = "sellMember", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Hotel> hotels = new ArrayList<>();
+
+    @OneToOne(mappedBy = "sellMember", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private Token token;
 }

@@ -3,6 +3,7 @@ package com.umc.mot.purchaseMember.entity;
 import com.umc.mot.auditable.Auditable;
 import com.umc.mot.comment.entity.Comment;
 import com.umc.mot.heart.entity.Heart;
+import com.umc.mot.oauth2.jwt.token.Token;
 import com.umc.mot.reserve.entity.Reserve;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,8 +43,6 @@ public class PurchaseMember extends Auditable {
     @Column
     private String host; // 회원 역할
 
-    private String token; //토큰
-
     @OneToMany(mappedBy = "purchaseMember", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Comment> comments = new ArrayList<>();
 
@@ -52,4 +51,7 @@ public class PurchaseMember extends Auditable {
 
     @OneToMany(mappedBy = "purchaseMember", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Reserve> reserves = new ArrayList<>();
+
+    @OneToOne(mappedBy = "PurchaseMember", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private Token token;
 }

@@ -23,9 +23,6 @@ public class PurchaseMember extends Auditable {
     private int purchaseMemberId; //구매자 회원 식별자
 
     @Column
-    private String id; //회원아이디
-
-    @Column
     private String name ; //회원 이름
 
     @Column
@@ -36,9 +33,6 @@ public class PurchaseMember extends Auditable {
 
     @Column
     private String phone; //회원 전화번호
-
-    @Column
-    private String pw; //회원 비밀번호
 
     @Column
     private String host; // 회원 역할

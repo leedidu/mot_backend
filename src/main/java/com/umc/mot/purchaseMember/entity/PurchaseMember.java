@@ -3,7 +3,7 @@ package com.umc.mot.purchaseMember.entity;
 import com.umc.mot.auditable.Auditable;
 import com.umc.mot.comment.entity.Comment;
 import com.umc.mot.heart.entity.Heart;
-import com.umc.mot.oauth2.jwt.token.Token;
+import com.umc.mot.token.entity.Token;
 import com.umc.mot.reserve.entity.Reserve;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -48,4 +48,10 @@ public class PurchaseMember extends Auditable {
 
     @OneToOne(mappedBy = "PurchaseMember", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Token token;
+
+    public PurchaseMember(String email, String name, String imageUrl) {
+        this.email = email;
+        this.name = name;
+        this.imageUrl = imageUrl;
+    }
 }

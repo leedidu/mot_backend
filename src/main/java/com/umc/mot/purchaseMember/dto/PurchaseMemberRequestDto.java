@@ -17,8 +17,6 @@ public class PurchaseMemberRequestDto {
         private String email; //회원이메일
         private String phone; //회원 전화번호
         private String host; //회원역할
-        private String token; //회원 토큰
-
     }
 
     @Getter
@@ -32,7 +30,5 @@ public class PurchaseMemberRequestDto {
         private String email; //회원이메일
         private String phone; //회원 전화번호
         private String host; //회원역할
-        private String token; //회원 토큰
     }
-
 }

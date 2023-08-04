@@ -5,9 +5,15 @@ import com.umc.mot.oauth2.jwt.JwtTokenizer;
 import com.umc.mot.oauth2.utils.CustomAuthorityUtils;
 import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import com.umc.mot.purchaseMember.service.PurchaseMemberService;
+import com.umc.mot.sellMember.entity.SellMember;
+import com.umc.mot.sellMember.service.SellMemberService;
+import com.umc.mot.token.entity.Token;
+import com.umc.mot.token.service.TokenService;
+import com.umc.mot.utils.CustomCookie;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -21,16 +27,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @AllArgsConstructor
+@Configuration
 public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
-    private final PurchaseMemberService memberService;
+    private final PurchaseMemberService purchaseMemberService;
+    private final SellMemberService sellMemberService;
+    private final TokenService tokenService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -38,21 +44,27 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
         String email = String.valueOf(oAuth2PurchaseMember.getAttributes().get("email"));
         if(email.equals("null")) email = String.valueOf(oAuth2PurchaseMember.getAttributes().get("html_url"));
-        PurchaseMember member = memberService.findByEmail(email);
+        Token token;
+        PurchaseMember purchaseMember = purchaseMemberService.verifiedByEmail(email);
+        SellMember sellMember = null;
+        if(purchaseMember == null) {
+            sellMember = sellMemberService.verifiedByEmail(email);
+            token = sellMember.getToken();
+        } else token = purchaseMember.getToken();
+//        PurchaseMember purchaseMember = purchaseMemberService.verifiedByEmail(email);
+//        SellMember sellMember = sellMemberService.verifiedByEmail(email);
         List<String> authorities = authorityUtils.createRoles(email);
 
         // email로 가입된 사람이 없는 경우
-        if(member == null) {
-            if(request.getServletPath().contains("google")) {
-                String name = String.valueOf(oAuth2PurchaseMember.getAttributes().get("name"));
-                String imgUrl = String.valueOf(oAuth2PurchaseMember.getAttributes().get("picture"));
-                member = savePurchaseMember(email, name, imgUrl);
-            }
-            else if(request.getServletPath().contains("github")) {
-                String name = String.valueOf(oAuth2PurchaseMember.getAttributes().get("login"));
-                String imgUrl = String.valueOf(oAuth2PurchaseMember.getAttributes().get("avatar_url"));
-                member = savePurchaseMember(email, name, imgUrl);
-            }
+//        if(purchaseMember == null && sellMember == null) {
+//            String name = String.valueOf(oAuth2PurchaseMember.getAttributes().get("name"));
+//            String imgUrl = String.valueOf(oAuth2PurchaseMember.getAttributes().get("picture"));
+//            purchaseMember = savePurchaseMember(email, name, imgUrl);
+//        }
+        if(sellMember == null && purchaseMember == null) {
+            String name = String.valueOf(oAuth2PurchaseMember.getAttributes().get("name"));
+            String imgUrl = String.valueOf(oAuth2PurchaseMember.getAttributes().get("picture"));
+            purchaseMember = savePurchaseMember(email, name, imgUrl);
         }
 
         // 콘솔 출력 코드
@@ -60,19 +72,20 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
 //        oAuth2PurchaseMember.getAuthorities().stream().forEach(grantedAuthority -> System.out.println("!! granted : " + grantedAuthority.getAuthority()));
 //        System.out.println("!! url : " + request.getRequestURI());
 
-        redirect(request, response, member, authorities);
+        redirect(request, response, email, token, authorities);
     }
 
     private PurchaseMember savePurchaseMember(String email, String name, String imgUrl) {
         PurchaseMember member = new PurchaseMember(email, name, imgUrl);
-        return memberService.createPurchaseMember(member);
+        return purchaseMemberService.createPurchaseMember(member);
     }
 
     private void redirect(HttpServletRequest request, HttpServletResponse response,
-                          PurchaseMember member,
+                          String email,
+                          Token token,
                           List<String> authorities) throws IOException {
-        String accessToken = "Bearer " + delegateAccessToken(member.getName(), member.getEmail(), authorities);
-        String refreshToken = delegateRefreshToken(member.getEmail());
+        String accessToken = "Bearer " + delegateAccessToken(email, authorities);
+        String refreshToken = delegateRefreshToken(email);
 
         // ---------------------------------------------------------------------------
         // response body 안에 token 값 저장
@@ -83,9 +96,9 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         response.setHeader("refresh-Token", refreshToken);
 
         // access token & refresh token 저장
-        member.setToken(accessToken);
-        member.setRefresh(refreshToken);
-        memberService.updatePurchaseMember(member);
+        token.setAccessToken(accessToken);
+        token.setRefreshToken(refreshToken);
+        tokenService.patchToken(token);
 
         // 콘솔 출력 코드
 //        System.out.println("!! url : " + response.getHeaderNames().toString());
@@ -115,9 +128,8 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
     }
 
     // access token 생성
-    private String delegateAccessToken(String name, String email, List<String> authorities) {
+    private String delegateAccessToken(String email, List<String> authorities) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("membername", name);
         claims.put("roles", authorities);
 
         String subject = email;
@@ -208,15 +220,6 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
 //                .queryParams(queryParams)
 //                .build()
 //                .toUri();
-    }
-
-    @AllArgsConstructor
-    @Setter
-    @Getter
-    public class PurchaseMemberResopnse {
-        private long memberId;
-        private String name;
-        private String email;
     }
 
     @AllArgsConstructor

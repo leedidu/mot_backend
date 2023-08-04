@@ -1,14 +1,19 @@
 package com.umc.mot.oauth2.filter;
 
+import com.umc.mot.oauth2.utils.CustomAuthorityUtils;
+import com.umc.mot.purchaseMember.service.PurchaseMemberService;
+import com.umc.mot.sellMember.entity.SellMember;
+import com.umc.mot.sellMember.service.SellMemberService;
+import com.umc.mot.token.entity.Token;
+import com.umc.mot.token.service.TokenService;
 import com.umc.mot.utils.CustomCookie;
 import com.umc.mot.exception.BusinessLogicException;
 import com.umc.mot.exception.ExceptionCode;
 import com.umc.mot.oauth2.jwt.JwtTokenizer;
-import com.umc.mot.oauth2.utils.CustomAuthorityUtils;
 import com.umc.mot.purchaseMember.entity.PurchaseMember;
-import com.umc.mot.purchaseMember.service.PurchaseMemberService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,21 +29,14 @@ import java.io.IOException;
 import java.util.*;
 
 @Configuration
+@AllArgsConstructor
 public class JwtVerificationFilter extends OncePerRequestFilter {
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
-    private final PurchaseMemberService memberService;
+    private final TokenService tokenService;
+    private final SellMemberService sellMemberService;
+    private final PurchaseMemberService purchaseMemberService;
     private final CustomCookie cookie;
-
-    public JwtVerificationFilter(JwtTokenizer jwtTokenizer,
-                                 CustomAuthorityUtils authorityUtils,
-                                 PurchaseMemberService memberService,
-                                 CustomCookie cookie) {
-        this.jwtTokenizer = jwtTokenizer;
-        this.authorityUtils = authorityUtils;
-        this.memberService = memberService;
-        this.cookie = cookie;
-    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -46,7 +44,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
          System.out.println("# JwtVerificationFilter");
         cookie.createCookie(request, response);
 
-        check(request);
+//        check(request);
         try {
             Map<String, Object> claims = verifyJws(request);
             setAuthenticationToContext(claims);
@@ -97,10 +95,20 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         Map<String, Object> refreshClaims = jwtTokenizer.getClaims(jws, base64EncodedSecretKey).getBody();
 
         // 새로운 Access 토큰 발행
-        PurchaseMember member = memberService.findByEmail((String) refreshClaims.get("sub"));
-        String subject = member.getEmail();
+        String subject = (String) refreshClaims.get("sub");
+        Token token;
+        if(subject.contains("@")) { // accessToken의 subject 유효성 검사
+            SellMember sellMember = sellMemberService.verifiedByEmail(subject);
+            token = sellMember.getToken();
+            if(sellMember == null) {
+                PurchaseMember purchaseMember = purchaseMemberService.verifiedByEmail(subject);
+                if(purchaseMember == null) throw new BusinessLogicException(ExceptionCode.PURCHASE_MEMBER_NOT_FOUND);
+                token = purchaseMember.getToken();
+            }
+        } else {
+            token = tokenService.verifiedLoginId(subject);
+        }
         Map<String, Object> claims = new HashMap<>();
-        claims.put("name", member.getName());
         claims.put("roles", authorityUtils.createRoles(subject));
 
         Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());
@@ -113,8 +121,8 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
 
         // 새로 발행된 access-Token 업데이트
         request.getHeader("access-Token");
-        member.setToken("Bearer " + accessToken);
-        memberService.patchMember(member);
+        token.setAccessToken("Bearer " + accessToken);
+        tokenService.patchToken(token);
 
         return "Bearer " + accessToken;
     }
@@ -126,6 +134,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         return authorization == null || !authorization.startsWith("Bearer");
     }
 
+    // access token 유효성 검증
     private Map<String, Object> verifyJws(HttpServletRequest request) {
         String jws = request.getHeader("access-Token").replace("Bearer ", "");
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
@@ -135,20 +144,19 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
     }
 
     private void setAuthenticationToContext(Map<String, Object> claims) {
-        String username = (String) claims.get("username");
         List<GrantedAuthority> authorities = authorityUtils.createAuthorities((List)claims.get("roles"));
-        Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(null, authorities);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     // access-Token을 이용해서 user 정보 조회하기
-    private void check(HttpServletRequest request) {
-        String token = request.getHeader("access-Token");
-        String newToken = (String) request.getAttribute("new-access-Token");
-        Optional<PurchaseMember> user = memberService.findByToken(token);
-        Optional<PurchaseMember> newUser = memberService.findByToken(newToken);
-
-        if(newToken == null) user.orElseThrow(() -> new BusinessLogicException(ExceptionCode.PURCHASE_MEMBER_NOT_FOUND));
-        else newUser.orElseThrow(() -> new BusinessLogicException(ExceptionCode.PURCHASE_MEMBER_NOT_FOUND));
-    }
+//    private void check(HttpServletRequest request) {
+//        String token = request.getHeader("access-Token");
+//        String newToken = (String) request.getAttribute("new-access-Token");
+//        Optional<PurchaseMember> user = tokenService.findByToken(token);
+//        Optional<PurchaseMember> newUser = tokenService.findByToken(newToken);
+//
+//        if(newToken == null) user.orElseThrow(() -> new BusinessLogicException(ExceptionCode.PURCHASE_MEMBER_NOT_FOUND));
+//        else newUser.orElseThrow(() -> new BusinessLogicException(ExceptionCode.PURCHASE_MEMBER_NOT_FOUND));
+//    }
 }

@@ -1,6 +1,6 @@
 package com.umc.mot.oauth2.response;
 
-import codestates.main22.exception.ExceptionCode;
+import com.umc.mot.exception.ExceptionCode;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;

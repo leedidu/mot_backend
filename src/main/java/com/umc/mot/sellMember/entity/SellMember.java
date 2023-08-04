@@ -3,7 +3,7 @@ package com.umc.mot.sellMember.entity;
 
 import com.umc.mot.auditable.Auditable;
 import com.umc.mot.hotel.entity.Hotel;
-import com.umc.mot.oauth2.jwt.token.Token;
+import com.umc.mot.token.entity.Token;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,7 +16,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
-public class SellMember extends Auditable{
+public class SellMember extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

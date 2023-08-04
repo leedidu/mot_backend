@@ -1,45 +1,45 @@
-package com.umc.mot.oauth2;
+package com.umc.mot.oauth2.utils;
 
-import com.stack.stackoverflow.exception.BusinessLogicException;
-import com.stack.stackoverflow.exception.ExceptionCode;
-import com.stack.stackoverflow.user.entity.User;
-import com.stack.stackoverflow.user.repository.UserRepository;
+import com.umc.mot.exception.BusinessLogicException;
+import com.umc.mot.token.entity.Token;
+import com.umc.mot.token.repository.TokenRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import com.umc.mot.exception.ExceptionCode;
 
 import java.util.Collection;
 import java.util.Optional;
 
 @Component
 public class CustomUserDetailsService implements UserDetailsService {
-    private final UserRepository userRepository;
+    private final TokenRepository tokenRepository;
     private final CustomAuthorityUtils authorityUtils;
 
-    public CustomUserDetailsService(UserRepository userRepository, CustomAuthorityUtils authorityUtils) {
-        this.userRepository = userRepository;
+    public CustomUserDetailsService(TokenRepository tokenRepository,
+                                    CustomAuthorityUtils authorityUtils) {
+        this.tokenRepository = tokenRepository;
         this.authorityUtils = authorityUtils;
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> optionalMember = userRepository.findByEmail(username);
-        User findUser = optionalMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+    public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
+        Optional<Token> optionalMember = tokenRepository.findByLoginId(loginId);
+        Token findToken = optionalMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.TOKEN_MEMBER_NOT_FOUND));
 
-        return new CustomUserDetails(findUser);
+        return new CustomUserDetails(findToken);
     }
 
-    private final class CustomUserDetails extends User implements UserDetails {
-        // (1)
-        CustomUserDetails(User user) {
-            setUserId(user.getUserId());
-            setName(user.getName());
-            setEmail(user.getEmail());
-            setPassword(user.getPassword());
-            setRoles(user.getRoles());
-            setUserPage(user.getUserPage());
+
+    private final class CustomUserDetails extends Token implements UserDetails {
+        CustomUserDetails(Token token) {
+            setId(token.getId());
+            setAccessToken(token.getAccessToken());
+            setRefreshToken(token.getRefreshToken());
+            setLoginId(token.getLoginId());
+            setLoginPw(token.getPassword());
         }
 
         @Override
@@ -49,7 +49,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         @Override
         public String getUsername() {
-            return getEmail();
+            return getLoginId();
         }
 
         @Override

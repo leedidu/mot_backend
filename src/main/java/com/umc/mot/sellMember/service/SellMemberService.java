@@ -52,4 +52,11 @@ public class SellMemberService {
         return member.orElseThrow(() -> new BusinessLogicException(ExceptionCode.SELL_MEMBER_NOT_FOUND));
 
     }
+
+    // 이메일을 통한 멤버 검증
+    public SellMember verifiedByEmail(String email) {
+        Optional<SellMember> member = sellMemberRepository.findByEmail(email);
+        return member.orElse(null);
+
+    }
 }

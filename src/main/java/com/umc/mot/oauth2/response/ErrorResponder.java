@@ -1,4 +1,4 @@
-package com.umc.mot.oauth2.utils;
+package com.umc.mot.oauth2.response;
 
 import com.google.gson.Gson;
 import com.umc.mot.oauth2.response.ErrorResponse;

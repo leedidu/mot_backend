@@ -2,8 +2,10 @@ package com.umc.mot.oauth2.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.umc.mot.oauth2.jwt.JwtTokenizer;
-import com.umc.mot.oauth2.login.LoginDto;
+import com.umc.mot.token.dto.LoginDto;
 import com.umc.mot.purchaseMember.service.PurchaseMemberService;
+import com.umc.mot.token.entity.Token;
+import com.umc.mot.token.service.TokenService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,14 +29,14 @@ import java.util.*;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {  // (1)
     private final AuthenticationManager authenticationManager;
     private final JwtTokenizer jwtTokenizer;
-    private final PurchaseMemberService memberService;
+    private final TokenService tokenService;
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager,
                                    JwtTokenizer jwtTokenizer,
-                                   PurchaseMemberService memberService) {
+                                   TokenService tokenService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenizer = jwtTokenizer;
-        this.memberService = memberService;
+        this.tokenService = tokenService;
     }
 
     @SneakyThrows
@@ -116,38 +118,39 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             HttpServletResponse response,
                                             FilterChain chain,
                                             Authentication authResult) throws ServletException, IOException  {
-        User user = (User) authResult.getPrincipal();
+        Token token = (Token) authResult.getPrincipal();
 
-        String accessToken = delegateAccessToken(user);
-        String refreshToken = delegateRefreshToken(user);
+        String accessToken = "Bearer " + delegateAccessToken(token);
+        String refreshToken = delegateRefreshToken(token);
 
-        response.setHeader("Authorization", "Bearer " + accessToken);
+        response.setHeader("Authorization", accessToken);
         response.setHeader("Refresh", refreshToken);
 
         // ------------------------------------------------------------
         // response.body에 내용 생성
-        saveResponseBody(response, user);
+        saveResponseBody(response, token);
 
-        // userPage에 Authorization과 Refresh 설정하기
-        memberService.saveTokenInUserPage(user.getUserPage().getUserPageId(), "Bearer " + accessToken, refreshToken);
+        // token에 Authorization과 Refresh 토큰값 설정하기
+        token.setAccessToken(accessToken);
+        token.setRefreshToken(refreshToken);
+        tokenService.patchToken(token);
         // ------------------------------------------------------------
 
         this.getSuccessHandler().onAuthenticationSuccess(request, response, authResult);
     }
 
     private void saveResponseBody(HttpServletResponse response,
-                                  User user)  throws IOException {
+                                  Token token)  throws IOException {
         System.out.println("!! saveResponseBody");
 
         // response.body 설정
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("utf-8");
 
-        // User를 UserResponseDto로 변환
+        // Token를 UserResponseDto로 변환
         MemberResopnse userResponse = new MemberResopnse(
-                user.getUserId(),
-                user.getName(),
-                user.getEmail()
+                Optional.ofNullable(token.getPurchaseMember().getName()).orElse(token.getSellMember().getName()), // 이름
+                token.getLoginId() // 아이디
         );
 
         // json 형식으로 변환
@@ -156,12 +159,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.getWriter().write(result);
     }
 
-    private String delegateAccessToken(User user) {
+    private String delegateAccessToken(Token token) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("name", user.getName());
-        claims.put("roles", user.getRoles());
+        claims.put("roles", token.getRoles());
 
-        String subject = user.getEmail();
+        String subject = token.getLoginId();
         Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());
 
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
@@ -171,8 +173,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         return accessToken;
     }
 
-    private String delegateRefreshToken(User user) {
-        String subject = user.getEmail();
+    private String delegateRefreshToken(Token token) {
+        String subject = token.getLoginId();
         Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes());
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
 
@@ -185,8 +187,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Setter
     @Getter
     public class MemberResopnse {
-        private long MemberId;
-        private String name;
-        private String email;
+        private String name; // 이름
+        private String LoginId; // 로그인 아이디
     }
 }

@@ -1,12 +1,8 @@
 package com.umc.mot.oauth2.handler;
 
 
-import com.google.gson.Gson;
-import com.sentimentdiary.demo.auth.dto.LoginResponseDto;
-import com.sentimentdiary.demo.member.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
@@ -27,14 +23,8 @@ public class MemberAuthenticationSuccessHandler implements AuthenticationSuccess
     }
 
     private void sendErrorResponse(HttpServletResponse response, Authentication authentication) throws IOException {
-        Gson gson = new Gson();
-        Member member = (Member) authentication.getPrincipal();
-        LoginResponseDto dto = new LoginResponseDto();
-        dto.setMemberId(member.getMemberId());
-        dto.setNickName(member.getNickName());
-        dto.setRole(member.getRoles().get(0));
+        // 인증 성공 후, 로그를 기록하거나 사용자 정보를 response로 전송하는 등의 추가 작업을 할 수 있다.
+        log.info("# Authenticated successfully!");
 
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.getWriter().write(gson.toJson(dto, LoginResponseDto.class));
     }
 }

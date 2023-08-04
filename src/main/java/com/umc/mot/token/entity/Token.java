@@ -1,4 +1,4 @@
-package com.umc.mot.oauth2.jwt.token;
+package com.umc.mot.token.entity;
 
 import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import com.umc.mot.sellMember.entity.SellMember;
@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,16 +20,19 @@ public class Token {
     private int id;
 
     @Column
-    private String accessToken;
+    private String accessToken = "";
 
     @Column
-    private String refreshToken;
+    private String refreshToken = "";
 
-    @Column
+    @Column(nullable = false)
     private String loginId; // 로그인 ID
 
-    @Column
+    @Column(nullable = false)
     private String loginPw; // 로그인 PW
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles = new ArrayList<>();
 
     @OneToOne
     @JoinColumn(name = "SELL_MEMBER_ID")
@@ -36,4 +41,8 @@ public class Token {
     @OneToOne
     @JoinColumn(name = "PURCHASE_MEMBER_ID")
     private PurchaseMember purchaseMember;
+
+    public String getPassword() {
+        return this.loginPw;
+    }
 }

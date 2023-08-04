@@ -4,6 +4,7 @@ import com.umc.mot.exception.BusinessLogicException;
 import com.umc.mot.exception.ExceptionCode;
 import com.umc.mot.purchaseMember.repository.PurchaseMemberRepository;
 import com.umc.mot.purchaseMember.entity.PurchaseMember;
+import com.umc.mot.sellMember.entity.SellMember;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +53,13 @@ public class PurchaseMemberService {
     public PurchaseMember verifiedMember(int purchaseMemberId) {
         Optional<PurchaseMember> member = purchaseMemberRepository.findById(purchaseMemberId);
         return member.orElseThrow(() -> new BusinessLogicException(ExceptionCode.PURCHASE_MEMBER_NOT_FOUND));
+
+    }
+
+    // 이메일을 통한 멤버 검증
+    public PurchaseMember verifiedByEmail(String email) {
+        Optional<PurchaseMember> member = purchaseMemberRepository.findByEmail(email);
+        return member.orElse(null);
 
     }
 }

@@ -1,9 +1,12 @@
 package com.umc.mot.oauth2.utils;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -11,6 +14,12 @@ import java.util.stream.Collectors;
 
 @Component
 public class CustomAuthorityUtils {
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
+
     @Value("${mail.address.admin}")
     private String adminMailAddress;
 
@@ -35,19 +44,11 @@ public class CustomAuthorityUtils {
         return authorities;
     }
 
-    // DB 저장(관리자 및 일반 사용자 구분)
+    // DB 저장 용
     public List<String> createRoles(String email) {
         if (email.equals(adminMailAddress)) {
             return ADMIN_ROLES_STRING;
         }
         return USER_ROLES_STRING;
-    }
-
-    // 권한 생성
-    public String createStudyRoles(Long studyId, boolean isHost) {
-        if(isHost) {
-            return "STUDY" + studyId + "_ADMIN";
-        }
-        return "STUDY" + studyId + "_USER";
     }
 }

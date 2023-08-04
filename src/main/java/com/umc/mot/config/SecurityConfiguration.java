@@ -2,10 +2,11 @@ package com.umc.mot.config;
 
 import com.umc.mot.oauth2.filter.JwtAuthenticationFilter;
 import com.umc.mot.oauth2.handler.*;
+import com.umc.mot.oauth2.utils.CustomAuthorityUtils;
+import com.umc.mot.token.service.TokenService;
 import com.umc.mot.utils.CustomCookie;
 import com.umc.mot.oauth2.filter.JwtVerificationFilter;
 import com.umc.mot.oauth2.jwt.JwtTokenizer;
-import com.umc.mot.oauth2.utils.CustomAuthorityUtils;
 import com.umc.mot.purchaseMember.service.PurchaseMemberService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -27,9 +28,10 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration {
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
-    private final PurchaseMemberService memberService;
+    private final TokenService tokenService;
     private final CustomCookie cookie;
     private final OAuth2MemberSuccessHandler oAuth2MemberSuccessHandler;
+    private final JwtVerificationFilter jwtVerificationFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -53,7 +55,7 @@ public class SecurityConfiguration {
                 .invalidateHttpSession(true) // 로그아웃 성공 시 세션 제거
                 .clearAuthentication(true) // 로그아웃 시 권한 제거
                 .permitAll() // 모두 허용
-                .logoutSuccessHandler(new MemberLogoutSuccessHandler(memberService)) // 로그아웃 성공 후 핸들러
+                .logoutSuccessHandler(new MemberLogoutSuccessHandler(tokenService)) // 로그아웃 성공 후 핸들러
                 .and()
                 .authorizeHttpRequests(authorize -> authorize // url authorization 전체 추가
 //                                .antMatchers(HttpMethod.POST, "/*/coffees").hasRole("ADMIN")
@@ -85,13 +87,13 @@ public class SecurityConfiguration {
             // 로그인
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
-            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer, refreshTokenRepository);
+            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer, tokenService);
             jwtAuthenticationFilter.setFilterProcessesUrl("/login");          // login url
 
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler());
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
 
-            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils, memberService, cookie); // google OAuth2
+//            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils, tokenService, cookie); // google OAuth2
 
             builder
                     .addFilter(jwtAuthenticationFilter) // 로그인

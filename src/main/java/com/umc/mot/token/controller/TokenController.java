@@ -43,7 +43,7 @@ public class TokenController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //
+    // test
     @GetMapping("/test")
     public ResponseEntity getTest() {
         TokenResponseDto.Response response = tokenMapper.tokenToTokenResponseDto(tokenService.test());

@@ -143,9 +143,16 @@ public class TokenService {
 
     // 아이디 중복 확인
     public boolean useIdCheck(String loginId) {
-        boolean result = true;
+//        final boolean result = true;
         Optional<Token> token = tokenRepository.findByLoginId(loginId);
-        if(Optional.ofNullable(token).orElse(null) == null) return true;
-        else return false; // 아이디 사용 불가능
+        System.out.println("!! token id : "  + token.orElse(new Token()).getId());
+        if(token.orElse(new Token()).getId() == 0) return true; // 아이디가 존재하지 않으므로 아이디 사용 가능
+        else return false; // 아이디가 존재함으로 아이디 사용 불가능
+//        Optional.ofNullable(token).ifPresent(token1 -> {
+//            result = false;
+//            return token.get();
+//        });
+//
+//        return result;
     }
 }

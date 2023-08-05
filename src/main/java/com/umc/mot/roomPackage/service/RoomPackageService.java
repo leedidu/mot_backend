@@ -34,5 +34,22 @@ public class RoomPackageService {
         return roomRepository.save(room);
     }
 
+/*
+    public Room roomPackage(int roomPackageId, int roomId, List<Integer> packageIds) {
+        Room room = roomService.findRoomId(roomId);
 
+        // 여러 개의 packageId를 순회하며 각각의 패키지를 추가
+        for (Integer packageId : packageIds) {
+            Package pa = packageService.findPackage(packageId);
+            if (room.getHotel().equals(pa.getHotel())) {
+                // 여기서 패키지를 room에 추가하는 로직을 작성
+            } else {
+                // 다른 호텔의 패키지는 처리할 수 없는 경우에 대한 로직
+            }
+        }
+
+        return roomRepository.save(room);
+    }
+}
+ */
 }

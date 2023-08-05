@@ -31,10 +31,6 @@ public class CustomCookie {
             createCookie(response, "urlProtocol", url[0]); // protocol 저장하기(ex. http)
             createCookie(response, "urlHost", url[1].split("//")[1].split("/")[0]); // host 저장하기
             if (url.length == 3) createCookie(response, "urlPort", url[2].split("/")[0]); // port 번호가 있으면 쿠키값 생성
-
-            createCookie(response, "urlProtocol", url[0]); // protocol 저장하기(ex. http)
-            createCookie(response, "urlHost", url[1]); // host 저장하기
-            if (url.length == 3) createCookie(response, "urlPort", url[2]); // port 번호가 있으면 쿠키값 생성
         }
     }
 

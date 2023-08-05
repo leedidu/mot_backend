@@ -28,24 +28,35 @@ public class TokenService {
     private final ApplicationEventPublisher publisher;
     private final PasswordEncoder passwordEncoder;
 
-    // 회원가입
+    // 회원가입(아이디, 비밀번호)
     public Token createToken(Token token, String phone) {
-        token = tokenRepository.save(token);
-
         // 구매자 회원 생성
-        PurchaseMember purchaseMember = new PurchaseMember();
-        purchaseMember.setName("nickname" + token.getId());
-        purchaseMember.setToken(token);
-        purchaseMember = purchaseMemberService.createPurchaseMember(purchaseMember);
+        PurchaseMember purchaseMember = purchaseMemberService.createPurchaseMember(token, phone);
 
         // 토큰 생성
-        token.setRoles(authorityUtils.createRoles(purchaseMember.getName())); // 권한 설정
+        token.setRoles(authorityUtils.createRoles("what@email.com")); // 권한 설정
         token.setLoginId(token.getLoginId());
         token.setLoginPw(passwordEncoder.encode(token.getLoginPw())); // 비밀번호 인코딩
+        token.setPurchaseMember(purchaseMember);
         token = tokenRepository.save(token);
 
         publisher.publishEvent(new UserRegistrationApplicationEvent(token));
         return token;
+    }
+
+    // 회원가입(oauth - google)
+    public Token createToken(PurchaseMember purchaseMember) {
+        Token token = new Token();
+        token.setRoles(authorityUtils.createRoles(purchaseMember.getEmail())); // 권한 설정
+        token.setPurchaseMember(purchaseMember);
+        token = tokenRepository.save(token);
+
+        publisher.publishEvent(new UserRegistrationApplicationEvent(token));
+        return token;
+    }
+
+    public Token test() {
+        return getLoginToken();
     }
 
     // 로그인한 회원의 토큰 가져오기
@@ -132,8 +143,9 @@ public class TokenService {
 
     // 아이디 중복 확인
     public boolean useIdCheck(String loginId) {
+        boolean result = true;
         Optional<Token> token = tokenRepository.findByLoginId(loginId);
-        if(token == null) return true; // 아이디 사용 가능
+        if(Optional.ofNullable(token).orElse(null) == null) return true;
         else return false; // 아이디 사용 불가능
     }
 }

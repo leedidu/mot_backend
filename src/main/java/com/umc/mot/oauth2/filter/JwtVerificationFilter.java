@@ -28,8 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
-@Configuration
-@AllArgsConstructor
 public class JwtVerificationFilter extends OncePerRequestFilter {
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
@@ -37,6 +35,21 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
     private final SellMemberService sellMemberService;
     private final PurchaseMemberService purchaseMemberService;
     private final CustomCookie cookie;
+
+    public JwtVerificationFilter(JwtTokenizer jwtTokenizer,
+                                 CustomAuthorityUtils authorityUtils,
+                                 TokenService tokenService,
+                                 SellMemberService sellMemberService,
+                                 PurchaseMemberService purchaseMemberService,
+                                 CustomCookie cookie) {
+        System.out.println("!!!! test");
+        this.jwtTokenizer = jwtTokenizer;
+        this.authorityUtils = authorityUtils;
+        this.tokenService = tokenService;
+        this.sellMemberService = sellMemberService;
+        this.purchaseMemberService = purchaseMemberService;
+        this.cookie = cookie;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -73,7 +86,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         try {
             // 새로운 AccessToken 발생 및 전달
             String accessToken = delegateAccessTokenByRefreshToken(request);
-            response.setHeader("access-Token", accessToken);
+            response.setHeader("Authorization", accessToken);
             request.setAttribute("new-access-Token", accessToken);
         } catch (SignatureException se) {
             request.setAttribute("exception", se);
@@ -90,7 +103,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
     // refresh-Token을 이용한 access-Token 재발행
     private String delegateAccessTokenByRefreshToken(HttpServletRequest request) {
         // Refresh 토큰 유효성 검증
-        String jws = request.getHeader("refresh-Token");
+        String jws = request.getHeader("Refresh");
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
         Map<String, Object> refreshClaims = jwtTokenizer.getClaims(jws, base64EncodedSecretKey).getBody();
 
@@ -120,7 +133,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         setAuthenticationToContext(newAccessTokenclaims);
 
         // 새로 발행된 access-Token 업데이트
-        request.getHeader("access-Token");
+        request.getHeader("Authorization");
         token.setAccessToken("Bearer " + accessToken);
         tokenService.patchToken(token);
 
@@ -129,14 +142,15 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String authorization = request.getHeader("access-Token");
+        String authorization = request.getHeader("Authorization");
+        System.out.println("!! Access : " + authorization);
 
         return authorization == null || !authorization.startsWith("Bearer");
     }
 
     // access token 유효성 검증
     private Map<String, Object> verifyJws(HttpServletRequest request) {
-        String jws = request.getHeader("access-Token").replace("Bearer ", "");
+        String jws = request.getHeader("Authorization").replace("Bearer ", "");
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
         Map<String, Object> claims = jwtTokenizer.getClaims(jws, base64EncodedSecretKey).getBody();
 
@@ -144,8 +158,10 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
     }
 
     private void setAuthenticationToContext(Map<String, Object> claims) {
+        System.out.println("!!!!!");
+        claims.keySet().stream().forEach(System.out::println);
         List<GrantedAuthority> authorities = authorityUtils.createAuthorities((List)claims.get("roles"));
-        Authentication authentication = new UsernamePasswordAuthenticationToken(null, authorities);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(claims.get("sub"), null, authorities);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 

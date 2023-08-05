@@ -44,13 +44,13 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
         String email = String.valueOf(oAuth2PurchaseMember.getAttributes().get("email"));
         if(email.equals("null")) email = String.valueOf(oAuth2PurchaseMember.getAttributes().get("html_url"));
-        Token token;
+        Optional<Token> token = null;
         PurchaseMember purchaseMember = purchaseMemberService.verifiedByEmail(email);
         SellMember sellMember = null;
         if(purchaseMember == null) {
             sellMember = sellMemberService.verifiedByEmail(email);
-            token = sellMember.getToken();
-        } else token = purchaseMember.getToken();
+            if(sellMember != null) token = Optional.ofNullable(sellMember.getToken());
+        } else token = Optional.ofNullable(purchaseMember.getToken());
 //        PurchaseMember purchaseMember = purchaseMemberService.verifiedByEmail(email);
 //        SellMember sellMember = sellMemberService.verifiedByEmail(email);
         List<String> authorities = authorityUtils.createRoles(email);
@@ -65,6 +65,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
             String name = String.valueOf(oAuth2PurchaseMember.getAttributes().get("name"));
             String imgUrl = String.valueOf(oAuth2PurchaseMember.getAttributes().get("picture"));
             purchaseMember = savePurchaseMember(email, name, imgUrl);
+            token = Optional.ofNullable(saveToken(purchaseMember));
         }
 
         // 콘솔 출력 코드
@@ -72,12 +73,16 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
 //        oAuth2PurchaseMember.getAuthorities().stream().forEach(grantedAuthority -> System.out.println("!! granted : " + grantedAuthority.getAuthority()));
 //        System.out.println("!! url : " + request.getRequestURI());
 
-        redirect(request, response, email, token, authorities);
+        redirect(request, response, email, token.get(), authorities);
     }
 
     private PurchaseMember savePurchaseMember(String email, String name, String imgUrl) {
         PurchaseMember member = new PurchaseMember(email, name, imgUrl);
         return purchaseMemberService.createPurchaseMember(member);
+    }
+
+    private Token saveToken(PurchaseMember purchaseMember) {
+        return tokenService.createToken(purchaseMember);
     }
 
     private void redirect(HttpServletRequest request, HttpServletResponse response,

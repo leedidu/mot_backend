@@ -3,6 +3,7 @@ package com.umc.mot.config;
 import com.umc.mot.oauth2.filter.JwtAuthenticationFilter;
 import com.umc.mot.oauth2.handler.*;
 import com.umc.mot.oauth2.utils.CustomAuthorityUtils;
+import com.umc.mot.sellMember.service.SellMemberService;
 import com.umc.mot.token.service.TokenService;
 import com.umc.mot.utils.CustomCookie;
 import com.umc.mot.oauth2.filter.JwtVerificationFilter;
@@ -29,9 +30,10 @@ public class SecurityConfiguration {
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
     private final TokenService tokenService;
+    private final SellMemberService sellMemberService;
+    private final PurchaseMemberService purchaseMemberService;
     private final CustomCookie cookie;
     private final OAuth2MemberSuccessHandler oAuth2MemberSuccessHandler;
-    private final JwtVerificationFilter jwtVerificationFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -93,7 +95,7 @@ public class SecurityConfiguration {
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler());
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
 
-//            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils, tokenService, cookie); // google OAuth2
+            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils, tokenService, sellMemberService, purchaseMemberService, cookie); // google OAuth2
 
             builder
                     .addFilter(jwtAuthenticationFilter) // 로그인

@@ -4,6 +4,8 @@ import com.umc.mot.exception.BusinessLogicException;
 import com.umc.mot.exception.ExceptionCode;
 import com.umc.mot.purchaseMember.repository.PurchaseMemberRepository;
 import com.umc.mot.purchaseMember.entity.PurchaseMember;
+import com.umc.mot.sellMember.entity.SellMember;
+import com.umc.mot.token.entity.Token;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

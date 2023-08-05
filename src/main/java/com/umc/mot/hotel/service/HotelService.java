@@ -9,6 +9,7 @@ import com.umc.mot.message.repository.MessageRepository;
 import com.umc.mot.sellMember.entity.SellMember;
 import com.umc.mot.sellMember.repository.SellMemberRepository;
 import com.umc.mot.sellMember.service.SellMemberService;
+import com.umc.mot.token.service.TokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,14 +22,17 @@ public class HotelService {
     private final HotelRepository hotelRepository;
     private final SellMemberRepository sellMemberRepository;
     private final SellMemberService sellMemberService;
+    private final TokenService tokenService;
 
     //Create
-    public Hotel createHotel(Hotel hotel,int sellMemberId) {
+    public Hotel createHotel(Hotel hotel,String token) {
 
-        SellMember member1 = sellMemberService.verifiedMember(sellMemberId);
+        SellMember sellMember = tokenService.getLoginSellMember();
+        if (!sellMember.getToken().equals(token)) {
+            throw new SecurityException("Invalid token");
+        }
+
         return hotelRepository.save(hotel);
-
-
 
     }
 

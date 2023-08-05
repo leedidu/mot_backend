@@ -30,8 +30,8 @@ public class HotelController {
     // Create
     @PostMapping("/{sellMember-id}")
     public ResponseEntity postHotel(@Valid @RequestBody HotelRequestDto.Post post
-            ,@Positive @PathVariable("sellMember-id") int sellMemberId){
-        Hotel hotel = hotelService.createHotel(hotelMapper.HotelRequestDtoPostToHotel(post),sellMemberId);
+            ,@RequestHeader("Authorization") String token){
+        Hotel hotel = hotelService.createHotel(hotelMapper.HotelRequestDtoPostToHotel(post),token);
         HotelResponseDto.Response response=hotelMapper.HotelToHotelResponseDto(hotel);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);

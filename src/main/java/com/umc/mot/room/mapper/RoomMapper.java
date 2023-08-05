@@ -12,4 +12,3 @@ public interface RoomMapper {
     Room roomRequestDtoPostToRoom(RoomRequestDto.Post post);
     Room roomRequestDtoPatchToRoom(RoomRequestDto.Patch patch);
 }
-

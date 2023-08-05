@@ -3,6 +3,7 @@ package com.umc.mot.sellMember.entity;
 
 import com.umc.mot.auditable.Auditable;
 import com.umc.mot.hotel.entity.Hotel;
+import com.umc.mot.token.entity.Token;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,14 +16,11 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
-public class SellMember extends Auditable{
+public class SellMember extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int sellMemberId;  //판매자회원식별자
-
-    @Column
-    private String id; //회원 아이디
 
     @Column
     private String name; //회원 이름
@@ -37,14 +35,11 @@ public class SellMember extends Auditable{
     private String phone; //회원 전화번호
 
     @Column
-    private String pw; //회원 비밀번호
-
-    @Column
     private String host; //회원역할
-
-    @Column
-    private String token; //회원 토큰
 
     @OneToMany(mappedBy = "sellMember", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Hotel> hotels = new ArrayList<>();
+
+    @OneToOne(mappedBy = "sellMember", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private Token token;
 }

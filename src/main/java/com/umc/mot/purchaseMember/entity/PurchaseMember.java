@@ -46,7 +46,7 @@ public class PurchaseMember extends Auditable {
     @OneToMany(mappedBy = "purchaseMember", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Reserve> reserves = new ArrayList<>();
 
-    @OneToOne(mappedBy = "PurchaseMember", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne(mappedBy = "purchaseMember", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Token token;
 
     public PurchaseMember(String email, String name, String imageUrl) {

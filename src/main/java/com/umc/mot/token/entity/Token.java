@@ -25,10 +25,10 @@ public class Token {
     @Column
     private String refreshToken = "";
 
-    @Column(nullable = false)
+    @Column(unique = true)
     private String loginId; // 로그인 ID
 
-    @Column(nullable = false)
+    @Column
     private String loginPw; // 로그인 PW
 
     @ElementCollection(fetch = FetchType.EAGER)

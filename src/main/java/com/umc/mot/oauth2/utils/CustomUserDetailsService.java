@@ -40,6 +40,8 @@ public class CustomUserDetailsService implements UserDetailsService {
             setRefreshToken(token.getRefreshToken());
             setLoginId(token.getLoginId());
             setLoginPw(token.getPassword());
+            setPurchaseMember(token.getPurchaseMember());
+            setSellMember(token.getSellMember());
         }
 
         @Override

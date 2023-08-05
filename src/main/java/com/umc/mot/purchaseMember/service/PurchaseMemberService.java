@@ -5,6 +5,7 @@ import com.umc.mot.exception.ExceptionCode;
 import com.umc.mot.purchaseMember.repository.PurchaseMemberRepository;
 import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import com.umc.mot.sellMember.entity.SellMember;
+import com.umc.mot.token.entity.Token;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,15 @@ public class PurchaseMemberService {
     public PurchaseMember createPurchaseMember(PurchaseMember purchasemember) {
 
         return purchaseMemberRepository.save(purchasemember);
+    }
+
+    public PurchaseMember createPurchaseMember(Token token, String phone) {
+        PurchaseMember purchaseMember = new PurchaseMember();
+        purchaseMember.setName("nickname" + (token.getId()+1));
+        purchaseMember.setPhone(phone);
+//        purchaseMember.setToken(token);
+
+        return purchaseMemberRepository.save(purchaseMember);
     }
 
     // Read

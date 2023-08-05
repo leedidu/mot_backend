@@ -79,39 +79,39 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         return authenticationManager.authenticate(authenticationToken);
     }
 
-    public String getBody(HttpServletRequest request) throws IOException {
-
-        String body = null;
-        StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader bufferedReader = null;
-
-        try {
-            InputStream inputStream = request.getInputStream();
-            if (inputStream != null) {
-                System.out.println("!! inputStream");
-                bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                char[] charBuffer = new char[128];
-                int bytesRead = -1;
-                while ((bytesRead = bufferedReader.read(charBuffer)) > 0) {
-                    System.out.println("!1 char Buffer : " + charBuffer);
-                    stringBuilder.append(charBuffer, 0, bytesRead);
-                }
-            }
-        } catch (IOException ex) {
-            throw ex;
-        } finally {
-            if (bufferedReader != null) {
-                try {
-                    bufferedReader.close();
-                } catch (IOException ex) {
-                    throw ex;
-                }
-            }
-        }
-
-        body = stringBuilder.toString();
-        return body;
-    }
+//    public String getBody(HttpServletRequest request) throws IOException {
+//
+//        String body = null;
+//        StringBuilder stringBuilder = new StringBuilder();
+//        BufferedReader bufferedReader = null;
+//
+//        try {
+//            InputStream inputStream = request.getInputStream();
+//            if (inputStream != null) {
+//                System.out.println("!! inputStream");
+//                bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+//                char[] charBuffer = new char[128];
+//                int bytesRead = -1;
+//                while ((bytesRead = bufferedReader.read(charBuffer)) > 0) {
+//                    System.out.println("!1 char Buffer : " + charBuffer);
+//                    stringBuilder.append(charBuffer, 0, bytesRead);
+//                }
+//            }
+//        } catch (IOException ex) {
+//            throw ex;
+//        } finally {
+//            if (bufferedReader != null) {
+//                try {
+//                    bufferedReader.close();
+//                } catch (IOException ex) {
+//                    throw ex;
+//                }
+//            }
+//        }
+//
+//        body = stringBuilder.toString();
+//        return body;
+//    }
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request,
@@ -148,8 +148,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setCharacterEncoding("utf-8");
 
         // Token를 UserResponseDto로 변환
+        if(token == null) System.out.println("!!");
+        System.out.println("!! " + token.getId());
+        System.out.println("!! " + token.getLoginId());
+        System.out.println("!! pur : " + token.getPurchaseMember().getPurchaseMemberId());
+        System.out.println("!! pur : " + token.getPurchaseMember().getName());
+        System.out.println("!! sell : " + token.getSellMember());
         MemberResopnse userResponse = new MemberResopnse(
-                Optional.ofNullable(token.getPurchaseMember().getName()).orElse(token.getSellMember().getName()), // 이름
+                token.getPurchaseMember() != null ? token.getPurchaseMember().getName() : token.getSellMember().getName(), // 이름
                 token.getLoginId() // 아이디
         );
 

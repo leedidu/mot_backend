@@ -1,6 +1,7 @@
 package com.umc.mot.token.controller;
 
 
+import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import com.umc.mot.token.dto.TokenRequestDto;
 import com.umc.mot.token.dto.TokenResponseDto;
 import com.umc.mot.token.dto.SigninDto;
@@ -17,7 +18,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 
 @RestController
-@RequestMapping("/check")
+@RequestMapping("/token")
 @Validated
 @AllArgsConstructor
 public class TokenController {
@@ -25,7 +26,7 @@ public class TokenController {
     private final TokenMapper tokenMapper;
 
     // Create - 회원가입
-    @PostMapping
+    @PostMapping("/signin")
     public ResponseEntity postToken(@Valid @RequestBody SigninDto signinDto) {
         Token token = tokenService.createToken(tokenMapper.signinDtoToToken(signinDto), signinDto.getPhone());
         TokenResponseDto.Response response = tokenMapper.tokenToTokenResponseDto(token);
@@ -34,9 +35,25 @@ public class TokenController {
     }
 
     // Read
+    // 아이디 중복 확인
     @GetMapping("/{loginId}")
     public ResponseEntity getCheckId(@PathVariable("loginId") String loginId) {
         TokenResponseDto.checkId response = new TokenResponseDto.checkId(tokenService.useIdCheck(loginId));
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    //
+    @GetMapping("/test")
+    public ResponseEntity getTest() {
+        TokenResponseDto.Response response = tokenMapper.tokenToTokenResponseDto(tokenService.test());
+
+
+
+        PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
+        System.out.println("!! purchaseMember : ");
+        System.out.println(purchaseMember.getPurchaseMemberId());
+        System.out.println(purchaseMember.getName());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

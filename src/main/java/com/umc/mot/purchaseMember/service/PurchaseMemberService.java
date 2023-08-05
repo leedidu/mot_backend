@@ -5,7 +5,9 @@ import com.umc.mot.exception.ExceptionCode;
 import com.umc.mot.purchaseMember.repository.PurchaseMemberRepository;
 import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import com.umc.mot.sellMember.entity.SellMember;
+import com.umc.mot.sellMember.repository.SellMemberRepository;
 import com.umc.mot.token.entity.Token;
+import com.umc.mot.token.service.TokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -75,7 +77,7 @@ public class PurchaseMemberService {
 
     }
 
-
+    //구매자 연관관계 끊고 판매자로
     public SellMember PurchaseMemberTosellMember(String email) {
         PurchaseMember member1 = verifiedByEmail(email);//이메일로 멤버 검증
         SellMember sellMember = new SellMember();

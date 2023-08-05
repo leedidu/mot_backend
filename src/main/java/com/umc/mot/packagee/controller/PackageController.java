@@ -34,7 +34,7 @@ public class PackageController {
     @PostMapping("/hotel-id")
     public ResponseEntity postPackage(@Valid @RequestBody PackageRequestDto.Post post,
                                       @Positive @PathVariable("hotel-id") int hotelId) {
-        Package pa= packageService.createPackage(packageMapper.PackageRequestDtoPostToPackage(post));
+        Package pa= packageService.createPackage(packageMapper.PackageRequestDtoPostToPackage(post),hotelId);
         PackageResponseDto.Response response = packageMapper.PackageToPackageResponseDto(pa);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);

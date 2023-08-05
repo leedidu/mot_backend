@@ -2,6 +2,9 @@ package com.umc.mot.packagee.service;
 
 import com.umc.mot.exception.BusinessLogicException;
 import com.umc.mot.exception.ExceptionCode;
+import com.umc.mot.hotel.entity.Hotel;
+import com.umc.mot.hotel.repository.HotelRepository;
+import com.umc.mot.hotel.service.HotelService;
 import com.umc.mot.packagee.entity.Package;
 import com.umc.mot.packagee.repository.PackageRepository;
 import com.umc.mot.sellMember.entity.SellMember;
@@ -15,10 +18,11 @@ import java.util.Optional;
 public class PackageService {
 
     private final PackageRepository packageRepository;
+    private final HotelService hotelService;
 
     //Create
-    public Package createPackage(Package pa) {
-
+    public Package createPackage(Package pa,int hotelId) {
+        Hotel hotel = hotelService.verifiedHotel(hotelId);
         return packageRepository.save(pa);
     }
 

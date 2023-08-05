@@ -20,6 +20,7 @@ public class HotelRequestDto {
         private String transfer; //이동수단
         private String address; //주소
         private String info; //기본정보
+        private String distance;
     }
 
     @Getter
@@ -36,5 +37,6 @@ public class HotelRequestDto {
         private String transfer; //이동수단
         private String address; //주소
         private String info; //기본정보
+        private String distance;
     }
 }

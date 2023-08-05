@@ -2,6 +2,8 @@ package com.umc.mot.room.service;
 
 import com.umc.mot.exception.BusinessLogicException;
 import com.umc.mot.exception.ExceptionCode;
+import com.umc.mot.hotel.entity.Hotel;
+import com.umc.mot.hotel.service.HotelService;
 import com.umc.mot.room.entity.Room;
 import com.umc.mot.room.repository.RoomRepository;
 import com.umc.mot.sellMember.entity.SellMember;
@@ -13,13 +15,15 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class RoomService {
+public class RoomService{
 
     private final RoomRepository roomRepository;
+    private final HotelService hotelService;
 
     //Create
-    public Room createRoom(Room room) {
+    public Room createRoom(Room room,int hotelId) {
 
+        Hotel hotel = hotelService.verifiedHotel(hotelId);
         return roomRepository.save(room);
     }
 

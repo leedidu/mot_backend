@@ -20,13 +20,14 @@ import javax.validation.constraints.Positive;
 @AllArgsConstructor
 public class RoomController {
 
-    private final RoomService roomService;
+    private final com.umc.mot.room.service.RoomService roomService;
     private final RoomMapper roomMapper;
 
     // Create
-    @PostMapping
-    public ResponseEntity postRoom(@Valid @RequestBody RoomRequestDto.Post post) {
-        Room room = roomService.createRoom(roomMapper.roomRequestDtoPostToRoom(post));
+    @PostMapping("/{hotel-id}")
+    public ResponseEntity postRoom(@Valid @RequestBody RoomRequestDto.Post post
+                                   ,@Positive @PathVariable("hotel-id") int hotelId) {
+        Room room = roomService.createRoom(roomMapper.roomRequestDtoPostToRoom(post),hotelId);
         RoomResponseDto.Response response = roomMapper.roomToRoomResponseDto(room);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -34,7 +35,8 @@ public class RoomController {
 
     // Read
     @GetMapping
-    public ResponseEntity getRoom(@Positive @RequestParam int roomId) {
+    public ResponseEntity getRoom(@Positive @RequestParam int roomId,
+                                  @RequestBody RoomRequestDto.Patch patch) {
         Room room = roomService.findRoomId(roomId);
         RoomResponseDto.Response response=roomMapper.roomToRoomResponseDto(room);
 

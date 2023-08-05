@@ -6,6 +6,9 @@ import com.umc.mot.hotel.entity.Hotel;
 import com.umc.mot.hotel.repository.HotelRepository;
 import com.umc.mot.message.entity.Message;
 import com.umc.mot.message.repository.MessageRepository;
+import com.umc.mot.sellMember.entity.SellMember;
+import com.umc.mot.sellMember.repository.SellMemberRepository;
+import com.umc.mot.sellMember.service.SellMemberService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +19,16 @@ import java.util.Optional;
 public class HotelService {
 
     private final HotelRepository hotelRepository;
+    private final SellMemberRepository sellMemberRepository;
+    private final SellMemberService sellMemberService;
 
     //Create
-    public Hotel createHotel(Hotel hotel) {
+    public Hotel createHotel(Hotel hotel,int sellMemberId) {
 
+        SellMember member1 = sellMemberService.verifiedMember(sellMemberId);
         return hotelRepository.save(hotel);
+
+
 
     }
 

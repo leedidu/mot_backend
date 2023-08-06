@@ -9,6 +9,13 @@ import java.time.LocalDate;
 public class TokenRequestDto {
     @Getter
     @AllArgsConstructor
+    public static class CheckRandomNumber {
+        private String phoneNumber;
+        private int randomNumber;
+    }
+
+    @Getter
+    @AllArgsConstructor
     public static class Post {
         private int id; //예약 식별아이디
         private LocalDate checkIn; //체크인

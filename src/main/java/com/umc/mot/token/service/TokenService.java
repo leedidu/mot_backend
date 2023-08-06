@@ -8,8 +8,10 @@ import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import com.umc.mot.purchaseMember.service.PurchaseMemberService;
 import com.umc.mot.sellMember.entity.SellMember;
 import com.umc.mot.sellMember.service.SellMemberService;
+import com.umc.mot.token.entity.CertificationPhone;
 import com.umc.mot.token.entity.Token;
 import com.umc.mot.token.repository.TokenRepository;
+import com.umc.mot.utils.SendMessage;
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,6 +29,7 @@ public class TokenService {
     private final CustomAuthorityUtils authorityUtils;
     private final ApplicationEventPublisher publisher;
     private final PasswordEncoder passwordEncoder;
+    private final SendMessage sendMessage;
 
     // 회원가입(아이디, 비밀번호)
     public Token createToken(Token token, String phone) {
@@ -142,17 +145,10 @@ public class TokenService {
     }
 
     // 아이디 중복 확인
-    public boolean useIdCheck(String loginId) {
-//        final boolean result = true;
+    public boolean checkLoginId(String loginId) {
         Optional<Token> token = tokenRepository.findByLoginId(loginId);
         System.out.println("!! token id : "  + token.orElse(new Token()).getId());
         if(token.orElse(new Token()).getId() == 0) return true; // 아이디가 존재하지 않으므로 아이디 사용 가능
         else return false; // 아이디가 존재함으로 아이디 사용 불가능
-//        Optional.ofNullable(token).ifPresent(token1 -> {
-//            result = false;
-//            return token.get();
-//        });
-//
-//        return result;
     }
 }

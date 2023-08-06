@@ -14,7 +14,8 @@ public enum ExceptionCode {
     HOTEL_NOT_FOUND(404,"Hotel not found"),
     HEART_NOT_FOUND(404,"Heart not found"),
     COMMENT_NOT_FOUND(404,"Comment not found"),
-    CATEGORY_NOT_FOUND(404,"Category not found");
+    CATEGORY_NOT_FOUND(404,"Category not found"),
+    CERTIFICATION_NUMBER(404, "Certification Number not found");
 
     @Getter
     private double status;

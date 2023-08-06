@@ -5,10 +5,13 @@ import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import com.umc.mot.token.dto.TokenRequestDto;
 import com.umc.mot.token.dto.TokenResponseDto;
 import com.umc.mot.token.dto.SigninDto;
+import com.umc.mot.token.entity.CertificationPhone;
 import com.umc.mot.token.entity.Token;
 import com.umc.mot.token.mapper.TokenMapper;
 import com.umc.mot.token.service.TokenService;
+import com.umc.mot.utils.SendMessage;
 import lombok.AllArgsConstructor;
+import lombok.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -18,14 +21,16 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 
 @RestController
-@RequestMapping("/token")
+//@RequestMapping("/token")
 @Validated
 @AllArgsConstructor
 public class TokenController {
     private final TokenService tokenService;
+    private final SendMessage sendMessage;
     private final TokenMapper tokenMapper;
 
-    // Create - 회원가입
+    // Create
+    // 회원가입
     @PostMapping("/signin")
     public ResponseEntity postToken(@Valid @RequestBody SigninDto signinDto) {
         Token token = tokenService.createToken(tokenMapper.signinDtoToToken(signinDto), signinDto.getPhone());
@@ -34,28 +39,37 @@ public class TokenController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    // 인증문자 전송
+    @PostMapping("/send-message/{phone-number}")
+    public ResponseEntity postMessage(@PathVariable("phone-number") String phoneNumbe) {
+        CertificationPhone certificationPhone =  sendMessage.sendMessage(phoneNumbe);
+        TokenResponseDto.sendMessage response = tokenMapper.certificationPhoneToTokenResponseDtoSendMessage(certificationPhone);
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
     // Read
     // 아이디 중복 확인
-    @GetMapping("/{loginId}")
-    public ResponseEntity getCheckId(@PathVariable("loginId") String loginId) {
-        TokenResponseDto.checkId response = new TokenResponseDto.checkId(tokenService.useIdCheck(loginId));
+    @GetMapping("/check-login-id/{loginId}")
+    public ResponseEntity getCheckLoginId(@PathVariable("loginId") String loginId) {
+        TokenResponseDto.check response = new TokenResponseDto.check(tokenService.checkLoginId(loginId));
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    // test
-    @GetMapping("/test")
-    public ResponseEntity getTest() {
-        TokenResponseDto.Response response = tokenMapper.tokenToTokenResponseDto(tokenService.test());
-
-
-
-        PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
-        System.out.println("!! purchaseMember : ");
-        System.out.println(purchaseMember.getPurchaseMemberId());
-        System.out.println(purchaseMember.getName());
+    // 인증번호 확인
+    @GetMapping("/check-random-number")
+    public ResponseEntity getCheckRandomNumber(@Valid @RequestBody TokenRequestDto.CheckRandomNumber request) {
+        CertificationPhone certificationPhone = tokenMapper.tokenRequestDtoCheckRandomNumberToCertificationPhone(request);
+        TokenResponseDto.check response = new TokenResponseDto.check(sendMessage.checkCertificationNumber(certificationPhone));
 
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    // 잔고 확인
+    @GetMapping("/get-balance")
+    public ResponseEntity getBalance() {
+        return new ResponseEntity<>(sendMessage.getBalance(), HttpStatus.OK);
     }
 
     @GetMapping

@@ -27,8 +27,8 @@ public class HotelService {
     //Create
     public Hotel createHotel(Hotel hotel,String token) {
 
-        SellMember sellMember = tokenService.getLoginSellMember();
-        if (!sellMember.getToken().equals(token)) {
+        SellMember sellM = tokenService.getLoginSellMember();
+        if (!sellM.getToken().equals(token)) {
             throw new SecurityException("Invalid token");
         }
 

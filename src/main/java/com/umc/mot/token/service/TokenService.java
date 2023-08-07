@@ -35,11 +35,10 @@ public class TokenService {
     // 회원가입(아이디, 비밀번호)
     public Token createToken(Token token, String phone) {
         // 구매자 회원 생성
-        PurchaseMember purchaseMember = purchaseMemberService.createPurchaseMember(token, phone);
+        PurchaseMember purchaseMember = purchaseMemberService.createPurchaseMember(token);
 
         // 토큰 생성
         token.setRoles(authorityUtils.createRoles("what@email.com")); // 권한 설정
-        token.setLoginId(token.getLoginId());
         token.setLoginPw(passwordEncoder.encode(token.getLoginPw())); // 비밀번호 인코딩
         token.setPurchaseMember(purchaseMember);
         token = tokenRepository.save(token);
@@ -119,6 +118,7 @@ public class TokenService {
         Optional.ofNullable(token.getRefreshToken()).ifPresent(findToken::setRefreshToken);
         Optional.ofNullable(token.getLoginId()).ifPresent(findToken::setLoginId);
         Optional.ofNullable(token.getLoginPw()).ifPresent(findToken::setLoginPw);
+        Optional.ofNullable(token.getPhone()).ifPresent(findToken::setPhone);
 
         return tokenRepository.save(findToken);
     }
@@ -165,16 +165,13 @@ public class TokenService {
         phoneNumber = sb.toString();
 
         // 전화번호로 회원 조회
+        Optional<Token> optionalToken = tokenRepository.findByPhone(phoneNumber);
         Token token;
-        SellMember sellMember = sellMemberService.findMemberByPhone(phoneNumber);
-        PurchaseMember purchaseMember = purchaseMemberService.findMemberByPhone(phoneNumber);
-        if(sellMember != null) token = sellMember.getToken();
-        else if(purchaseMember != null) token = purchaseMember.getToken();
-        else {
+        if(optionalToken.orElse(null) == null) {
             token = new Token();
             token.setId(0);
             token.setLoginId("");
-        }
+        } else token = optionalToken.get();
 
         return token;
     }

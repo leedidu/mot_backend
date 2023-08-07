@@ -32,6 +32,9 @@ public class Token extends Auditable {
     @Column
     private String loginPw; // 로그인 PW
 
+    @Column(unique = true)
+    private String phone; //회원 전화번호
+
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
 

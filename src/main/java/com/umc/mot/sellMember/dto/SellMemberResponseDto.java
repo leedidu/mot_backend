@@ -12,7 +12,6 @@ public class SellMemberResponseDto {
         private String name; //회원 이름
         private String imageUrl; //회원이미지
         private String email; //회원이메일
-        private String phone; //회원 전화번호
         private String host; //회원역할
     }
 }

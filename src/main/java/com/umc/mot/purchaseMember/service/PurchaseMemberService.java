@@ -22,6 +22,7 @@ public class PurchaseMemberService {
     private final PurchaseMemberRepository purchaseMemberRepository;
     private final SellMemberRepository sellMemberRepository;
     private final SellMemberService sellMemberService;
+    private final TokenRepository tokenRepository;
 
 
     //Create
@@ -78,8 +79,13 @@ public class PurchaseMemberService {
     }
 
     //구매자 연관관계 끊고 판매자로
-    public void PurchaseMemberTosellMember(String email) {
-        PurchaseMember member1 = verifiedByEmail(email);//이메일로 멤버 검증
+    public void PurchaseMemberTosellMember(int PurchaseMemberId) {
+        PurchaseMember member1 = verifiedMember(PurchaseMemberId);//아이디로 멤버 검증
+
+        Token token = member1.getToken();
+        if(token!=null) {
+            token.setPurchaseMember(null);
+        }
 
         SellMember sellMember = new SellMember();
         Optional.ofNullable(member1.getName()).ifPresent(sellMember::setName);

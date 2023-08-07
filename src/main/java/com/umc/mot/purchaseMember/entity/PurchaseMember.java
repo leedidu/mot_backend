@@ -37,6 +37,8 @@ public class PurchaseMember extends Auditable {
     @Column
     private String host; // 회원 역할
 
+
+
     @OneToMany(mappedBy = "purchaseMember", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Comment> comments = new ArrayList<>();
 

@@ -29,7 +29,9 @@ public class RoomPackageService {
     public Room roomPackage(int roomId, int packageId) {
         Room room = roomService.findRoomId(roomId);
         Package pa = packageService.findPackage(packageId);
+
         if(room.getHotel().equals(pa.getHotel())) {
+
         }
         return roomRepository.save(room);
     }

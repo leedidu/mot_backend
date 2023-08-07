@@ -28,7 +28,7 @@ public class HotelController {
     private final HotelMapper hotelMapper;
 
     // Create
-    @PostMapping("/{sellMember-id}")
+    @PostMapping
     public ResponseEntity postHotel(@Valid @RequestBody HotelRequestDto.Post post
             ,@RequestHeader("Authorization") String token){
         Hotel hotel = hotelService.createHotel(hotelMapper.HotelRequestDtoPostToHotel(post),token);

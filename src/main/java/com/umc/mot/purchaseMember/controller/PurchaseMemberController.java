@@ -60,4 +60,14 @@ public class PurchaseMemberController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @DeleteMapping ("/PurchaseToSell/{email}")
+    public ResponseEntity patchSell(@Positive @PathVariable("email") String email){
+        purchaseMemberService.PurchaseMemberTosellMember(email);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+
 }

@@ -9,9 +9,7 @@ import com.umc.mot.packagee.entity.Package;
 import com.umc.mot.reserve.entity.Reserve;
 import com.umc.mot.room.entity.Room;
 import com.umc.mot.sellMember.entity.SellMember;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -22,6 +20,8 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 public class Hotel extends Auditable { // 숙소
 

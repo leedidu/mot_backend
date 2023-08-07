@@ -37,6 +37,9 @@ public class SellMember extends Auditable {
     @Column
     private String host; //회원역할
 
+    @Column
+    private String accountNumber; //계좌번호
+
     @OneToMany(mappedBy = "sellMember", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Hotel> hotels = new ArrayList<>();
 

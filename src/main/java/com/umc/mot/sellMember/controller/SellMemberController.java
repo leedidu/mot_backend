@@ -31,6 +31,7 @@ public class SellMemberController {
         SellMember member = sellMemberService.createSellMember(sellMemberMapper.sellMemberRequestDtoPostToSellMember(post));
         SellMemberResponseDto.Response response = sellMemberMapper.sellMemberToSellMemberResponseDto(member);
 
+
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 

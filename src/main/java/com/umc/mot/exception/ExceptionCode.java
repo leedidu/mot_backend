@@ -15,8 +15,7 @@ public enum ExceptionCode {
     HEART_NOT_FOUND(404,"Heart not found"),
     COMMENT_NOT_FOUND(404,"Comment not found"),
     CATEGORY_NOT_FOUND(404,"Category not found"),
-    ROOM_MEMBER_NOT_FOUND(404,"Room_Member not found"),
-    PURCHASE_MEMBER_NOT_FOUND(404,"Purchase_member not found");
+    ROOM_MEMBER_NOT_FOUND(404,"Room_Member not found");
 
     @Getter
     private double status;

@@ -59,7 +59,7 @@ public class TokenController {
     @PostMapping("/send-message/{phone-number}")
     public ResponseEntity postMessage(@PathVariable("phone-number") String phoneNumbe) {
         CertificationPhone certificationPhone =  sendMessage.sendMessage(phoneNumbe);
-        TokenResponseDto.sendMessage response = tokenMapper.certificationPhoneToTokenResponseDtoSendMessage(certificationPhone);
+        TokenResponseDto.SendMessage response = tokenMapper.certificationPhoneToTokenResponseDtoSendMessage(certificationPhone);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -68,7 +68,7 @@ public class TokenController {
     // 아이디 중복 확인
     @GetMapping("/check-login-id/{loginId}")
     public ResponseEntity getCheckLoginId(@PathVariable("loginId") String loginId) {
-        TokenResponseDto.check response = new TokenResponseDto.check(tokenService.checkLoginId(loginId));
+        TokenResponseDto.Check response = new TokenResponseDto.Check(tokenService.checkLoginId(loginId));
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -77,7 +77,7 @@ public class TokenController {
     @GetMapping("/check-random-number")
     public ResponseEntity getCheckRandomNumber(@Valid @RequestBody TokenRequestDto.CheckRandomNumber request) {
         CertificationPhone certificationPhone = tokenMapper.tokenRequestDtoCheckRandomNumberToCertificationPhone(request);
-        TokenResponseDto.check response = new TokenResponseDto.check(sendMessage.checkCertificationNumber(certificationPhone));
+        TokenResponseDto.Check response = new TokenResponseDto.Check(sendMessage.checkCertificationNumber(certificationPhone));
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -87,7 +87,7 @@ public class TokenController {
     public ResponseEntity getFindLoginIdByPhoneNumber(@Valid @RequestBody TokenRequestDto.CheckRandomNumber request) {
         CertificationPhone certificationPhone = tokenMapper.tokenRequestDtoCheckRandomNumberToCertificationPhone(request);
         Token token = tokenService.findLoginIdByPhoneNumber(certificationPhone);
-        TokenResponseDto.Response response = tokenMapper.tokenToTokenResponseDtoResponse(token);
+        TokenResponseDto.FindLoingId response = tokenMapper.tokenToTokenResponseDtoFindLoginId(token);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

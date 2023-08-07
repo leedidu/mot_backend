@@ -163,7 +163,6 @@ public class TokenService {
         sb.insert(3, "-");
         sb.insert(8, "-");
         phoneNumber = sb.toString();
-        System.out.println("!! phoneNumber : " + phoneNumber);
 
         // 전화번호로 회원 조회
         Token token;

@@ -11,11 +11,12 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface TokenMapper {
     TokenResponseDto.Response tokenToTokenResponseDtoResponse(Token token);
-    TokenResponseDto.check tokenToTokenResponseCheckIdDto(Token token);
+    TokenResponseDto.FindLoingId tokenToTokenResponseDtoFindLoginId(Token token);
+    TokenResponseDto.Check tokenToTokenResponseCheckIdDto(Token token);
     Token tokenRequestDtoPostToToken(TokenRequestDto.Post post);
     Token tokenRequestDtoPatchToToken(TokenRequestDto.Patch patch);
     Token loginDtoToToken(LoginDto loginDto);
     Token signinDtoToToken(SigninDto signinDto);
     CertificationPhone tokenRequestDtoCheckRandomNumberToCertificationPhone(TokenRequestDto.CheckRandomNumber checkRandomNumber);
-    TokenResponseDto.sendMessage certificationPhoneToTokenResponseDtoSendMessage(CertificationPhone certificationPhone);
+    TokenResponseDto.SendMessage certificationPhoneToTokenResponseDtoSendMessage(CertificationPhone certificationPhone);
 }

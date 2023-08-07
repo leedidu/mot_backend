@@ -31,6 +31,9 @@ public class PurchaseMember extends Auditable {
     @Column
     private String email; // 회원 이메일
 
+    @Column(unique = true)
+    private String phone; //회원 전화번호
+
     @Column
     private String host; // 회원 역할
 

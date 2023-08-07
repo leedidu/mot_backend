@@ -1,6 +1,5 @@
 package com.umc.mot.config;
 
-import com.umc.mot.oauth2.filter.JwtAuthenticationByPhoneFilter;
 import com.umc.mot.oauth2.filter.JwtAuthenticationFilter;
 import com.umc.mot.oauth2.handler.*;
 import com.umc.mot.oauth2.utils.CustomAuthorityUtils;
@@ -103,15 +102,7 @@ public class SecurityConfiguration {
 
 //            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils, tokenService, sellMemberService, purchaseMemberService, cookie); // google OAuth2
 
-            // 로그인 - 전화번호
-//            JwtAuthenticationByPhoneFilter jwtAuthenticationByPhoneFilter = new JwtAuthenticationByPhoneFilter(authenticationManager, jwtTokenizer, tokenService);
-//            jwtAuthenticationByPhoneFilter.setFilterProcessesUrl("/login/phone");
-//
-//            jwtAuthenticationByPhoneFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler());
-//            jwtAuthenticationByPhoneFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
-
             builder
-//                    .addFilter(jwtAuthenticationByPhoneFilter) // 로그인 - 전화번호
                     .addFilter(jwtAuthenticationFilter) // 로그인
                     .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class); // google OAuth2
         }

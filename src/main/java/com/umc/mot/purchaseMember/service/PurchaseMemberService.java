@@ -23,9 +23,10 @@ public class PurchaseMemberService {
         return purchaseMemberRepository.save(purchasemember);
     }
 
-    public PurchaseMember createPurchaseMember(Token token) {
+    public PurchaseMember createPurchaseMember(Token token, String phone) {
         PurchaseMember purchaseMember = new PurchaseMember();
         purchaseMember.setName("nickname" + (token.getId()+1));
+        purchaseMember.setPhone(phone);
 //        purchaseMember.setToken(token);
 
         return purchaseMemberRepository.save(purchaseMember);
@@ -37,12 +38,18 @@ public class PurchaseMemberService {
         return member;
     }
 
+    public PurchaseMember findMemberByPhone(String phone) {
+        return purchaseMemberRepository.findByPhone(phone).orElse(null);
+    }
+
+
     // Update
     public PurchaseMember patchMember(PurchaseMember member) {
         PurchaseMember findMember = verifiedMember(member.getPurchaseMemberId());
         Optional.ofNullable(member.getName()).ifPresent(findMember::setName);
         Optional.ofNullable(member.getImageUrl()).ifPresent(findMember::setImageUrl);
         Optional.ofNullable(member.getEmail()).ifPresent(findMember::setEmail);
+        Optional.ofNullable(member.getPhone()).ifPresent(findMember::setPhone);
         Optional.ofNullable(member.getHost()).ifPresent(findMember::setHost);
         Optional.ofNullable(member.getToken()).ifPresent(findMember::setToken);
 

@@ -27,12 +27,17 @@ public class SellMemberService {
         return member;
     }
 
+    public SellMember findMemberByPhone(String phone) {
+        return sellMemberRepository.findByPhone(phone).orElse(null);
+    }
+
     // Update
     public SellMember patchMember(SellMember member) {
         SellMember findMember = verifiedMember(member.getSellMemberId());
         Optional.ofNullable(member.getName()).ifPresent(findMember::setName);
         Optional.ofNullable(member.getImageUrl()).ifPresent(findMember::setImageUrl);
         Optional.ofNullable(member.getEmail()).ifPresent(findMember::setEmail);
+        Optional.ofNullable(member.getPhone()).ifPresent(findMember::setPhone);
         Optional.ofNullable(member.getHost()).ifPresent(findMember::setHost);
 
         return sellMemberRepository.save(findMember);

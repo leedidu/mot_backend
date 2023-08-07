@@ -10,7 +10,7 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface TokenMapper {
-    TokenResponseDto.Response tokenToTokenResponseDto(Token token);
+    TokenResponseDto.Response tokenToTokenResponseDtoResponse(Token token);
     TokenResponseDto.check tokenToTokenResponseCheckIdDto(Token token);
     Token tokenRequestDtoPostToToken(TokenRequestDto.Post post);
     Token tokenRequestDtoPatchToToken(TokenRequestDto.Patch patch);

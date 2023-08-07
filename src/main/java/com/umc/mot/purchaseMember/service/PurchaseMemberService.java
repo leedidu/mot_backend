@@ -38,6 +38,10 @@ public class PurchaseMemberService {
         return member;
     }
 
+    public PurchaseMember findMemberByPhone(String phone) {
+        return purchaseMemberRepository.findByPhone(phone).orElse(null);
+    }
+
 
     // Update
     public PurchaseMember patchMember(PurchaseMember member) {

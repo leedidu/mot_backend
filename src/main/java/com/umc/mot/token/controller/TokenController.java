@@ -2,7 +2,6 @@ package com.umc.mot.token.controller;
 
 
 import com.umc.mot.oauth2.filter.JwtVerificationFilter;
-import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import com.umc.mot.token.dto.TokenRequestDto;
 import com.umc.mot.token.dto.TokenResponseDto;
 import com.umc.mot.token.dto.SigninDto;
@@ -12,7 +11,6 @@ import com.umc.mot.token.mapper.TokenMapper;
 import com.umc.mot.token.service.TokenService;
 import com.umc.mot.utils.SendMessage;
 import lombok.AllArgsConstructor;
-import lombok.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -52,7 +50,7 @@ public class TokenController {
     @PostMapping("/signin")
     public ResponseEntity postToken(@Valid @RequestBody SigninDto signinDto) {
         Token token = tokenService.createToken(tokenMapper.signinDtoToToken(signinDto), signinDto.getPhone());
-        TokenResponseDto.Response response = tokenMapper.tokenToTokenResponseDto(token);
+        TokenResponseDto.Response response = tokenMapper.tokenToTokenResponseDtoResponse(token);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -84,7 +82,17 @@ public class TokenController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    // 잔고 확인
+    // 아아디 찾기(전화번호 이용)
+    @GetMapping("/find-login-id")
+    public ResponseEntity getFindLoginIdByPhoneNumber(@Valid @RequestBody TokenRequestDto.CheckRandomNumber request) {
+        CertificationPhone certificationPhone = tokenMapper.tokenRequestDtoCheckRandomNumberToCertificationPhone(request);
+        Token token = tokenService.findLoginIdByPhoneNumber(certificationPhone);
+        TokenResponseDto.Response response = tokenMapper.tokenToTokenResponseDtoResponse(token);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    // 잔고 확인(coolsms 서비스)
     @GetMapping("/get-balance")
     public ResponseEntity getBalance() {
         return new ResponseEntity<>(sendMessage.getBalance(), HttpStatus.OK);
@@ -102,7 +110,7 @@ public class TokenController {
     @GetMapping
     public ResponseEntity getToken(@Positive @RequestParam int tokenId) {
         Token token = tokenService.findTokenId(tokenId);
-        TokenResponseDto.Response response = tokenMapper.tokenToTokenResponseDto(token);
+        TokenResponseDto.Response response = tokenMapper.tokenToTokenResponseDtoResponse(token);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -113,7 +121,7 @@ public class TokenController {
                                       @RequestBody TokenRequestDto.Patch patch) {
         patch.setId(tokenId);
         Token token = tokenService.patchToken(tokenMapper.tokenRequestDtoPatchToToken(patch));
-        TokenResponseDto.Response response = tokenMapper.tokenToTokenResponseDto(token);
+        TokenResponseDto.Response response = tokenMapper.tokenToTokenResponseDtoResponse(token);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

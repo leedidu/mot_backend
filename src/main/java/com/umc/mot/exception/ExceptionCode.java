@@ -16,6 +16,7 @@ public enum ExceptionCode {
     COMMENT_NOT_FOUND(404,"Comment not found"),
     CATEGORY_NOT_FOUND(404,"Category not found"),
     TAMPERED_TOKEN(1004, "Tampered Token"), // 변조된 토큰
+    NOT_MATCH_CERTIFICATION_NUMBER(401, "Not match Certification Number"),
     CERTIFICATION_NUMBER(404, "Certification Number not found");
 
     @Getter

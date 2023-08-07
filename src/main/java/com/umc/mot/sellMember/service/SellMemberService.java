@@ -27,6 +27,9 @@ public class SellMemberService {
         return member;
     }
 
+    public SellMember findMemberByPhone(String phone) {
+        return sellMemberRepository.findByPhone(phone).orElse(null);
+    }
 
     // Update
     public SellMember patchMember(SellMember member) {

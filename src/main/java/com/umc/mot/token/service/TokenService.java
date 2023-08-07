@@ -8,11 +8,14 @@ import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import com.umc.mot.purchaseMember.service.PurchaseMemberService;
 import com.umc.mot.sellMember.entity.SellMember;
 import com.umc.mot.sellMember.service.SellMemberService;
+import com.umc.mot.token.entity.CertificationPhone;
 import com.umc.mot.token.entity.Token;
 import com.umc.mot.token.repository.TokenRepository;
+import com.umc.mot.utils.SendMessage;
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +30,7 @@ public class TokenService {
     private final CustomAuthorityUtils authorityUtils;
     private final ApplicationEventPublisher publisher;
     private final PasswordEncoder passwordEncoder;
+    private final SendMessage sendMessage;
 
     // 회원가입(아이디, 비밀번호)
     public Token createToken(Token token, String phone) {
@@ -53,10 +57,6 @@ public class TokenService {
 
         publisher.publishEvent(new UserRegistrationApplicationEvent(token));
         return token;
-    }
-
-    public Token test() {
-        return getLoginToken();
     }
 
     // 로그인한 회원의 토큰 가져오기
@@ -147,5 +147,36 @@ public class TokenService {
         System.out.println("!! token id : "  + token.orElse(new Token()).getId());
         if(token.orElse(new Token()).getId() == 0) return true; // 아이디가 존재하지 않으므로 아이디 사용 가능
         else return false; // 아이디가 존재함으로 아이디 사용 불가능
+    }
+
+    // 전화번호로 아이디 찾기
+    public Token findLoginIdByPhoneNumber(CertificationPhone certificationPhone) {
+        // 전화번호와 인증번화 맞는지 확인
+        if(!sendMessage.checkCertificationNumber(certificationPhone)) { // 인증번호 불일치
+            throw new BusinessLogicException(ExceptionCode.NOT_MATCH_CERTIFICATION_NUMBER);
+        }
+
+        // 전화번호 형태 변환
+        String phoneNumber = certificationPhone.getPhoneNumber();
+        StringBuffer sb = new StringBuffer();
+        sb.append(phoneNumber);
+        sb.insert(3, "-");
+        sb.insert(8, "-");
+        phoneNumber = sb.toString();
+        System.out.println("!! phoneNumber : " + phoneNumber);
+
+        // 전화번호로 회원 조회
+        Token token;
+        SellMember sellMember = sellMemberService.findMemberByPhone(phoneNumber);
+        PurchaseMember purchaseMember = purchaseMemberService.findMemberByPhone(phoneNumber);
+        if(sellMember != null) token = sellMember.getToken();
+        else if(purchaseMember != null) token = purchaseMember.getToken();
+        else {
+            token = new Token();
+            token.setId(0);
+            token.setLoginId("");
+        }
+
+        return token;
     }
 }

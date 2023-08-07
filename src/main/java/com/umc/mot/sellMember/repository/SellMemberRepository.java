@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface SellMemberRepository extends JpaRepository<SellMember, Integer> {
     Optional<SellMember> findByEmail(String email);
+    Optional<SellMember> findByPhone(String phone);
 }

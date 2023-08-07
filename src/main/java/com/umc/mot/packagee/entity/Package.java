@@ -4,6 +4,7 @@ package com.umc.mot.packagee.entity;
 import com.umc.mot.auditable.Auditable;
 import com.umc.mot.hotel.entity.Hotel;
 import com.umc.mot.reserve.entity.Reserve;
+import com.umc.mot.room.entity.Room;
 import com.umc.mot.roomPackage.entity.RoomPackage;
 import lombok.*;
 
@@ -37,6 +38,7 @@ public class Package extends Auditable { //패키지
 
     @Column
     private String info; //기본정보
+
 
     @ManyToOne
     @JoinColumn(name = "HOTEL_ID")

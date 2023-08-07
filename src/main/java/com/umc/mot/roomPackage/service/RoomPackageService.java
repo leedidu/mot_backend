@@ -7,34 +7,50 @@ import com.umc.mot.hotel.entity.Hotel;
 import com.umc.mot.hotel.repository.HotelRepository;
 import com.umc.mot.hotel.service.HotelService;
 import com.umc.mot.packagee.entity.Package;
+import com.umc.mot.packagee.mapper.PackageMapper;
 import com.umc.mot.packagee.repository.PackageRepository;
 import com.umc.mot.packagee.service.PackageService;
 import com.umc.mot.room.entity.Room;
+import com.umc.mot.room.mapper.RoomMapper;
 import com.umc.mot.room.repository.RoomRepository;
 import com.umc.mot.room.service.RoomService;
+import com.umc.mot.roomPackage.entity.RoomPackage;
+import com.umc.mot.roomPackage.repository.RoomPackageRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 
 @Service
 @AllArgsConstructor
 public class RoomPackageService {
-    private final RoomRepository roomRepository;
-    private final PackageRepository packageRepository;
+    private final RoomPackageRepository roomPackageRepository;
     private final RoomService roomService;
     private final PackageService packageService;
 
-    public Room roomPackage(int roomId, int packageId) {
-        Room room = roomService.findRoomId(roomId);
-        Package pa = packageService.findPackage(packageId);
+    //패키지랑 룸저장하는거 룸패키지1 패키지1 작은방,
+    // 룸패키지1 패키지1 큰방을 생각했는데
+    // 아래와 같이 하면 룸패키지1 패키지1 작은방,
+    // 룸패키지2 패키지1 큰방
+    //패키지가 만들어지고 그 뒤에 패키지 안에 룸이 추가되어야 한다.
+    public RoomPackage createRoomPackage(Package pa , Room room) {
+        int id = pa.getHotel().getId();
+        int id2 = room.getHotel().getId();
+        RoomPackage roomPackage = new RoomPackage();
 
-        if(room.getHotel().equals(pa.getHotel())) {
+        if (id == id2) {
+            roomPackage.setPackages(pa);
+            roomPackage.setRoom(room);
+            return roomPackageRepository.save(roomPackage);
+        } else {
 
+            throw new IllegalArgumentException("Cannot create room package for different hotels.");
         }
-        return roomRepository.save(room);
+
     }
+}
 
 /*
     public Room roomPackage(int roomPackageId, int roomId, List<Integer> packageIds) {
@@ -54,4 +70,4 @@ public class RoomPackageService {
     }
 }
  */
-}
+

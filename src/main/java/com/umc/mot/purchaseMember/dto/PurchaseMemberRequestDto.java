@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class PurchaseMemberRequestDto {
-
-
     @Getter
     @AllArgsConstructor
     public static class Post {

@@ -23,6 +23,7 @@ public class PackageService {
     //Create
     public Package createPackage(Package pa,int hotelId) {
         Hotel hotel = hotelService.verifiedHotel(hotelId);
+        pa.setHotel(hotel);
         return packageRepository.save(pa);
     }
 

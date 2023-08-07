@@ -24,6 +24,7 @@ public class RoomService{
     public Room createRoom(Room room,int hotelId) {
 
         Hotel hotel = hotelService.verifiedHotel(hotelId);
+        room.setHotel(hotel);
         return roomRepository.save(room);
     }
 

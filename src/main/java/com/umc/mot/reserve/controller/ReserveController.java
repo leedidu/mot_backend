@@ -1,10 +1,12 @@
 package com.umc.mot.reserve.controller;
 
+import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import com.umc.mot.reserve.mapper.ReserveMapper;
 import com.umc.mot.reserve.service.ReserveService;
 import com.umc.mot.reserve.dto.ReserveRequestDto;
 import com.umc.mot.reserve.dto.ReserveResponseDto;
 import com.umc.mot.reserve.entity.Reserve;
+import com.umc.mot.token.service.TokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ import javax.validation.constraints.Positive;
 public class ReserveController {
     private final ReserveService reserveService;
     private final ReserveMapper reserveMapper;
+    private TokenService tokenService;
 
     // Create
     @PostMapping
@@ -39,6 +42,13 @@ public class ReserveController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    
+//    @GetMapping
+//    public ResponseEntity getInfo(@Positive @RequestParam int reserveID){
+//        PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
+//        ReserveResponseDto.Response response = reserveMapper.ResponseInfo();
+//        return new ResponseEntity<>(response, HttpStatus.OK);
+//    }
 
     // Update
     @PatchMapping("/{reserve-id}")

@@ -3,6 +3,8 @@ package com.umc.mot.hotel.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.List;
+
 public class HotelResponseDto {
     @Getter
     @AllArgsConstructor
@@ -17,5 +19,6 @@ public class HotelResponseDto {
         private String transfer; //이동수단
         private String address; //주소
         private String info; //기본정보
+        private List hotelImage;
     }
 }

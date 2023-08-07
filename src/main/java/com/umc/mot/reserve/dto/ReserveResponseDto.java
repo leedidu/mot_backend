@@ -15,4 +15,5 @@ public class ReserveResponseDto {
         private String phone; //핸드폰
         private int peopleNum; //예약인원
     }
+
 }

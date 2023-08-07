@@ -29,6 +29,20 @@ public class TokenController {
     private final SendMessage sendMessage;
     private final TokenMapper tokenMapper;
 
+    // TEST
+    @GetMapping("/test")
+    public ResponseEntity test() {
+        Token token = tokenService.getLoginToken();
+
+        System.out.println("##");
+        System.out.println(token.getId());
+        System.out.println(token.getLoginId());
+        System.out.println("##");
+
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     // Create
     // 회원가입
     @PostMapping("/signin")

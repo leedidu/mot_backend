@@ -79,7 +79,7 @@ public class TokenService {
         else token = tokenRepository.findByLoginId(principal.toString());
 
 
-        System.out.println("!! " + principal.toString());
+        System.out.println("!! principal : " + principal.toString());
 
         return token.orElse(null);
     }

@@ -46,7 +46,8 @@ public class SendMessage {
         message.setTo(receivePhoneNumber); // 수신자
         message.setText("[MOT] 인증번호는 " + randomNumber + " 입니다.");
 
-        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message)); // 메세지 전송
+        // 메세지 전송
+//        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
 
         // DB 저장
         CertificationPhone certificationPhone = new CertificationPhone();

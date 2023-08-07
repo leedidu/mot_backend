@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
+@Configuration
 public class JwtVerificationFilter extends OncePerRequestFilter {
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
@@ -149,7 +150,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
     }
 
     // access token 유효성 검증
-    private Map<String, Object> verifyJws(HttpServletRequest request) {
+    public Map<String, Object> verifyJws(HttpServletRequest request) {
         String jws = request.getHeader("Authorization").replace("Bearer ", "");
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
         Map<String, Object> claims = jwtTokenizer.getClaims(jws, base64EncodedSecretKey).getBody();
@@ -157,7 +158,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         return claims;
     }
 
-    private void setAuthenticationToContext(Map<String, Object> claims) {
+    public void setAuthenticationToContext(Map<String, Object> claims) {
         System.out.println("!!!!!");
         claims.keySet().stream().forEach(System.out::println);
         List<GrantedAuthority> authorities = authorityUtils.createAuthorities((List)claims.get("roles"));

@@ -1,6 +1,7 @@
 package com.umc.mot.token.controller;
 
 
+import com.umc.mot.oauth2.filter.JwtVerificationFilter;
 import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import com.umc.mot.token.dto.TokenRequestDto;
 import com.umc.mot.token.dto.TokenResponseDto;
@@ -17,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 
@@ -28,6 +31,7 @@ public class TokenController {
     private final TokenService tokenService;
     private final SendMessage sendMessage;
     private final TokenMapper tokenMapper;
+    private final JwtVerificationFilter jwtVerificationFilter;
 
     // TEST
     @GetMapping("/test")
@@ -84,6 +88,15 @@ public class TokenController {
     @GetMapping("/get-balance")
     public ResponseEntity getBalance() {
         return new ResponseEntity<>(sendMessage.getBalance(), HttpStatus.OK);
+    }
+
+
+    // refresh token으로 access token 재발급
+    @GetMapping("/assign-access-token")
+    public ResponseEntity getAccessToken(HttpServletRequest request, HttpServletResponse response) {
+        jwtVerificationFilter.assignAccessToken(request, response);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping

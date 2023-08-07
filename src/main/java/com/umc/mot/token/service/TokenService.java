@@ -8,10 +8,8 @@ import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import com.umc.mot.purchaseMember.service.PurchaseMemberService;
 import com.umc.mot.sellMember.entity.SellMember;
 import com.umc.mot.sellMember.service.SellMemberService;
-import com.umc.mot.token.entity.CertificationPhone;
 import com.umc.mot.token.entity.Token;
 import com.umc.mot.token.repository.TokenRepository;
-import com.umc.mot.utils.SendMessage;
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,7 +27,6 @@ public class TokenService {
     private final CustomAuthorityUtils authorityUtils;
     private final ApplicationEventPublisher publisher;
     private final PasswordEncoder passwordEncoder;
-    private final SendMessage sendMessage;
 
     // 회원가입(아이디, 비밀번호)
     public Token createToken(Token token, String phone) {

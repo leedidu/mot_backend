@@ -42,6 +42,8 @@ public class CustomUserDetailsService implements UserDetailsService {
             setLoginPw(token.getPassword());
             setPurchaseMember(token.getPurchaseMember());
             setSellMember(token.getSellMember());
+            setRoles(token.getRoles());
+
         }
 
         @Override

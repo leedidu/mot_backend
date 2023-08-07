@@ -24,6 +24,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {  // (1)
@@ -148,12 +149,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setCharacterEncoding("utf-8");
 
         // Token를 UserResponseDto로 변환
-        if(token == null) System.out.println("!!");
-        System.out.println("!! " + token.getId());
-        System.out.println("!! " + token.getLoginId());
-        System.out.println("!! pur : " + token.getPurchaseMember().getPurchaseMemberId());
-        System.out.println("!! pur : " + token.getPurchaseMember().getName());
-        System.out.println("!! sell : " + token.getSellMember());
         MemberResopnse userResponse = new MemberResopnse(
                 token.getPurchaseMember() != null ? token.getPurchaseMember().getName() : token.getSellMember().getName(), // 이름
                 token.getLoginId() // 아이디
@@ -165,6 +160,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.getWriter().write(result);
     }
 
+    // access token 발급
     private String delegateAccessToken(Token token) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("roles", token.getRoles());
@@ -174,19 +170,16 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
 
-        String accessToken = jwtTokenizer.generateAccessToken(claims, subject, expiration, base64EncodedSecretKey);
-
-        return accessToken;
+        return jwtTokenizer.generateAccessToken(claims, subject, expiration, base64EncodedSecretKey); // access token
     }
 
+    // refresh token 발급
     private String delegateRefreshToken(Token token) {
         String subject = token.getLoginId();
         Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes());
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
 
-        String refreshToken = jwtTokenizer.generateRefreshToken(subject, expiration, base64EncodedSecretKey);
-
-        return refreshToken;
+        return jwtTokenizer.generateRefreshToken(subject, expiration, base64EncodedSecretKey); // refresh token
     }
 
     @AllArgsConstructor

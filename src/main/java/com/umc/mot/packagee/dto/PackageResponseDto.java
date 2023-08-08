@@ -18,6 +18,8 @@ public class PackageResponseDto {
         private int minPeople;
         private int maxPeople;
         private int price;
+        private String info;
+        private String roomType; //객실방종류
     }
 
 }

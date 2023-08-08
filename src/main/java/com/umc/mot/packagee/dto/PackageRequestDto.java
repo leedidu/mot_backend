@@ -17,6 +17,9 @@ public class PackageRequestDto {
         private int minPeople;
         private int maxPeople;
         private int price;
+        private String info;
+        private String roomType; //객실방종류
+
     }
 
     @Getter
@@ -28,5 +31,7 @@ public class PackageRequestDto {
         private int minPeople;
         private int maxPeople;
         private int price;
+        private String info;
+        private String roomType; //객실방종류
     }
 }

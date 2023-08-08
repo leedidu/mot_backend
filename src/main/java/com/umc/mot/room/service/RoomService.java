@@ -8,6 +8,7 @@ import com.umc.mot.room.entity.Room;
 import com.umc.mot.room.repository.RoomRepository;
 import com.umc.mot.sellMember.entity.SellMember;
 import com.umc.mot.sellMember.repository.SellMemberRepository;
+import com.umc.mot.token.service.TokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +20,11 @@ public class RoomService{
 
     private final RoomRepository roomRepository;
     private final HotelService hotelService;
+    private final TokenService tokenService;
 
     //Create
     public Room createRoom(Room room,int hotelId) {
-
+        SellMember sellM = tokenService.getLoginSellMember();
         Hotel hotel = hotelService.verifiedHotel(hotelId);
         room.setHotel(hotel);
         return roomRepository.save(room);
@@ -43,6 +45,7 @@ public class RoomService{
         Optional.ofNullable(room.getMinPeople()).ifPresent(findRoom::setMinPeople);
         Optional.ofNullable(room.getMaxPeople()).ifPresent(findRoom::setMaxPeople);
         Optional.ofNullable(room.getPrice()).ifPresent(findRoom::setPrice);
+        Optional.ofNullable(room.getRoomType()).ifPresent(findRoom::setRoomType);
 
 
 

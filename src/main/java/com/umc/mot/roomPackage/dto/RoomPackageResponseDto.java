@@ -10,11 +10,11 @@ import lombok.Setter;
 import java.util.List;
 
 public class RoomPackageResponseDto {
-
+    @Setter
     @Getter
     @AllArgsConstructor
     public static class Response {
-        private Package pa;
+        private Package packages;
         private List<Room> room;
 
     }

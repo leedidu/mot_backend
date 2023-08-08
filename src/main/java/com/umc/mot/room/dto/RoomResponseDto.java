@@ -12,5 +12,6 @@ public class RoomResponseDto {
         private int minPeople;//최소인원
         private int maxPeople; //최대인원
         private int price; //비용
+        private String roomType; //객실방종류
     }
 }

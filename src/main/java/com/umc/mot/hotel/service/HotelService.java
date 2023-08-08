@@ -52,6 +52,7 @@ public class HotelService {
         Optional.ofNullable(hotel.getTransfer()).ifPresent(findHotel::setTransfer);
         Optional.ofNullable(hotel.getAddress()).ifPresent(findHotel::setAddress);
         Optional.ofNullable(hotel.getInfo()).ifPresent(findHotel::setInfo);
+        Optional.ofNullable(hotel.getSellMember()).ifPresent(findHotel::setSellMember);
 
         return hotelRepository.save(findHotel);
 

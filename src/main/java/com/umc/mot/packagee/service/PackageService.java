@@ -8,6 +8,7 @@ import com.umc.mot.hotel.service.HotelService;
 import com.umc.mot.packagee.entity.Package;
 import com.umc.mot.packagee.repository.PackageRepository;
 import com.umc.mot.sellMember.entity.SellMember;
+import com.umc.mot.token.service.TokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +20,11 @@ public class PackageService {
 
     private final PackageRepository packageRepository;
     private final HotelService hotelService;
+    private final TokenService tokenService;
 
     //Create
     public Package createPackage(Package pa,int hotelId) {
+        SellMember sellM = tokenService.getLoginSellMember();
         Hotel hotel = hotelService.verifiedHotel(hotelId);
         pa.setHotel(hotel);
         return packageRepository.save(pa);
@@ -42,6 +45,7 @@ public class PackageService {
         Optional.ofNullable(pa.getMinPeople()).ifPresent(findPackage::setMinPeople);
         Optional.ofNullable(pa.getMaxPeople()).ifPresent(findPackage::setMaxPeople);
         Optional.ofNullable(pa.getPrice()).ifPresent(findPackage::setPrice);
+        Optional.ofNullable(pa.getRoomType()).ifPresent(findPackage::setRoomType);
 
 
         return packageRepository.save(findPackage);

@@ -14,8 +14,11 @@ public class RoomPackageRequestDto {
     @Setter
     @AllArgsConstructor
     public static class requestDto {
-        private Package pa;
+        private Package packages;
         private List<Room> room;
 
     }
+
+
+
 }

@@ -9,6 +9,8 @@ import com.umc.mot.roomPackage.entity.RoomPackage;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,19 +26,25 @@ public class Package extends Auditable { //패키지
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id; //패키지 식별자
 
-    @Column
+    @Column(nullable = false, length = 30)
     private String name; //패키지 이름
 
     @Column
+    @Min(value =1 , message="최소 인원 1 이상이어야 합니다.")
     private int minPeople;
 
     @Column
+    @Max(value =999 , message="최대 인원 999 이하이어야 합니다.")
     private int maxPeople;
 
     @Column
     private int price;
 
-    @Column
+
+    @Column(nullable = false, length = 100)
+    private String roomType; //패키지방종류
+
+    @Column(nullable = false, length = 500)
     private String info; //기본정보
 
 

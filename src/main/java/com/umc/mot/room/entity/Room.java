@@ -27,17 +27,20 @@ public class Room extends Auditable {
     private String name; //객실 이름
 
     @Column
-    @Min(value = 5, message = "최소 인원은 5 이상이어야 합니다.")
+    @Min(value = 1, message = "최소 인원은 1 이상이어야 합니다.")
     private int minPeople;//최소인원
 
     @Column
-    @Max(value =20 , message="최대 인원 20 이하이어야 합니다.")
+    @Max(value =999 , message="최대 인원 999 이하이어야 합니다.")
     private int maxPeople; //최대인원
 
     @Column
     private int price; //비용
 
-    @Column
+    @Column(nullable = false, length = 30)
+    private String roomType; //객실방종류
+
+    @Column(nullable = false, length = 100)
     private String info; //기본정보
 
     @ManyToOne

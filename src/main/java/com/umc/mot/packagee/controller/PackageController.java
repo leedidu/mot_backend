@@ -31,7 +31,7 @@ public class PackageController {
     private final PackageMapper packageMapper;
 
     // Create
-    @PostMapping("/hotel-id")
+    @PostMapping("/{hotel-id}")
     public ResponseEntity postPackage(@Valid @RequestBody PackageRequestDto.Post post,
                                       @Positive @PathVariable("hotel-id") int hotelId) {
         Package pa= packageService.createPackage(packageMapper.PackageRequestDtoPostToPackage(post),hotelId);

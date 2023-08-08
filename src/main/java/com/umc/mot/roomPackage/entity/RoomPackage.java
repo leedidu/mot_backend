@@ -4,6 +4,7 @@ import com.umc.mot.auditable.Auditable;
 import com.umc.mot.hotel.entity.Hotel;
 import com.umc.mot.packagee.entity.Package;
 import com.umc.mot.room.entity.Room;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class RoomPackage extends Auditable {
     @Id

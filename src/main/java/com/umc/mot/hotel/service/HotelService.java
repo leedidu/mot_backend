@@ -25,13 +25,8 @@ public class HotelService {
     private final TokenService tokenService;
 
     //Create
-    public Hotel createHotel(Hotel hotel,String token) {
-
+    public Hotel createHotel(Hotel hotel) {
         SellMember sellM = tokenService.getLoginSellMember();
-        if (!sellM.getToken().equals(token)) {
-            throw new SecurityException("Invalid token");
-        }
-
         return hotelRepository.save(hotel);
 
     }

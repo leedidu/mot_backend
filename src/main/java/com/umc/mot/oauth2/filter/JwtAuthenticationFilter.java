@@ -149,15 +149,18 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         // Token를 UserResponseDto로 변환
         if(token == null) System.out.println("!!");
-        System.out.println("!! " + token.getId());
+     /*   System.out.println("!! " + token.getId());
         System.out.println("!! " + token.getLoginId());
         System.out.println("!! pur : " + token.getPurchaseMember().getPurchaseMemberId());
         System.out.println("!! pur : " + token.getPurchaseMember().getName());
-        System.out.println("!! sell : " + token.getSellMember());
+        System.out.println("!! sell : " + token.getSellMember());*/
+
         MemberResopnse userResponse = new MemberResopnse(
                 token.getPurchaseMember() != null ? token.getPurchaseMember().getName() : token.getSellMember().getName(), // 이름
                 token.getLoginId() // 아이디
         );
+
+
 
         // json 형식으로 변환
         ObjectMapper mapper = new ObjectMapper();

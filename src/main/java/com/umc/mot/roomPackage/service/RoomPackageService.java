@@ -19,6 +19,7 @@ import com.umc.mot.roomPackage.repository.RoomPackageRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,22 +36,33 @@ public class RoomPackageService {
     // 아래와 같이 하면 룸패키지1 패키지1 작은방,
     // 룸패키지2 패키지1 큰방
     //패키지가 만들어지고 그 뒤에 패키지 안에 룸이 추가되어야 한다.
-    public RoomPackage createRoomPackage(Package pa , Room room) {
-        int id = pa.getHotel().getId();
-        int id2 = room.getHotel().getId();
-        RoomPackage roomPackage = new RoomPackage();
+    public List<RoomPackage> createRoomPackage(Package pa, List<Room> rooms) {
+        List<RoomPackage> roomPackages = new ArrayList<>();
 
-        if (id == id2) {
-            roomPackage.setPackages(pa);
-            roomPackage.setRoom(room);
-            return roomPackageRepository.save(roomPackage);
-        } else {
+        for (int i = 0; i < rooms.size(); i++) {
+            int id = pa.getHotel().getId();
+            int id2 = rooms.get(i).getHotel().getId();
 
-            throw new IllegalArgumentException("Cannot create room package for different hotels.");
+            RoomPackage roomPackage = new RoomPackage();
+            if (id == id2) {
+                roomPackage.setPackages(pa);
+                roomPackage.setRoom(rooms.get(i));
+                roomPackages.add(roomPackage);
+                roomPackageRepository.save(roomPackage);
+
+            } else {
+
+                throw new IllegalArgumentException("Cannot create room package for different hotels.");
+            }
+
         }
+
+        return roomPackages;
 
     }
 }
+
+
 
 /*
     public Room roomPackage(int roomPackageId, int roomId, List<Integer> packageIds) {

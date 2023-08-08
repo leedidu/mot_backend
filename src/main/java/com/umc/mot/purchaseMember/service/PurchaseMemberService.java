@@ -22,7 +22,7 @@ public class PurchaseMemberService {
     private final PurchaseMemberRepository purchaseMemberRepository;
     private final SellMemberRepository sellMemberRepository;
     private final SellMemberService sellMemberService;
-    private final TokenRepository tokenRepository;
+
 
 
     //Create
@@ -95,9 +95,14 @@ public class PurchaseMemberService {
         Optional.ofNullable(member1.getHost()).ifPresent(sellMember::setHost);
         Optional.ofNullable(member1.getToken()).ifPresent(sellMember::setToken);
 
+        sellMember.getToken().setSellMember(sellMember);
+
+
         sellMemberService.createSellMember(sellMember);
 
         purchaseMemberRepository.delete(member1);
+
+
 
     }
 

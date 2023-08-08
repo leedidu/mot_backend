@@ -61,7 +61,7 @@ public class PurchaseMemberController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/PurchaseToSell")
+    @PostMapping("/PToS")
     public ResponseEntity patchSell(@Positive @RequestParam("PMemberId") int id){
         purchaseMemberService.PurchaseMemberTosellMember(id);
 

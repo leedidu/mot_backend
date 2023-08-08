@@ -7,13 +7,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 public class RoomPackageRequestDto {
     @Getter
     @Setter
     @AllArgsConstructor
     public static class requestDto {
         private Package pa;
-        private Room room;
+        private List<Room> room;
 
     }
 }

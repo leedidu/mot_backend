@@ -15,7 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-
+/*
 @RestController
 @RequestMapping("/roomPackage")
 @Validated
@@ -24,11 +24,15 @@ public class RoomPackageController {
 
     private final RoomPackageService roomPackageService;
     private final RoomMapper roomMapper;
-
+/*
     @PostMapping
     public ResponseEntity RoomPackageController(@Valid @RequestBody RoomPackageRequestDto.requestDto request){
-        Room room = roomMapper.roomRequestDtoPostToRoom(request.getRoom());
+
+        Room room = (request.getRoom());
         Package pa = request.getPa();
         RoomPackage roomPackage = roomPackageService.createRoomPackage(pa,room);
     }
 }
+
+
+ */

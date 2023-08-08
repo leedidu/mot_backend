@@ -119,6 +119,19 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         return accessToken;
     }
 
+    // access token 발행
+    public String delegateAccessToken(Token token) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("roles", token.getRoles());
+
+        String subject = token.getLoginId();
+        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());
+
+        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
+
+        return "Bearer " + jwtTokenizer.generateAccessToken(claims, subject, expiration, base64EncodedSecretKey); // access token
+    }
+
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String authorization = request.getHeader("Authorization");

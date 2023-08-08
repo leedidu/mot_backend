@@ -3,6 +3,7 @@ package com.umc.mot.token.service;
 import com.umc.mot.event.UserRegistrationApplicationEvent;
 import com.umc.mot.exception.BusinessLogicException;
 import com.umc.mot.exception.ExceptionCode;
+import com.umc.mot.oauth2.filter.JwtAuthenticationFilter;
 import com.umc.mot.oauth2.utils.CustomAuthorityUtils;
 import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import com.umc.mot.purchaseMember.service.PurchaseMemberService;
@@ -59,6 +60,25 @@ public class TokenService {
         return token;
     }
 
+    // 로그인 - 전화번호
+    public Token findByPhone(Token token, String phone, int randomNumber) {
+        // 인증번호 인증 및 전화번호로 token 조회
+        CertificationPhone certificationPhone = new CertificationPhone();
+        certificationPhone.setPhoneNumber(phone.replace("-", ""));
+        certificationPhone.setRandomNumber(randomNumber);
+        Token findToken = findLoginIdByPhoneNumber(certificationPhone);
+        if(findToken.getId() == 0) return findToken; // 인증번호와 전호번호 불일치
+
+        // 아이디 확인
+        if(!findToken.getLoginId().equals(token.getLoginId())) { // 아이디 없음
+            Token returnToken = new Token();
+            returnToken.setId(0);
+            return returnToken;
+        }
+
+        return findToken;
+    }
+
     // 로그인한 회원의 토큰 가져오기
     public Token getLoginToken() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal(); //SecurityContextHolder에서 회원정보 가져오기
@@ -111,7 +131,6 @@ public class TokenService {
         return token;
     }
 
-
     // Update
     public Token patchToken(Token token) {
         Token findToken = verifiedTokenId(token.getId());
@@ -121,6 +140,13 @@ public class TokenService {
         Optional.ofNullable(token.getLoginPw()).ifPresent(findToken::setLoginPw);
 
         return tokenRepository.save(findToken);
+    }
+
+    // 비밀번호 변경
+    public Token changePw(String pw) {
+        Token token = getLoginToken();
+        token.setLoginPw(passwordEncoder.encode(token.getLoginPw())); // 비밀번호 인코딩
+        return tokenRepository.save(token);
     }
 
     // Delete

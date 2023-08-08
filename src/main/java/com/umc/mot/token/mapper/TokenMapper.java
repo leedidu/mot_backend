@@ -1,9 +1,6 @@
 package com.umc.mot.token.mapper;
 
-import com.umc.mot.token.dto.LoginDto;
-import com.umc.mot.token.dto.SigninDto;
-import com.umc.mot.token.dto.TokenRequestDto;
-import com.umc.mot.token.dto.TokenResponseDto;
+import com.umc.mot.token.dto.*;
 import com.umc.mot.token.entity.CertificationPhone;
 import com.umc.mot.token.entity.Token;
 import org.mapstruct.Mapper;
@@ -17,6 +14,7 @@ public interface TokenMapper {
     Token tokenRequestDtoPatchToToken(TokenRequestDto.Patch patch);
     Token loginDtoToToken(LoginDto loginDto);
     Token signinDtoToToken(SigninDto signinDto);
+    Token loginByPhoneDtoToToken(LoginByPhoneDto loginByPhoneDto);
     CertificationPhone tokenRequestDtoCheckRandomNumberToCertificationPhone(TokenRequestDto.CheckRandomNumber checkRandomNumber);
     TokenResponseDto.SendMessage certificationPhoneToTokenResponseDtoSendMessage(CertificationPhone certificationPhone);
 }

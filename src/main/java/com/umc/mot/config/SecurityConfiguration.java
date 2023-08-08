@@ -2,18 +2,12 @@ package com.umc.mot.config;
 
 import com.umc.mot.oauth2.filter.JwtAuthenticationFilter;
 import com.umc.mot.oauth2.handler.*;
-import com.umc.mot.oauth2.utils.CustomAuthorityUtils;
-import com.umc.mot.sellMember.service.SellMemberService;
 import com.umc.mot.token.service.TokenService;
-import com.umc.mot.utils.CustomCookie;
 import com.umc.mot.oauth2.filter.JwtVerificationFilter;
 import com.umc.mot.oauth2.jwt.JwtTokenizer;
-import com.umc.mot.purchaseMember.service.PurchaseMemberService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,7 +15,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 /**
  * JWT 검증 기능 추가
@@ -32,12 +25,7 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 public class SecurityConfiguration {
     private final JwtTokenizer jwtTokenizer;
     private final TokenService tokenService;
-    private final SellMemberService sellMemberService;
-//        private final CustomAuthorityUtils authorityUtils;
-//    private final PurchaseMemberService purchaseMemberService;
-//    private final CustomCookie cookie;
     private final OAuth2MemberSuccessHandler oAuth2MemberSuccessHandler;
-
     private final JwtVerificationFilter jwtVerificationFilter;
 
     @Bean

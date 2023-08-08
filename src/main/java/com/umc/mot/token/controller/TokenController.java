@@ -2,6 +2,7 @@ package com.umc.mot.token.controller;
 
 
 import com.umc.mot.oauth2.filter.JwtVerificationFilter;
+import com.umc.mot.token.dto.LoginByPhoneDto;
 import com.umc.mot.token.dto.TokenRequestDto;
 import com.umc.mot.token.dto.TokenResponseDto;
 import com.umc.mot.token.dto.SigninDto;
@@ -51,6 +52,21 @@ public class TokenController {
     public ResponseEntity postToken(@Valid @RequestBody SigninDto signinDto) {
         Token token = tokenService.createToken(tokenMapper.signinDtoToToken(signinDto), signinDto.getPhone());
         TokenResponseDto.Response response = tokenMapper.tokenToTokenResponseDtoResponse(token);
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    // 로그인 - 전화번호
+    @PostMapping("/login/phone")
+    public ResponseEntity postLoginByPhone(@Valid @RequestBody LoginByPhoneDto loginByPhoneDto, HttpServletResponse servletResponse) {
+        Token token = tokenMapper.loginByPhoneDtoToToken(loginByPhoneDto);
+        token = tokenService.findByPhone(token, loginByPhoneDto.getPhone(), loginByPhoneDto.getRandomNumber());
+
+        TokenResponseDto.Check response = new TokenResponseDto.Check(false); // true : 일치하는 계정 존재, false : 일치하는 계정 없음
+        if(token.getId() != 0) { // 일치하는 계정 존재
+            response = new TokenResponseDto.Check(true);
+            servletResponse.setHeader("Authorization", jwtVerificationFilter.delegateAccessToken(token));
+        }
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -126,6 +142,12 @@ public class TokenController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PatchMapping("/change-pw")
+    public ResponseEntity patchChangePw(@Valid @RequestBody TokenRequestDto.ChangePw changePw) {
+        tokenService.changePw(changePw.getLoginPw());
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
 
     // Delete
     @DeleteMapping("/{token-id}")

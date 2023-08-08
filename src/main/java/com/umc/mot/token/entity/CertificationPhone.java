@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Entity
 public class CertificationPhone {
     @Id
-    private String phoneNumber;
+    private String phoneNumber; // 01012341234 형태
 
     @Column
     private int randomNumber;

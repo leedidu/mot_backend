@@ -64,14 +64,11 @@ public class ReserveService {
         return reservePackages;
     }
 
-    public Hotel hotelInfo(){
-        PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
-
-        return null;
-    }
-
+    //토큰값을 헤더에
     //Create
     public Reserve createReserve(Reserve reserve) {
+        PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
+        reserve.setPurchaseMember(purchaseMember);
         return reserveRepository.save(reserve);
     }
 

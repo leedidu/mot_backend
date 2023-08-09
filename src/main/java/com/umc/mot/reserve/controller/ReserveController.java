@@ -42,13 +42,6 @@ public class ReserveController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-    
-//    @GetMapping
-//    public ResponseEntity getInfo(@Positive @RequestParam int reserveID){
-//        PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
-//        ReserveResponseDto.Response response = reserveMapper.ResponseInfo();
-//        return new ResponseEntity<>(response, HttpStatus.OK);
-//    }
 
     // Update
     @PatchMapping("/{reserve-id}")

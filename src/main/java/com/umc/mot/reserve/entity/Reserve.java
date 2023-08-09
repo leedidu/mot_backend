@@ -26,7 +26,7 @@ public class Reserve extends Auditable {
     private int id; //예약 식별아이디
 
     @Column
-    private String paymentPrice; // 결제금액
+    private int paymentPrice; // 결제금액
 
     @Column
     private LocalDate checkIn; //체크인

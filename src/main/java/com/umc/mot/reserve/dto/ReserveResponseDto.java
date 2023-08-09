@@ -15,4 +15,17 @@ public class ReserveResponseDto {
         private String phone; //핸드폰
         private int peopleNum; //예약인원
     }
+
+    @Getter
+    @AllArgsConstructor
+    public static class Get{
+        private String hotelName;
+        private int star;
+        private int commentCount;
+        private LocalDate checkIn;
+        private LocalDate checkOut;
+        private String packageName;
+        private String roomName;
+    }
+
 }

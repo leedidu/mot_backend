@@ -39,7 +39,7 @@ public class ReserveController {
     public ResponseEntity getReserve(@Positive @RequestParam int reserveId) {
         Reserve reserve = reserveService.findReserveId(reserveId);
         ReserveResponseDto.Response response=reserveMapper.ReserveToReserveResponseDto(reserve);
-
+//        reserveService.findReservelist();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -59,7 +59,6 @@ public class ReserveController {
     @DeleteMapping("/{reserve-id}")
     public ResponseEntity deleteMember(@Positive @PathVariable("reserve-id") int reserveId) {
         reserveService.deleteReserve((reserveId));
-
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

@@ -16,7 +16,7 @@ public class ReserveRequestDto {
         private LocalDate checkOut; //체크아웃
         private String phone; //핸드폰
         private int peopleNum; //예약인원
-        private String paymentPrice; // 지불가격
+        private String paymentPrice; // 지불금액
     }
 
     @Getter
@@ -28,5 +28,6 @@ public class ReserveRequestDto {
         private LocalDate checkOut; //체크아웃
         private String phone; //핸드폰
         private int peopleNum; //예약인원
+        private String paymentPrice; //지불금액
     }
 }

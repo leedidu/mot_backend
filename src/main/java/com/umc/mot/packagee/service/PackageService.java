@@ -2,9 +2,13 @@ package com.umc.mot.packagee.service;
 
 import com.umc.mot.exception.BusinessLogicException;
 import com.umc.mot.exception.ExceptionCode;
+import com.umc.mot.hotel.entity.Hotel;
+import com.umc.mot.hotel.repository.HotelRepository;
+import com.umc.mot.hotel.service.HotelService;
 import com.umc.mot.packagee.entity.Package;
 import com.umc.mot.packagee.repository.PackageRepository;
 import com.umc.mot.sellMember.entity.SellMember;
+import com.umc.mot.token.service.TokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +19,14 @@ import java.util.Optional;
 public class PackageService {
 
     private final PackageRepository packageRepository;
+    private final HotelService hotelService;
+    private final TokenService tokenService;
 
     //Create
-    public Package createPackage(Package pa) {
-
+    public Package createPackage(Package pa,int hotelId) {
+        SellMember sellM = tokenService.getLoginSellMember();
+        Hotel hotel = hotelService.verifiedHotel(hotelId);
+        pa.setHotel(hotel);
         return packageRepository.save(pa);
     }
 
@@ -31,12 +39,14 @@ public class PackageService {
 
     // Update
     public Package patchPackage(Package pa) {
+        SellMember sellM = tokenService.getLoginSellMember();
         Package findPackage = verifiedPackage(pa.getId());
-        Optional.ofNullable(pa.getId()).ifPresent(findPackage::setId);
         Optional.ofNullable(pa.getName()).ifPresent(findPackage::setName);
         Optional.ofNullable(pa.getMinPeople()).ifPresent(findPackage::setMinPeople);
         Optional.ofNullable(pa.getMaxPeople()).ifPresent(findPackage::setMaxPeople);
         Optional.ofNullable(pa.getPrice()).ifPresent(findPackage::setPrice);
+        Optional.ofNullable(pa.getRoomType()).ifPresent(findPackage::setRoomType);
+        Optional.ofNullable(pa.getPhoto()).ifPresent(findPackage::setPhoto);
 
 
         return packageRepository.save(findPackage);
@@ -44,6 +54,7 @@ public class PackageService {
 
     // Delete
     public void deletePackage(int packageId) {
+        SellMember sellM = tokenService.getLoginSellMember();
         Package pa = verifiedPackage(packageId);
         packageRepository.delete(pa);
     }

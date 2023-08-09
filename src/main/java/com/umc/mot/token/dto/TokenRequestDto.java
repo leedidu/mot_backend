@@ -43,6 +43,5 @@ public class TokenRequestDto {
         private String refreshToken;
         private String LoginId;
         private String LoginPw;
-
     }
 }

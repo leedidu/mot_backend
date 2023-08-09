@@ -23,6 +23,20 @@ public class Category extends Auditable {
     @Column
     private String name;
 
+    @Enumerated(EnumType.STRING)
+    private Type type;
+
+    @Getter
+    public static enum Type {
+        GROUP("그룹"),
+        FILTER("그룹 이외");
+
+        @Getter
+        private String state;
+
+        Type(String state) {this.state = state;}
+    }
+
     @OneToMany(mappedBy = "category", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<HotelCategory> hotelCategories = new ArrayList<>();
 }

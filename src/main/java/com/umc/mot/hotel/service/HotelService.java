@@ -7,6 +7,10 @@ import com.umc.mot.hotel.entity.Hotel;
 import com.umc.mot.hotel.repository.HotelRepository;
 import com.umc.mot.message.entity.Message;
 import com.umc.mot.message.repository.MessageRepository;
+import com.umc.mot.sellMember.entity.SellMember;
+import com.umc.mot.sellMember.repository.SellMemberRepository;
+import com.umc.mot.sellMember.service.SellMemberService;
+import com.umc.mot.token.service.TokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +23,13 @@ import java.util.Optional;
 public class HotelService {
 
     private final HotelRepository hotelRepository;
+    private final SellMemberRepository sellMemberRepository;
+    private final SellMemberService sellMemberService;
+    private final TokenService tokenService;
 
     //Create
     public Hotel createHotel(Hotel hotel) {
-
+        SellMember sellM = tokenService.getLoginSellMember();
         return hotelRepository.save(hotel);
 
     }
@@ -42,9 +49,8 @@ public class HotelService {
 
     // Update
     public Hotel patchHotel(Hotel hotel) {
-
+        SellMember sellM = tokenService.getLoginSellMember();
         Hotel findHotel = verifiedHotel(hotel.getId());
-        Optional.ofNullable(hotel.getId()).ifPresent(findHotel::setId);
         Optional.ofNullable(hotel.getMinPeople()).ifPresent(findHotel::setMinPeople);
         Optional.ofNullable(hotel.getMaxPeople()).ifPresent(findHotel::setMaxPeople);
         Optional.ofNullable(hotel.getPrice()).ifPresent(findHotel::setPrice);
@@ -52,8 +58,13 @@ public class HotelService {
         Optional.ofNullable(hotel.getStar()).ifPresent(findHotel::setStar);
         Optional.ofNullable(hotel.getMap()).ifPresent(findHotel::setMap);
         Optional.ofNullable(hotel.getTransfer()).ifPresent(findHotel::setTransfer);
+        Optional.ofNullable(hotel.getRegion()).ifPresent(findHotel::setRegion);
         Optional.ofNullable(hotel.getAddress()).ifPresent(findHotel::setAddress);
+        Optional.ofNullable(hotel.getAddressInfo()).ifPresent(findHotel::setAddressInfo);
         Optional.ofNullable(hotel.getInfo()).ifPresent(findHotel::setInfo);
+        Optional.ofNullable(hotel.getDistance()).ifPresent(findHotel::setDistance);
+        Optional.ofNullable(hotel.getSellMember()).ifPresent(findHotel::setSellMember);
+        Optional.ofNullable(hotel.getPhoto()).ifPresent(findHotel::setPhoto);
 
         return hotelRepository.save(findHotel);
 
@@ -63,6 +74,7 @@ public class HotelService {
 
     // Delete
     public void deleteHotel(int hotelId) {
+        SellMember sellM = tokenService.getLoginSellMember();
         Hotel hotel=verifiedHotel(hotelId);
         hotelRepository.delete(hotel);
 

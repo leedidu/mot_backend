@@ -89,6 +89,7 @@ public class TokenController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+
     // 인증번호 확인
     @GetMapping("/check-random-number")
     public ResponseEntity getCheckRandomNumber(@Valid @RequestBody TokenRequestDto.CheckRandomNumber request) {
@@ -148,6 +149,7 @@ public class TokenController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
 
     // 비밀번호 변경
     @PatchMapping("/change-pw")

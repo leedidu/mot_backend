@@ -5,7 +5,11 @@ import com.umc.mot.exception.ExceptionCode;
 import com.umc.mot.purchaseMember.repository.PurchaseMemberRepository;
 import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import com.umc.mot.sellMember.entity.SellMember;
+import com.umc.mot.sellMember.repository.SellMemberRepository;
+import com.umc.mot.sellMember.service.SellMemberService;
 import com.umc.mot.token.entity.Token;
+import com.umc.mot.token.repository.TokenRepository;
+import com.umc.mot.token.service.TokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +20,8 @@ import java.util.Optional;
 public class PurchaseMemberService {
 
     private final PurchaseMemberRepository purchaseMemberRepository;
+    private final SellMemberRepository sellMemberRepository;
+    private final SellMemberService sellMemberService;
 
     //Create
     public PurchaseMember createPurchaseMember(PurchaseMember purchasemember) {
@@ -42,7 +48,6 @@ public class PurchaseMemberService {
         return purchaseMemberRepository.findByPhone(phone).orElse(null);
     }
 
-
     // Update
     public PurchaseMember patchMember(PurchaseMember member) {
         PurchaseMember findMember = verifiedMember(member.getPurchaseMemberId());
@@ -51,8 +56,6 @@ public class PurchaseMemberService {
         Optional.ofNullable(member.getEmail()).ifPresent(findMember::setEmail);
         Optional.ofNullable(member.getPhone()).ifPresent(findMember::setPhone);
         Optional.ofNullable(member.getHost()).ifPresent(findMember::setHost);
-        Optional.ofNullable(member.getToken()).ifPresent(findMember::setToken);
-
 
         return purchaseMemberRepository.save(findMember);
     }
@@ -74,6 +77,33 @@ public class PurchaseMemberService {
     public PurchaseMember verifiedByEmail(String email) {
         Optional<PurchaseMember> member = purchaseMemberRepository.findByEmail(email);
         return member.orElse(null);
+
+    }
+    //구매자 연관관계 끊고 판매자로
+    public void PurchaseMemberTosellMember(int PurchaseMemberId) {
+        PurchaseMember member1 = verifiedMember(PurchaseMemberId);//아이디로 멤버 검증
+
+        Token token = member1.getToken();
+        if(token!=null) {
+            token.setPurchaseMember(null);
+        }
+
+        SellMember sellMember = new SellMember();
+        Optional.ofNullable(member1.getName()).ifPresent(sellMember::setName);
+        Optional.ofNullable(member1.getImageUrl()).ifPresent(sellMember::setImageUrl);
+        Optional.ofNullable(member1.getPhone()).ifPresent(sellMember::setPhone);
+        Optional.ofNullable(member1.getEmail()).ifPresent(sellMember::setEmail);
+        Optional.ofNullable(member1.getHost()).ifPresent(sellMember::setHost);
+        Optional.ofNullable(member1.getToken()).ifPresent(sellMember::setToken);
+
+        sellMember.getToken().setSellMember(sellMember);
+
+
+        sellMemberService.createSellMember(sellMember);
+
+        purchaseMemberRepository.delete(member1);
+
+
 
     }
 }

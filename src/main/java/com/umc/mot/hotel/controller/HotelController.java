@@ -40,8 +40,8 @@ public class HotelController {
 
     // Read
     @GetMapping
-    public ResponseEntity getHotel(@Positive @RequestParam int hotelId){
-        Hotel hotel = hotelService.findHotel(hotelId);
+    public ResponseEntity getHotel(@Positive @RequestParam int hotel_id){
+        Hotel hotel = hotelService.findHotel(hotel_id);
         HotelResponseDto.Response response = hotelMapper.HotelToHotelResponseDto(hotel);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }

@@ -1,0 +1,278 @@
+[33mcommit db0175bcfc4fc004166766cbe00544fbe1806e7f[m[33m ([m[1;36mHEAD -> [m[1;32mfeat/jjh/mappingtest-hotel[m[33m, [m[1;31morigin/feat/swg/googleLogin[m[33m)[m
+Author: kung036 <sinariari3@gmail.com>
+Date:   Sat Aug 5 00:50:10 2023 +0900
+
+    fix -#4 : 기본 security 설정
+
+[33mcommit 0e440d03f3b4e9dba5cf7821a33f3d08014f3afe[m
+Author: kung036 <sinariari3@gmail.com>
+Date:   Fri Aug 4 08:38:02 2023 +0900
+
+    fix -#4 : 기본 security 설정
+
+[33mcommit 027bf392f9f46c24bfb70a6ff1a69ea307d1ee78[m
+Author: kung036 <sinariari3@gmail.com>
+Date:   Thu Aug 3 18:06:24 2023 +0900
+
+    fix -#4 : 기본 CRUD 에러
+
+[33mcommit aab978c9d8b2c445cf3fbd0a69aad63a8527917d[m
+Author: kung036 <sinariari3@gmail.com>
+Date:   Thu Aug 3 15:27:18 2023 +0900
+
+    feat -#1 : 기본 security 설정
+
+[33mcommit 578f75e595d949468a7cefc062834503afe12f27[m
+Author: kung036 <sinariari3@gmail.com>
+Date:   Thu Aug 3 14:32:55 2023 +0900
+
+    feat -#4 : 기본 security 설정
+
+[33mcommit 3f06ed0bc6ce845e85c32e133623548901467697[m
+Author: kung036 <sinariari3@gmail.com>
+Date:   Thu Aug 3 12:26:20 2023 +0900
+
+    feat -#4 : Token 테이블 추가 및 연관관계 매핑
+
+[33mcommit 4266436f319f307aa2d809e5b3d8835d097cc206[m
+Author: kung036 <sinariari3@gmail.com>
+Date:   Thu Aug 3 10:17:29 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit d5945174fce5c37a31c3d5e4bb2cbb6dd266abd7[m[33m ([m[1;32mmaster[m[33m)[m
+Author: jihyun <jihuyn3066@naver.com>
+Date:   Wed Aug 2 15:14:31 2023 +0900
+
+    fix - h2 데이터베이스 설정
+
+[33mcommit 926efb667e19db70c07c265f8d77e8ce220fff9c[m[33m ([m[1;31morigin/feat/jjh/mappingtest-hotel[m[33m)[m
+Merge: 59855d9 c52e329
+Author: kung036 <80895384+kung036@users.noreply.github.com>
+Date:   Wed Aug 2 14:08:56 2023 +0900
+
+    Merge pull request #3 from treejh/feat/swg/CRUD
+    
+    Feat/swg/crud
+
+[33mcommit c52e3297caa7f71d5b54fb29d31da2b1f0b215c3[m[33m ([m[1;32mfeat/jjh/CRUD[m[33m)[m
+Author: kung036 <sinariari3@gmail.com>
+Date:   Wed Aug 2 14:06:12 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit b29f459690084e131d582fd102f993bd7855f4fe[m
+Merge: 471f2f2 5e987e2
+Author: kung036 <sinariari3@gmail.com>
+Date:   Wed Aug 2 13:03:48 2023 +0900
+
+    Merge remote-tracking branch 'origin/feat/swg/CRUD' into feat/swg/CRUD
+    
+    # Conflicts:
+    #       src/main/java/com/umc/mot/exception/ExceptionCode.java
+
+[33mcommit 471f2f26dff276a6307d760b94f031aeee78a7f6[m
+Author: kung036 <sinariari3@gmail.com>
+Date:   Wed Aug 2 13:03:17 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit 2a434bb2bbb8ec913ad5e9fc0634a00ca98a87df[m
+Author: kung036 <sinariari3@gmail.com>
+Date:   Tue Aug 1 22:38:45 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit 3529490d2e4ad66c2c3b2bf40fb61fb4ac462dc4[m
+Author: jihyun <jihuyn3066@naver.com>
+Date:   Wed Aug 2 07:33:24 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit 63425105fa433c9c7804f59b4301a040a57dca04[m
+Author: jihyun <jihuyn3066@naver.com>
+Date:   Tue Aug 1 23:07:11 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit 5e987e2a1a754aa97f05e7cc52e970f379e1adbd[m
+Author: kung036 <sinariari3@gmail.com>
+Date:   Tue Aug 1 22:38:45 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit 2e629b053add9321753d488daa92587d38bbbf13[m
+Author: jihyun <jihuyn3066@naver.com>
+Date:   Tue Aug 1 20:43:02 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit d7f07ece9e68c904b542a937f3eaacbd5806c63f[m
+Author: kung036 <sinariari3@gmail.com>
+Date:   Tue Aug 1 20:37:14 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit dee047e1b07f7d67cb944690420c67ae1625c46c[m
+Author: kung036 <sinariari3@gmail.com>
+Date:   Tue Aug 1 20:25:49 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit 1924bb02211069977548788da69097c48effcf86[m
+Author: jihyun <jihuyn3066@naver.com>
+Date:   Tue Aug 1 19:53:47 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit ee1650de9ac1e3dfc83bc4135834bdf23f0a87ef[m
+Author: jihyun <jihuyn3066@naver.com>
+Date:   Tue Aug 1 19:26:29 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit cca87aec93b9316c1a39fbbc24975967479c1e02[m
+Author: jihyun <jihuyn3066@naver.com>
+Date:   Tue Aug 1 18:38:49 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit 9870dbb75210db9b2010800521528fef21b52c62[m
+Author: kung036 <sinariari3@gmail.com>
+Date:   Tue Aug 1 19:10:09 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit 9cd4c4d91bde0a9db3ebf1ca035eaaa4251e802e[m
+Merge: 548f7d3 b801746
+Author: kung036 <sinariari3@gmail.com>
+Date:   Tue Aug 1 19:07:35 2023 +0900
+
+    Merge remote-tracking branch 'origin/feat/swg/CRUD' into feat/swg/CRUD
+    
+    # Conflicts:
+    #       src/main/java/com/umc/mot/hotel/entity/Hotel.java
+    #       src/main/java/com/umc/mot/reserve/entity/Reserve.java
+    #       src/main/java/com/umc/mot/room/entity/Room.java
+
+[33mcommit 548f7d3eb9ba367dc69d5fb15cb6f0ece67ab317[m
+Author: kung036 <sinariari3@gmail.com>
+Date:   Tue Aug 1 19:05:21 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit 9d06de5b72fa87d4363c69c93af21f097511daf6[m
+Author: kung036 <sinariari3@gmail.com>
+Date:   Tue Aug 1 18:38:15 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit b801746e69f4faa3bf05a005355cf6e5c1d40201[m
+Author: kung036 <sinariari3@gmail.com>
+Date:   Tue Aug 1 18:38:15 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit 094622a2f8f1e9a3f6158f8e37a067ef0cf54fd8[m
+Author: jihyun <jihuyn3066@naver.com>
+Date:   Tue Aug 1 18:37:01 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit eb48190f592f63cc2deab13a5f39ec754e3cf904[m
+Author: kung036 <sinariari3@gmail.com>
+Date:   Tue Aug 1 18:17:50 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit 1a55e1b75b8fe6aaac66eb338e19850902991b43[m
+Author: jihyun <jihuyn3066@naver.com>
+Date:   Tue Aug 1 17:59:35 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit 428e4e3baefe5f25fd31ef2a0d8abb3493e3c6ce[m
+Author: kung036 <sinariari3@gmail.com>
+Date:   Tue Aug 1 17:58:33 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit ac5e7ea04df2158f674c3dbce23173fcfe5aa152[m
+Author: kung036 <sinariari3@gmail.com>
+Date:   Tue Aug 1 17:40:32 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit 9763ec30f7447b132ca44015294531fc04d95a7c[m
+Author: kung036 <sinariari3@gmail.com>
+Date:   Tue Aug 1 17:25:38 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit b139d9ea53727cb568cedb0d7de0d56ca499520f[m
+Merge: 4784fd0 8915fa5
+Author: kung036 <sinariari3@gmail.com>
+Date:   Tue Aug 1 16:46:36 2023 +0900
+
+    Merge remote-tracking branch 'origin/feat/swg/CRUD' into feat/swg/CRUD
+    
+    # Conflicts:
+    #       src/main/java/com/umc/mot/category/repository/CategoryRepository.java
+
+[33mcommit 4784fd0ca867c8fe32fb0fe35ac6a55f1b450052[m
+Author: kung036 <sinariari3@gmail.com>
+Date:   Tue Aug 1 16:45:11 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit 97c1fd50bca5e6023343e4c710684a2b0dd8421e[m
+Author: jihyun <jihuyn3066@naver.com>
+Date:   Tue Aug 1 16:44:05 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit c261b8deac9824b81f2e94e7e49b4ee862c092c2[m
+Author: jihyun <jihuyn3066@naver.com>
+Date:   Tue Aug 1 16:42:10 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit 8faf38c3857cda1e4003885f9a67af29499d98e6[m
+Author: jihyun <jihuyn3066@naver.com>
+Date:   Tue Aug 1 16:33:58 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit 9161bc728611e400a27e9514d4db898b198b96b2[m
+Author: jihyun <jihuyn3066@naver.com>
+Date:   Tue Aug 1 16:30:45 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit ed6406ce7115b51bb6f1f67e5babb99fd747a22d[m
+Author: kung036 <sinariari3@gmail.com>
+Date:   Tue Aug 1 16:29:00 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit 8915fa5ff66115c1c2f540ebd915e9558fdfa674[m
+Merge: 888b480 13f73b6
+Author: kung036 <sinariari3@gmail.com>
+Date:   Tue Aug 1 16:32:14 2023 +0900
+
+    Merge remote-tracking branch 'origin/feat/swg/CRUD' into feat/swg/CRUD
+
+[33mcommit 888b480228bbeb561e98a13edd5d2eea0dd384e3[m
+Author: kung036 <sinariari3@gmail.com>
+Date:   Tue Aug 1 16:29:00 2023 +0900
+
+    feat -#1 : 기초 CRUD
+
+[33mcommit 819150264504030ba69334a881fc72f17561a6e4[m
+Merge: 59855d9 5d022c1
+Author: jihyun <jihuyn3066@naver.com>
+Date:   Tue Aug 1 16:29:10 2023 +0900
+
+    Merge remote-tracking branch 'origin/feat/swg/CRUD' into feat/jjh/CRUD
+
+[33mcommit 13f73b6302869ae941d88a07

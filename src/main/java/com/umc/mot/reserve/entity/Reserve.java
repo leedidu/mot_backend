@@ -44,6 +44,10 @@ public class Reserve extends Auditable {
     @JoinColumn(name = "PURCHASE_MEMBER_ID")
     private PurchaseMember purchaseMember;
 
+    @ManyToOne
+    @JoinColumn(name = "HOTEL_ID")
+    private Hotel hotel;
+
     @OneToMany(mappedBy = "reserve", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Package> packages = new ArrayList<>();
 

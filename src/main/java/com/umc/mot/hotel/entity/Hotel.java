@@ -78,4 +78,7 @@ public class Hotel extends Auditable { // 숙소
 
     @OneToMany(mappedBy = "hotel", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Room> rooms = new ArrayList<>();
+
+    @OneToMany(mappedBy = "hotel", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Reserve> reserves = new ArrayList<>();
 }

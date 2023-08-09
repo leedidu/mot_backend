@@ -36,11 +36,7 @@ public class RoomPackageController {
     @PostMapping
     public ResponseEntity RoomPackageController(@Valid @RequestBody RoomPackageRequestDto.requestDto request){
         //요청 받은걸 RoomPackage에 넣어서 처리
-        log.info("---------------------확인1------------------------");
-        log.info(request);
-        log.info(request.getPackages().getName());
-        log.info(request.getRoom().get(0));
-        log.info("---------------------확인2------------------------");
+
         List<RoomPackage> roomPackageList = roomPackageService.createRoomPackage
                     (roomPackageMapper.RequestPackageToPackage(request.getPackages()),
                             roomPackageMapper.RequestRoomToRoom(request.getRoom()));

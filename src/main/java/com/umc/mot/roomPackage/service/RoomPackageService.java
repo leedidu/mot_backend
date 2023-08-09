@@ -64,6 +64,11 @@ public class RoomPackageService {
         for (int i = 0; i < rooms.size(); i++) {
             log.info("----------------------------서비스확인3-------------------------");
             Room room = rooms.get(i);
+            log.info("----------------------------패키지 확인-------------------------");
+            Package aPackage = pa;
+            log.info(aPackage.getName());
+            log.info(aPackage.getInfo());
+            log.info("----------------------------패키지 확인-------------------------");
             Room findroom = roomService.findRoomId(room.getId());
             log.info(findroom.getName());
             log.info(findroom.getInfo());
@@ -74,11 +79,11 @@ public class RoomPackageService {
 
             if (id==id2) {
                 log.info("---------------------서비스확인5-------------------------");
-                roomPackage.setPackages(paTest);
-                log.info(paTest.getName());
-                log.info(paTest.getInfo());
+                roomPackage.setPackages(aPackage);
+                log.info(pa.getName());
+                log.info(pa.getInfo());
                 log.info("---------------------서비스확인6-------------------------");
-                roomPackage.setRoom(findroom);
+                roomPackage.setRoom(room);
                 roomPackageRepository.save(roomPackage);
                 log.info("---------------------서비스확인7------------------------");
                 roomPackages.add(roomPackage);

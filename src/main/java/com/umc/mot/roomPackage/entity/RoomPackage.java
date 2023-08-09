@@ -28,4 +28,5 @@ public class RoomPackage extends Auditable {
     @ManyToOne
     @JoinColumn(name = "PACKAGE_ID")
     private Package packages;
+
 }

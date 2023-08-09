@@ -3,16 +3,20 @@ package com.umc.mot.token.service;
 import com.umc.mot.event.UserRegistrationApplicationEvent;
 import com.umc.mot.exception.BusinessLogicException;
 import com.umc.mot.exception.ExceptionCode;
+import com.umc.mot.oauth2.filter.JwtAuthenticationFilter;
 import com.umc.mot.oauth2.utils.CustomAuthorityUtils;
 import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import com.umc.mot.purchaseMember.service.PurchaseMemberService;
 import com.umc.mot.sellMember.entity.SellMember;
 import com.umc.mot.sellMember.service.SellMemberService;
+import com.umc.mot.token.entity.CertificationPhone;
 import com.umc.mot.token.entity.Token;
 import com.umc.mot.token.repository.TokenRepository;
+import com.umc.mot.utils.SendMessage;
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +31,7 @@ public class TokenService {
     private final CustomAuthorityUtils authorityUtils;
     private final ApplicationEventPublisher publisher;
     private final PasswordEncoder passwordEncoder;
+    private final SendMessage sendMessage;
 
     // 회원가입(아이디, 비밀번호)
     public Token createToken(Token token, String phone) {
@@ -55,8 +60,23 @@ public class TokenService {
         return token;
     }
 
-    public Token test() {
-        return getLoginToken();
+    // 로그인 - 전화번호
+    public Token findByPhone(Token token, String phone, int randomNumber) {
+        // 인증번호 인증 및 전화번호로 token 조회
+        CertificationPhone certificationPhone = new CertificationPhone();
+        certificationPhone.setPhoneNumber(phone.replace("-", ""));
+        certificationPhone.setRandomNumber(randomNumber);
+        Token findToken = findLoginIdByPhoneNumber(certificationPhone);
+        if(findToken.getId() == 0) return findToken; // 인증번호와 전호번호 불일치
+
+        // 아이디 확인
+        if(!findToken.getLoginId().equals(token.getLoginId())) { // 아이디 없음
+            Token returnToken = new Token();
+            returnToken.setId(0);
+            return returnToken;
+        }
+
+        return findToken;
     }
 
     // 로그인한 회원의 토큰 가져오기
@@ -76,7 +96,7 @@ public class TokenService {
         else token = tokenRepository.findByLoginId(principal.toString());
 
 
-        System.out.println("!! " + principal.toString());
+        System.out.println("!! principal : " + principal.toString());
 
         return token.orElse(null);
     }
@@ -111,6 +131,15 @@ public class TokenService {
         return token;
     }
 
+    // 닉네임 조회하기
+    public String findName() {
+        Token token = getLoginToken();
+        String name;
+        if(token.getPurchaseMember() != null) name = token.getPurchaseMember().getName();
+        else name = token.getSellMember().getName();
+
+        return name;
+    }
 
     // Update
     public Token patchToken(Token token) {
@@ -121,6 +150,23 @@ public class TokenService {
         Optional.ofNullable(token.getLoginPw()).ifPresent(findToken::setLoginPw);
 
         return tokenRepository.save(findToken);
+    }
+
+    // 비밀번호 변경
+    public Token changePw(String pw) {
+        Token token = getLoginToken();
+        token.setLoginPw(passwordEncoder.encode(token.getLoginPw())); // 비밀번호 인코딩
+        return tokenRepository.save(token);
+    }
+
+    // 이름 변경
+    public String changeName(String name) {
+        Token token = getLoginToken();
+        if(token.getPurchaseMember() != null) token.getPurchaseMember().setName(name);
+        else token.getSellMember().setName(name);
+
+        tokenRepository.save(token);
+        return name;
     }
 
     // Delete
@@ -142,10 +188,40 @@ public class TokenService {
     }
 
     // 아이디 중복 확인
-    public boolean useIdCheck(String loginId) {
-        boolean result = true;
+    public boolean checkLoginId(String loginId) {
         Optional<Token> token = tokenRepository.findByLoginId(loginId);
-        if(Optional.ofNullable(token).orElse(null) == null) return true;
-        else return false; // 아이디 사용 불가능
+        System.out.println("!! token id : "  + token.orElse(new Token()).getId());
+        if(token.orElse(new Token()).getId() == 0) return true; // 아이디가 존재하지 않으므로 아이디 사용 가능
+        else return false; // 아이디가 존재함으로 아이디 사용 불가능
+    }
+
+    // 전화번호로 아이디 찾기
+    public Token findLoginIdByPhoneNumber(CertificationPhone certificationPhone) {
+        // 전화번호와 인증번화 맞는지 확인
+        if(!sendMessage.checkCertificationNumber(certificationPhone)) { // 인증번호 불일치
+            throw new BusinessLogicException(ExceptionCode.NOT_MATCH_CERTIFICATION_NUMBER);
+        }
+
+        // 전화번호 형태 변환
+        String phoneNumber = certificationPhone.getPhoneNumber();
+        StringBuffer sb = new StringBuffer();
+        sb.append(phoneNumber);
+        sb.insert(3, "-");
+        sb.insert(8, "-");
+        phoneNumber = sb.toString();
+
+        // 전화번호로 회원 조회
+        Token token;
+        SellMember sellMember = sellMemberService.findMemberByPhone(phoneNumber);
+        PurchaseMember purchaseMember = purchaseMemberService.findMemberByPhone(phoneNumber);
+        if(sellMember != null) token = sellMember.getToken();
+        else if(purchaseMember != null) token = purchaseMember.getToken();
+        else {
+            token = new Token();
+            token.setId(0);
+            token.setLoginId("");
+        }
+
+        return token;
     }
 }

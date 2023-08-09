@@ -97,8 +97,8 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         saveTokenInResponseBody(response, accessToken, refreshToken);
 
         // response header 안에 token 값 저장
-        response.setHeader("access-Token", accessToken);
-        response.setHeader("refresh-Token", refreshToken);
+        response.setHeader("Authorization", accessToken);
+        response.setHeader("Refresh", refreshToken);
 
         // access token & refresh token 저장
         token.setAccessToken(accessToken);
@@ -161,8 +161,8 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
     // 리다이렉트 URL 생성
     private URI createURI(String accessToken, String refreshToken, HttpServletRequest request) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("access-Token", accessToken);
-        queryParams.add("refresh-Token", refreshToken);
+        queryParams.add("Authorization", accessToken);
+        queryParams.add("Refresh", refreshToken);
 
         CustomCookie cookie = new CustomCookie();
         String[] url = cookie.readURLfromCookie(request);

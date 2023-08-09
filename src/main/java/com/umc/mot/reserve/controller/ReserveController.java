@@ -1,10 +1,12 @@
 package com.umc.mot.reserve.controller;
 
+import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import com.umc.mot.reserve.mapper.ReserveMapper;
 import com.umc.mot.reserve.service.ReserveService;
 import com.umc.mot.reserve.dto.ReserveRequestDto;
 import com.umc.mot.reserve.dto.ReserveResponseDto;
 import com.umc.mot.reserve.entity.Reserve;
+import com.umc.mot.token.service.TokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ import javax.validation.constraints.Positive;
 public class ReserveController {
     private final ReserveService reserveService;
     private final ReserveMapper reserveMapper;
+    private TokenService tokenService;
 
     // Create
     @PostMapping
@@ -36,7 +39,7 @@ public class ReserveController {
     public ResponseEntity getReserve(@Positive @RequestParam int reserveId) {
         Reserve reserve = reserveService.findReserveId(reserveId);
         ReserveResponseDto.Response response=reserveMapper.ReserveToReserveResponseDto(reserve);
-
+//        reserveService.findReservelist();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -56,7 +59,6 @@ public class ReserveController {
     @DeleteMapping("/{reserve-id}")
     public ResponseEntity deleteMember(@Positive @PathVariable("reserve-id") int reserveId) {
         reserveService.deleteReserve((reserveId));
-
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

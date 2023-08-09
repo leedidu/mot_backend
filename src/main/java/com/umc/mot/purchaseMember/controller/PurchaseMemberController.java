@@ -67,7 +67,4 @@ public class PurchaseMemberController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
-
 }

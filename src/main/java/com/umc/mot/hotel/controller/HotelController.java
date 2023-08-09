@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.util.List;
 
 @RestController
 @RequestMapping("/hotel")
@@ -53,8 +54,12 @@ public class HotelController {
         patch.setId(hotelId);
         Hotel hotel = hotelService.patchHotel(hotelMapper.HotelRequestDtoPatchToHotel(patch));
        HotelResponseDto.Response response =hotelMapper.HotelToHotelResponseDto(hotel);
-
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("/search")
+    public ResponseEntity findHotel(@RequestParam("name") String name,@RequestParam(value = "people",defaultValue="0") int people){
+        List<Hotel> hotel = hotelService.findHotels(name,people);
+        return new ResponseEntity<>(hotel, HttpStatus.OK);
     }
 
 

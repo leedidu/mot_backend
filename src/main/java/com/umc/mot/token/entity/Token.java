@@ -1,5 +1,6 @@
 package com.umc.mot.token.entity;
 
+import com.umc.mot.auditable.Auditable;
 import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import com.umc.mot.sellMember.entity.SellMember;
 import lombok.Getter;
@@ -14,7 +15,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
-public class Token {
+public class Token extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

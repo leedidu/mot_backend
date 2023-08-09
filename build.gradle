@@ -51,6 +51,8 @@ dependencies {
     //test
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
+    // 문자인증
+    implementation 'net.nurigo:sdk:4.2.7'
 }
 
 tasks.named('test') {

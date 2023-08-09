@@ -23,8 +23,6 @@ public class PurchaseMemberService {
     private final SellMemberRepository sellMemberRepository;
     private final SellMemberService sellMemberService;
 
-
-
     //Create
     public PurchaseMember createPurchaseMember(PurchaseMember purchasemember) {
 
@@ -46,6 +44,9 @@ public class PurchaseMemberService {
         return member;
     }
 
+    public PurchaseMember findMemberByPhone(String phone) {
+        return purchaseMemberRepository.findByPhone(phone).orElse(null);
+    }
 
     // Update
     public PurchaseMember patchMember(PurchaseMember member) {
@@ -55,6 +56,7 @@ public class PurchaseMemberService {
         Optional.ofNullable(member.getEmail()).ifPresent(findMember::setEmail);
         Optional.ofNullable(member.getPhone()).ifPresent(findMember::setPhone);
         Optional.ofNullable(member.getHost()).ifPresent(findMember::setHost);
+
         return purchaseMemberRepository.save(findMember);
     }
 
@@ -77,7 +79,6 @@ public class PurchaseMemberService {
         return member.orElse(null);
 
     }
-
     //구매자 연관관계 끊고 판매자로
     public void PurchaseMemberTosellMember(int PurchaseMemberId) {
         PurchaseMember member1 = verifiedMember(PurchaseMemberId);//아이디로 멤버 검증
@@ -105,8 +106,4 @@ public class PurchaseMemberService {
 
 
     }
-
-
-
-
 }

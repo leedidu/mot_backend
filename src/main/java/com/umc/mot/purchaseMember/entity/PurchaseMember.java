@@ -31,12 +31,11 @@ public class PurchaseMember extends Auditable {
     @Column
     private String email; // 회원 이메일
 
-    @Column
-    private String phone; //회원 전화번호
+    @Column(unique = true)
+    private String phone; //회원 전화번호 010-1234-1234 형태
 
     @Column
     private String host; // 회원 역할
-
 
 
     @OneToMany(mappedBy = "purchaseMember", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})

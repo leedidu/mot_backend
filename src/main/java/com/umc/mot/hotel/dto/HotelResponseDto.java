@@ -3,6 +3,8 @@ package com.umc.mot.hotel.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.List;
+
 public class HotelResponseDto {
 
     @Getter
@@ -22,6 +24,6 @@ public class HotelResponseDto {
         private String info; //기본정보
         private String distance;
         private String photo;
-
+        private List hotelImage;
     }
 }

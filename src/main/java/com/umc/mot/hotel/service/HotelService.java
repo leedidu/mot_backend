@@ -2,6 +2,7 @@ package com.umc.mot.hotel.service;
 
 import com.umc.mot.exception.BusinessLogicException;
 import com.umc.mot.exception.ExceptionCode;
+import com.umc.mot.hotel.dto.HotelRequestDto;
 import com.umc.mot.hotel.entity.Hotel;
 import com.umc.mot.hotel.repository.HotelRepository;
 import com.umc.mot.message.entity.Message;
@@ -13,6 +14,8 @@ import com.umc.mot.token.service.TokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,6 +38,12 @@ public class HotelService {
     public Hotel findHotel(int hotelId) {
         Hotel hotel = verifiedHotel(hotelId);
         return hotel;
+    }
+
+    public List<Hotel> findHotels(String post,int people) {
+      //  System.out.println("#########"+post);
+        List<Hotel> hotels=hotelRepository.findByName(post,people);
+        return hotels;
     }
 
 

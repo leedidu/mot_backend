@@ -131,6 +131,16 @@ public class TokenService {
         return token;
     }
 
+    // 닉네임 조회하기
+    public String findName() {
+        Token token = getLoginToken();
+        String name;
+        if(token.getPurchaseMember() != null) name = token.getPurchaseMember().getName();
+        else name = token.getSellMember().getName();
+
+        return name;
+    }
+
     // Update
     public Token patchToken(Token token) {
         Token findToken = verifiedTokenId(token.getId());
@@ -147,6 +157,16 @@ public class TokenService {
         Token token = getLoginToken();
         token.setLoginPw(passwordEncoder.encode(token.getLoginPw())); // 비밀번호 인코딩
         return tokenRepository.save(token);
+    }
+
+    // 이름 변경
+    public String changeName(String name) {
+        Token token = getLoginToken();
+        if(token.getPurchaseMember() != null) token.getPurchaseMember().setName(name);
+        else token.getSellMember().setName(name);
+
+        tokenRepository.save(token);
+        return name;
     }
 
     // Delete

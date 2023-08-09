@@ -123,6 +123,13 @@ public class TokenController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // 토큰으로 사용자 닉네임 가져오기
+    @GetMapping("/nickname")
+    public ResponseEntity getNickname() {
+        TokenResponseDto.Name response = new TokenResponseDto.Name(tokenService.findName());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @GetMapping
     public ResponseEntity getToken(@Positive @RequestParam int tokenId) {
         Token token = tokenService.findTokenId(tokenId);
@@ -142,11 +149,19 @@ public class TokenController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    // 비밀번호 변경
     @PatchMapping("/change-pw")
     public ResponseEntity patchChangePw(@Valid @RequestBody TokenRequestDto.ChangePw changePw) {
         tokenService.changePw(changePw.getLoginPw());
 
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    // 닉네임 변경
+    @PutMapping("/nickname/{nickname}")
+    public ResponseEntity putNickname(@PathVariable("nickname") String nickname) {
+        TokenResponseDto.Name response = new TokenResponseDto.Name(tokenService.changeName(nickname));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     // Delete

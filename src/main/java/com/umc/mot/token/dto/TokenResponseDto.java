@@ -3,7 +3,6 @@ package com.umc.mot.token.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class TokenResponseDto {
@@ -35,6 +34,11 @@ public class TokenResponseDto {
     public static class SendMessage {
         private String phoneNumber;
         private int randomNumber;
+    }
 
+    @Getter
+    @AllArgsConstructor
+    public static class Name {
+        private String name;
     }
 }

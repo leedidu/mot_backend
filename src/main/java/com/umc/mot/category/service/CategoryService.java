@@ -8,6 +8,7 @@ import com.umc.mot.exception.ExceptionCode;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -27,6 +28,11 @@ public class CategoryService {
     public Category findCategory(int categoryId) {
         Category category = verifiedCategory(categoryId);
         return category;
+    }
+
+    // 모든 카테고리 조회
+    public List<Category> findCategories() {
+        return categoryRepository.findAll();
     }
 
 

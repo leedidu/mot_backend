@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.util.List;
 
 @RestController
 @RequestMapping("/category")
@@ -36,11 +37,22 @@ public class CategoryController {
 
 
     // Read
+//    @GetMapping
+//    public ResponseEntity getCategory(@Positive @RequestParam int categoryId){
+//        Category category = categoryService.findCategory(categoryId);
+//        CategoryResponseDto.Response response = categoryMapper.CategoryToCategoryResponseDto(category);
+//        return new ResponseEntity<>(response,HttpStatus.OK);
+//    }
+
+    // 모든 카테고리 반환
     @GetMapping
-    public ResponseEntity getCategory(@Positive @RequestParam int categoryId){
-        Category category = categoryService.findCategory(categoryId);
-        CategoryResponseDto.Response response = categoryMapper.CategoryToCategoryResponseDto(category);
-        return new ResponseEntity<>(response,HttpStatus.OK);
+    public ResponseEntity getCategories() {
+        List<Category> categories = categoryService.findCategories();
+        List<CategoryResponseDto.Response> response = categoryMapper.categoriesToCategoryResponseDtoResponses(categories);
+
+        CategoryResponseDto.Responses responses = new CategoryResponseDto.Responses(response);
+        return new ResponseEntity<>(responses, HttpStatus.OK);
+//        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 

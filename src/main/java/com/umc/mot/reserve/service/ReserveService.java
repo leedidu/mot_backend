@@ -82,12 +82,11 @@ public class ReserveService {
     // Update
     public Reserve patchReserve(Reserve reserve) {
         Reserve findReserve = verifiedReserve(reserve.getId());
-        Optional.ofNullable(reserve.getId()).ifPresent(findReserve::setId);
-        Optional.ofNullable(reserve.getPaymentPrice()).ifPresent(findReserve::setPaymentPrice);
         Optional.ofNullable(reserve.getCheckIn()).ifPresent(findReserve::setCheckIn);
         Optional.ofNullable(reserve.getCheckOut()).ifPresent(findReserve::setCheckOut);
         Optional.ofNullable(reserve.getPhone()).ifPresent(findReserve::setPhone);
-        Optional.ofNullable(reserve.getPeopleNum()).ifPresent(findReserve::setPeopleNum);
+        if(reserve.getPaymentPrice() != 0) findReserve.setPaymentPrice(reserve.getPaymentPrice());
+        if(reserve.getPeopleNum() != 0) findReserve.setPeopleNum(reserve.getPeopleNum());
 
         return reserveRepository.save(findReserve);
     }

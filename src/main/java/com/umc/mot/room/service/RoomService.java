@@ -39,13 +39,15 @@ public class RoomService{
 
     // Update
     public Room patchRoom(Room room) {
+        SellMember sellM = tokenService.getLoginSellMember();
         Room findRoom = verifiedRoom(room.getId());
-        Optional.ofNullable(room.getId()).ifPresent(findRoom::setId);
         Optional.ofNullable(room.getName()).ifPresent(findRoom::setName);
         Optional.ofNullable(room.getMinPeople()).ifPresent(findRoom::setMinPeople);
         Optional.ofNullable(room.getMaxPeople()).ifPresent(findRoom::setMaxPeople);
         Optional.ofNullable(room.getPrice()).ifPresent(findRoom::setPrice);
+        Optional.ofNullable(room.getInfo()).ifPresent(findRoom::setInfo);
         Optional.ofNullable(room.getRoomType()).ifPresent(findRoom::setRoomType);
+        Optional.ofNullable(room.getPhoto()).ifPresent(findRoom::setPhoto);
 
 
 
@@ -54,6 +56,7 @@ public class RoomService{
 
     // Delete
     public void deleteRoom(int roomId) {
+        SellMember sellM = tokenService.getLoginSellMember();
         Room room = verifiedRoom(roomId);
         roomRepository.delete(room);
     }

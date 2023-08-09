@@ -1,15 +1,13 @@
-package com.umc.mot.packagee.dto;
+package com.umc.mot.roomPackage.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
+import java.time.LocalDateTime;
 import java.util.List;
 
-public class PackageResponseDto {
-
+public class PackageResponseDto  {
     @Getter
     @Setter
     @AllArgsConstructor
@@ -19,9 +17,12 @@ public class PackageResponseDto {
         private int minPeople;
         private int maxPeople;
         private int price;
-        private String info;
-        private String roomType; //객실방종류
+        private String roomType; //패키지방종류
+        private String info; //기본정보
         private List<String> photo;
+        private LocalDateTime createdAt;
+        private LocalDateTime modifiedAt;
+
     }
 
 }

@@ -36,26 +36,43 @@ public class RoomPackageController {
     @PostMapping
     public ResponseEntity RoomPackageController(@Valid @RequestBody RoomPackageRequestDto.requestDto request){
         //요청 받은걸 RoomPackage에 넣어서 처리
+        log.info("---------------------서비스11------------------------");
+        log.info(request.getRoom().get(0).getName());
+        log.info(request.getPackages().getName());
+        log.info(request.getPackages().getName());
+        log.info(request.getRoom().get(1).getName());
+        log.info(request.getPackages().getName());
+        log.info("---------------------서비스22------------------------");
 
         List<RoomPackage> roomPackageList = roomPackageService.createRoomPackage
-                    (roomPackageMapper.RequestPackageToPackage(request.getPackages()),
-                            roomPackageMapper.RequestRoomToRoom(request.getRoom()));
+                    (roomPackageMapper.PackageRequestDtoToPackage(request.getPackages()),
+                            roomPackageMapper.RoomToRoomRequestDto(request.getRoom()));
         //응답
-        log.info("---------------------확인3------------------------");
+        log.info("---------------------확인1------------------------");
         List<RoomPackageResponseDto.Response> responseList = new ArrayList<>();
 
+        List<Room> room1 = new ArrayList<>();
+        Package pa = roomPackageList.get(0).getPackages();
+        log.info(pa.getName());
+        log.info("---------------------확인2------------------------");
 
-        for (RoomPackage roomPackage : roomPackageList) {
-            RoomPackageResponseDto.Response response = roomPackageMapper.RoomPackageToRoomPackageResponse(
-                    roomPackage.getPackages(),
-                    Collections.singletonList(roomPackage.getRoom())
-            );
-            responseList.add(response);
+
+        for(int i=0;i<roomPackageList.size();i++){
+            Room rooms = roomPackageList.get(i).getRoom();
+            room1.add(rooms);
         }
+        log.info("---------------------확인3------------------------");
+
+        RoomPackageResponseDto.Response response =
+                new RoomPackageResponseDto.Response(roomPackageMapper.PackageToRequest(pa),roomPackageMapper.RoomToRequest(room1));
+
         log.info("---------------------확인4------------------------");
-        return new ResponseEntity<>(responseList, HttpStatus.CREATED);
-
-
+        log.info(response.getPackages().getName());
+        log.info(response.getRoom().get(0).getName());
+        log.info(response.getRoom().get(1).getName());
+        log.info(response.getRoom().get(0).getName());
+        log.info("---------------------55확인55------------------------");
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
 
     }
 }

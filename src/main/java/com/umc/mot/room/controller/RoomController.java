@@ -35,8 +35,7 @@ public class RoomController {
 
     // Read
     @GetMapping
-    public ResponseEntity getRoom(@Positive @RequestParam int roomId,
-                                  @RequestBody RoomRequestDto.Patch patch) {
+    public ResponseEntity getRoom(@Positive @RequestParam int roomId) {
         Room room = roomService.findRoomId(roomId);
         RoomResponseDto.Response response=roomMapper.roomToRoomResponseDto(room);
 

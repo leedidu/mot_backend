@@ -39,13 +39,14 @@ public class PackageService {
 
     // Update
     public Package patchPackage(Package pa) {
+        SellMember sellM = tokenService.getLoginSellMember();
         Package findPackage = verifiedPackage(pa.getId());
-        Optional.ofNullable(pa.getId()).ifPresent(findPackage::setId);
         Optional.ofNullable(pa.getName()).ifPresent(findPackage::setName);
         Optional.ofNullable(pa.getMinPeople()).ifPresent(findPackage::setMinPeople);
         Optional.ofNullable(pa.getMaxPeople()).ifPresent(findPackage::setMaxPeople);
         Optional.ofNullable(pa.getPrice()).ifPresent(findPackage::setPrice);
         Optional.ofNullable(pa.getRoomType()).ifPresent(findPackage::setRoomType);
+        Optional.ofNullable(pa.getPhoto()).ifPresent(findPackage::setPhoto);
 
 
         return packageRepository.save(findPackage);
@@ -53,6 +54,7 @@ public class PackageService {
 
     // Delete
     public void deletePackage(int packageId) {
+        SellMember sellM = tokenService.getLoginSellMember();
         Package pa = verifiedPackage(packageId);
         packageRepository.delete(pa);
     }

@@ -43,6 +43,10 @@ public class Room extends Auditable {
     @Column(nullable = false, length = 100)
     private String info; //기본정보
 
+    @Column
+    @ElementCollection
+    private List<String> photo = new ArrayList<>(); //사진
+
     @ManyToOne
     @JoinColumn(name = "HOTEL_ID")
     private Hotel hotel;

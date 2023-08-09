@@ -30,43 +30,49 @@ public class Hotel extends Auditable { // 숙소
     private int id; //숙소식별자
 
     @Column
-    @Max(value = 100, message = "최대 인원은 100 이하여야 합니다.")
+    @Max(value = 999, message = "최대 인원은 100 이하여야 합니다.")
     private int maxPeople; //최대인원
 
     @Column
-    @Min(value = 5, message = "최소 인원은 5 이상이어야 합니다.")
+    @Min(value = 0, message = "최소 인원은 5 이상이어야 합니다.")
     private int minPeople; //최소인원
 
     @Column
-    @Min(value = 100000, message = "최소 가격은 10,000 이상이어야 합니다.")
     private int price; //가격
 
-    @Column(nullable = false, length = 30)
+    @Column(length = 30)
     private String name; //숙소이름
 
     @Column
-    @Min(value = 1, message = "최소 별점은 1 이상이어야 합니다.")
-    @Max(value =5 , message="최대 별점은 5 이하이어야 합니다.")
     private int star; //별점
-
 
     @Column(length = 100)
     private String map; //지도
 
-    @Column(nullable = false, length = 30)
+    @Column(length = 30)
     private String transfer; //이동수단
 
-    @Column(nullable = false, length = 30)
+    @Column(length = 30)
     private String address; //주소
 
-    @Column(nullable = false, length = 30)
+    @Column(length=100)
+    private String region; //지역
+
+    @Column(length=100)
+    private String addressInfo; //상세주소
+
+    @Column(length = 30)
     private String info; //기본정보
 
     @Column
     private int commentCount; // 댓글개수
 
-    @Column(nullable = false, length = 30)
+    @Column(length = 30)
     private String distance; // 숙소이동거리
+
+    @Column
+    private String photo;
+
 
     @ManyToOne
     @JoinColumn(name = "SELLMEMBER_ID")

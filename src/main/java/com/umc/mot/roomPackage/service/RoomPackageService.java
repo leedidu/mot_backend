@@ -47,47 +47,39 @@ public class RoomPackageService {
     public List<RoomPackage> createRoomPackage(Package pa, List<Room> rooms) {
         log.info("---------------------토큰확인 -------------------------");
         SellMember sellM = tokenService.getLoginSellMember();
-        log.info("---------------------서비스확인1-------------------------");
+        log.info(pa.getName());
+        log.info(pa.getInfo());
         Package paTest = packageService.verifiedPackage(pa.getId());
         int id =paTest.getHotel().getId();
-        log.info(paTest.getName());
-        log.info(paTest.getInfo());
-        log.info("---------------------서비스확인2-------------------------");
-        log.info(id);
 
+        log.info(pa.getName());
+        log.info(pa.getInfo());
         List<RoomPackage> roomPackages = new ArrayList<>();
-        RoomPackage roomPackage = new RoomPackage();
 
-        log.info("----------------------------룸사이즈 확인-------------------------");
         log.info(rooms.size());
-        log.info("----------------------------룸사이즈 확인-------------------------");
         for (int i = 0; i < rooms.size(); i++) {
-            log.info("----------------------------서비스확인3-------------------------");
             Room room = rooms.get(i);
-            log.info("----------------------------패키지 확인-------------------------");
             Package aPackage = pa;
-            log.info(aPackage.getName());
-            log.info(aPackage.getInfo());
-            log.info("----------------------------패키지 확인-------------------------");
             Room findroom = roomService.findRoomId(room.getId());
+            log.info("---------------------룸확인  -------------------------");
             log.info(findroom.getName());
             log.info(findroom.getInfo());
-            log.info("----------------------------서비스확인4-------------------------");
             int id2 = findroom.getHotel().getId();
             log.info(id2);
-
+            log.info("---------------------룸확인2  -------------------------");
+            RoomPackage roomPackage = new RoomPackage();
 
             if (id==id2) {
-                log.info("---------------------서비스확인5-------------------------");
-                roomPackage.setPackages(aPackage);
-                log.info(pa.getName());
-                log.info(pa.getInfo());
-                log.info("---------------------서비스확인6-------------------------");
+                roomPackage.setPackages(pa);
+                log.info("--------------------서비스1---------------------------");
+                log.info(paTest.getInfo());
+                log.info(paTest.getName());
+                log.info(room.getCreatedAt());
+                log.info(room.getModifiedAt());
+                log.info("--------------------서비스2---------------------------");
                 roomPackage.setRoom(room);
-                roomPackageRepository.save(roomPackage);
-                log.info("---------------------서비스확인7------------------------");
                 roomPackages.add(roomPackage);
-
+                roomPackageRepository.save(roomPackage);
 
             } else {
 
@@ -102,23 +94,4 @@ public class RoomPackageService {
 }
 
 
-
-/*
-    public Room roomPackage(int roomPackageId, int roomId, List<Integer> packageIds) {
-        Room room = roomService.findRoomId(roomId);
-
-        // 여러 개의 packageId를 순회하며 각각의 패키지를 추가
-        for (Integer packageId : packageIds) {
-            Package pa = packageService.findPackage(packageId);
-            if (room.getHotel().equals(pa.getHotel())) {
-                // 여기서 패키지를 room에 추가하는 로직을 작성
-            } else {
-                // 다른 호텔의 패키지는 처리할 수 없는 경우에 대한 로직
-            }
-        }
-
-        return roomRepository.save(room);
-    }
-}
- */
 

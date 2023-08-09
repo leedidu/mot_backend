@@ -47,6 +47,10 @@ public class Package extends Auditable { //패키지
     @Column(nullable = false, length = 500)
     private String info; //기본정보
 
+    @Column
+    @ElementCollection
+    private List<String> photo = new ArrayList<>();
+
 
     @ManyToOne
     @JoinColumn(name = "HOTEL_ID")

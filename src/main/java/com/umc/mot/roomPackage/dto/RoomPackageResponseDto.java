@@ -14,8 +14,8 @@ public class RoomPackageResponseDto {
     @Getter
     @AllArgsConstructor
     public static class Response {
-        private Package packages;
-        private List<Room> room;
+        private PackageResponseDto.Response packages;
+        private List<RoomResponseDto.Response> room;
 
     }
 }

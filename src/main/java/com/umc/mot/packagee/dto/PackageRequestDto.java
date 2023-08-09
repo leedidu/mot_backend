@@ -6,6 +6,8 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PackageRequestDto {
     @Getter
@@ -19,6 +21,7 @@ public class PackageRequestDto {
         private int price;
         private String info;
         private String roomType; //객실방종류
+        private List<String> photo;
 
     }
 
@@ -33,5 +36,6 @@ public class PackageRequestDto {
         private int price;
         private String info;
         private String roomType; //객실방종류
+        private List<String> photo;
     }
 }

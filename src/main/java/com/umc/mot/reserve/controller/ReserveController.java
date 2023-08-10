@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.util.List;
 
 @RestController
 @RequestMapping("/reserve")
@@ -28,7 +29,7 @@ public class ReserveController {
     // Create
     @PostMapping
     public ResponseEntity postReserve(@Valid @RequestBody ReserveRequestDto.Post post) {
-        Reserve reserve = reserveService.createReserve(reserveMapper.ReserveRequestDtoPostToReserve(post));
+        Reserve reserve = reserveService.createReserve(reserveMapper.ReserveRequestDtoPostToReserve(post), post.getHotelId());
         ReserveResponseDto.Response response = reserveMapper.ReserveToReserveResponseDto(reserve);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -39,7 +40,6 @@ public class ReserveController {
     public ResponseEntity getReserve(@Positive @RequestParam int reserveId) {
         Reserve reserve = reserveService.findReserveId(reserveId);
         ReserveResponseDto.Response response=reserveMapper.ReserveToReserveResponseDto(reserve);
-//        reserveService.findReservelist();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

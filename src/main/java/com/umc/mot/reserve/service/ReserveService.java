@@ -8,6 +8,7 @@ import com.umc.mot.packagee.entity.Package;
 import com.umc.mot.packagee.service.PackageService;
 import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import com.umc.mot.purchaseMember.service.PurchaseMemberService;
+import com.umc.mot.reserve.controller.ReserveController;
 import com.umc.mot.reserve.entity.Reserve;
 import com.umc.mot.reserve.repository.ReserveRepository;
 import com.umc.mot.room.entity.Room;
@@ -23,9 +24,6 @@ import java.util.*;
 @AllArgsConstructor
 public class ReserveService {
     private final ReserveRepository reserveRepository;
-    private final PurchaseMemberService purchaseMemberService;
-    private final RoomService roomService;
-    private final PackageService packageService;
     private final TokenService tokenService;
     private final HotelService hotelService;
 
@@ -64,19 +62,30 @@ public class ReserveService {
         return reservePackages;
     }
 
-    //토큰값을 헤더에
+    //        if((reserve.getCheckIn().isBefore(post.getCheckIn()) && reserve.getCheckOut().isBefore(post.getCheckOut()))
+//                || (reserve.getCheckIn().isBefore(post.getCheckIn()) && reserve.getCheckOut().isAfter(post.getCheckOut()))
+//                || (reserve.getCheckIn().isAfter(post.getCheckIn()) && reserve.getCheckOut().isBefore(post.getCheckOut()))
+//                || (reserve.getCheckIn().isAfter(post.getCheckIn()) && reserve.getCheckOut().isAfter(post.getCheckOut()))){
+//            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);}
+//        else{
+//            return new ResponseEntity<>(response, HttpStatus.CREATED);
+//        }
     //Create
-    public Reserve createReserve(Reserve reserve) {
+    public Reserve createReserve(Reserve reserve, int hotelId) {
         PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
+        Hotel hotel = hotelService.verifiedHotel(hotelId);
         reserve.setPurchaseMember(purchaseMember);
+        reserve.setHotel(hotel);
         return reserveRepository.save(reserve);
     }
+
 
     // Read
     public Reserve findReserveId(int roomId){
         Reserve reserve = verifiedReserve(roomId);
         return reserve;
     }
+
 
 
     // Update

@@ -29,6 +29,7 @@ public class ReserveService {
     private final ReserveRepository reserveRepository;
     private final TokenService tokenService;
     private final HotelService hotelService;
+    private final RoomService roomService;
 
     public List<Hotel> findHotels(){ // 예약된 호텔 리스트 찾기
         PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
@@ -92,34 +93,32 @@ public class ReserveService {
         return reserveRepository.save(reserve);
     }
 
+
 /*
 1. 객실 패키지 테이블에서 호텔 아이디가 같은걸 찾음
-2. 그 예약 식별자를 가져와서
+2. 객실 테이블에서 그 예약 식별자를 가져옴
 3. 체크인 아웃을 비교
 * */
-    // 객실-예약 / 패키지-예약 연관관계 맵핑 안되어있어서 지금 아주그냥잘돌아감;
     public boolean checkReserve(ReserveRequestDto.Post post){
-        int hotelId = post.getHotelId();
-        Hotel hotel = hotelService.findHotel(hotelId); //호텔 정보를 가져옴
-        for(Room room : hotel.getRooms()){ //1번
-            if(room.getHotel().getId() == post.getHotelId()){ //2번
-                int reserveId = room.getReserve().getId();
-                Reserve reserve = findReserve(reserveId); // 2번 -> 예약된 걸 찾아옴
-                LocalDate checkIn = reserve.getCheckIn();
-                LocalDate checkOut = reserve.getCheckOut();
-                if(checkIn.isEqual(post.getCheckIn())){
-                    return false;
-                } else{
-                    if((checkIn.isBefore(post.getCheckIn()) && checkOut.isBefore(post.getCheckOut()))
-                            || (checkIn.isBefore(post.getCheckIn()) && checkOut.isAfter(post.getCheckOut()))
-                            || (checkIn.isAfter(post.getCheckIn()) && checkOut.isBefore(post.getCheckOut())
-                            || (checkIn.isAfter(post.getCheckIn()) && checkOut.isAfter(post.getCheckOut())))){
+        Hotel hotel = hotelService.findHotel(post.getHotelId()); //호텔 정보를 가져옴
+        if(post.getRoomId() != 0){ // 객실을 예약할때
+            Room room = roomService.findRoomId(post.getRoomId());
+            if(room.getReserve() == null) {return true;}
+            else{
+                if(room.getReserve().getCheckIn().isEqual(post.getCheckIn())) {return false;}
+                else{
+                    if(room.getReserve().getCheckIn().isEqual(post.getCheckOut())
+                            || room.getReserve().getCheckOut().isEqual(post.getCheckIn())
+                            || room.getReserve().getCheckIn().isAfter(post.getCheckOut())
+                            || room.getReserve().getCheckOut().isBefore(post.getCheckIn())){
+                        return true;
+                    } else{
                         return false;
                     }
                 }
             }
         }
-        return true;
+        return false;
     }
 
 

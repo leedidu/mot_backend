@@ -4,6 +4,7 @@ import com.umc.mot.exception.BusinessLogicException;
 import com.umc.mot.exception.ExceptionCode;
 import com.umc.mot.hotel.entity.Hotel;
 import com.umc.mot.hotel.service.HotelService;
+import com.umc.mot.reserve.service.ReserveService;
 import com.umc.mot.room.entity.Room;
 import com.umc.mot.room.repository.RoomRepository;
 import com.umc.mot.sellMember.entity.SellMember;
@@ -21,6 +22,7 @@ public class RoomService{
     private final RoomRepository roomRepository;
     private final HotelService hotelService;
     private final TokenService tokenService;
+//    private final ReserveService reserveService;
 
     //Create
     public Room createRoom(Room room,int hotelId) {

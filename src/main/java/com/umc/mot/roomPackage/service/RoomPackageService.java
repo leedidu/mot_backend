@@ -73,14 +73,6 @@ public class RoomPackageService {
     //read
     public List<Room> findRoomPackage(int packageId){
         List<Integer> roomPackage = roomPackageRepository.findRoomByPackage(packageId);
-        if(roomPackage.size() == 0)
-            log.info("불러온 값이 없습니다.!!!!!!!!!!!!!!!!!!!!!");
-        else {
-            log.info(roomPackage.get(0));
-            log.info(roomPackage.get(1));
-            log.info("값을 무사히 불러왔습니다.!!!!!!!!!!!!!!!!!!!");
-
-        }
 
         List<Room> rooms= new ArrayList<>();
 
@@ -90,12 +82,6 @@ public class RoomPackageService {
 
 
         }
-        log.info("리스트에 값이 넣어졌습니다!!!!!!!!!!!!!!!!!");
-        log.info(rooms.get(0).getName());
-        log.info(rooms.get(0).getCreatedAt());
-        log.info(rooms.get(1).getName());
-        log.info(rooms.get(1).getCreatedAt());
-        log.info("리스트에 값이 넣어졌습니다!!!!!!!!!!!!!!!!!");
 
 
         return rooms;
@@ -103,38 +89,51 @@ public class RoomPackageService {
     }
 
 
-/*
+
 
     //Update
-    public Heart patchRoomPackage(Heart heart){
-        Heart findHeart = verifiedHeart(heart.getId());
-        Optional.ofNullable(heart.getId()).ifPresent(findHeart::setId);
-        return heartRepository.save(findHeart);
+    public List<RoomPackage> patchRoomPackage(Package pa,List<Room> rooms){
+        roomPackageRepository.deleteRoomPackageByPackage(pa.getId());
+        SellMember sell = tokenService.getLoginSellMember();
+
+        Package paTest = packageService.verifiedPackage(pa.getId());
+        int id =paTest.getHotel().getId();
+
+        List<RoomPackage> roomPackages = new ArrayList<>();
+
+        for (int i = 0; i < rooms.size(); i++) {
+            Room room = rooms.get(i);
+            Package aPackage = pa;
+            Room findroom = roomService.findRoomId(room.getId());
+            int id2 = findroom.getHotel().getId();
+            RoomPackage roomPackage = new RoomPackage();
+
+            if (id == id2) {
+                roomPackage.setPackages(pa);
+                roomPackage.setRoom(room);
+                roomPackages.add(roomPackage);
+                RoomPackage roomPackage1 = roomPackageRepository.save(roomPackage);
+                findroom.getRoomPackages().add(roomPackage1);
+                paTest.getRoomPackages().add(roomPackage1);
+
+
+            } else {
+
+                throw new IllegalArgumentException("Cannot create room package for different hotels.");
+            }
+
+        }
+        return roomPackages;
     }
 
 
 
     //Delete
-    public void deleteHeart(int heartId){
-        Heart heart = verifiedHeart(heartId);
-        heartRepository.delete(heart);
+    public void deleteRoomPackage(int packageId){
+        SellMember sell = tokenService.getLoginSellMember();
+        roomPackageRepository.deleteRoomPackageByPackage(packageId);
     }
 
-    public RoomPackage verifiedRP(int RPId) {
-
-
-        List<RoomPackage> roomPackageList =new ArrayList<>();
-        for
-        Optional<RoomPackage> roomPackage = roomPackageRepository.findAll(RPId);
-        return roomPackage.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ROOM_PACKAGE_NOT_FOUND));
-
-    }
-
-
-
-
-
- */
 }
 
 

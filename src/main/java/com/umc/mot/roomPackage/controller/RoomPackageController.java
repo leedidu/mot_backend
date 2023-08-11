@@ -33,7 +33,7 @@ public class RoomPackageController {
     private final RoomMapper roomMapper;
 
     @PostMapping
-    public ResponseEntity RoomPackageController(@Valid @RequestBody RoomPackageRequestDto.requestDto request){
+    public ResponseEntity RoomPackageCreateController(@Valid @RequestBody RoomPackageRequestDto.requestDto request){
         //요청 받은걸 RoomPackage에 넣어서 처리
 
         List<RoomPackage> roomPackageList = roomPackageService.createRoomPackage
@@ -64,40 +64,48 @@ public class RoomPackageController {
     public ResponseEntity getRoomPackage(@Positive @RequestParam int packageId){
      List<RoomResponseDto.Response> rooms =
              roomPackageMapper.RoomToRequest(roomPackageService.findRoomPackage(packageId));
-     log.info("-----------------룸패키지 컨트롤러-------------------------");
-        log.info(rooms.get(0).getName());
-        log.info(rooms.get(0).getCreatedAt());
-        log.info(rooms.get(1).getName());
-        log.info(rooms.get(1).getCreatedAt());
-        log.info("-----------------룸패키지 컨트롤러-------------------------");
 
         return new ResponseEntity<>(rooms,HttpStatus.OK);
     }
 
 
-/*
-    // Update
-    @PatchMapping("/{heart-id}")
-    public ResponseEntity patchRoomPackage(@Positive @PathVariable("heart-id") int heartId,
-                                     @RequestBody HeartRequestDto.Patch patch) {
-        patch.setId(heartId);
-        Heart heart = heartService.patchHeart(heartMapper.HeartRequestDtoPatchToHeart(patch));
-        HeartResponseDto.Response response =heartMapper.HeartToHeartResponseDto(heart);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    @PatchMapping
+    public ResponseEntity RoomPackagePatchController
+            (@Valid @RequestBody RoomPackageRequestDto.requestDto request){
+        List<RoomPackage> roomPackageList = roomPackageService.patchRoomPackage
+                (roomPackageMapper.PackageRequestDtoToPackage(request.getPackages()),
+                        roomPackageMapper.RoomToRoomRequestDto(request.getRoom()));
+        //응답
+        List<RoomPackageResponseDto.Response> responseList = new ArrayList<>();
+
+        List<Room> room1 = new ArrayList<>();
+        Package pa = roomPackageList.get(0).getPackages();
+
+        for(int i=0;i<roomPackageList.size();i++){
+            Room rooms = roomPackageList.get(i).getRoom();
+            room1.add(rooms);
+        }
+
+        RoomPackageResponseDto.Response response =
+                new RoomPackageResponseDto.Response(roomPackageMapper.PackageToRequest(pa),roomPackageMapper.RoomToRequest(room1));
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+
     }
+
 
 
     // Delete
     @DeleteMapping("/{package-id}")
-    public ResponseEntity deleteRoomPackage(@Positive @PathVariable("package-id") int heartId) {
+    public ResponseEntity deleteRoomPackage(@Positive @PathVariable("package-id") int packageId) {
 
-
+        roomPackageService.deleteRoomPackage(packageId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 
- */
+
 }
 
 

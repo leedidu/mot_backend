@@ -11,9 +11,12 @@ import com.umc.mot.sellMember.entity.SellMember;
 import com.umc.mot.sellMember.repository.SellMemberRepository;
 import com.umc.mot.sellMember.service.SellMemberService;
 import com.umc.mot.token.service.TokenService;
+import com.umc.mot.utils.S3Uploader;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +29,7 @@ public class HotelService {
     private final SellMemberRepository sellMemberRepository;
     private final SellMemberService sellMemberService;
     private final TokenService tokenService;
+    private final S3Uploader s3Uploader;
 
     //Create
     public Hotel createHotel(Hotel hotel) {
@@ -87,6 +91,27 @@ public class HotelService {
         Optional<Hotel> hotel = hotelRepository.findById(hotelId);
         return hotel.orElseThrow(() -> new BusinessLogicException(ExceptionCode.HOTEL_NOT_FOUND));
 
+    }
+
+    // 판매자와 숙소 매칭 확인
+    public Hotel verifiedHotelAndSellMember(int hotelId) {
+        Hotel hotel = verifiedHotel(hotelId);
+        SellMember sellMember = tokenService.getLoginSellMember();
+
+        if(hotel.getSellMember().getSellMemberId() != sellMember.getSellMemberId())
+            throw new BusinessLogicException(ExceptionCode.NOT_AUTHORIZATION);
+        return hotel;
+    }
+
+    // 사진 업로드
+    public Hotel uploadHotelImage(int hotelId, MultipartFile multipartFile) throws IOException {
+        Hotel hotel = verifiedHotelAndSellMember(hotelId);
+
+        // 이미지 업로드
+        String s3ImageUrl = s3Uploader.uploadFile(multipartFile);
+        hotel.setPhoto(s3ImageUrl);
+
+        return hotelRepository.save(hotel);
     }
 
 }

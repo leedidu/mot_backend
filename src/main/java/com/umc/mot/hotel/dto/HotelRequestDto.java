@@ -3,6 +3,7 @@ package com.umc.mot.hotel.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.Column;
 
@@ -35,5 +36,13 @@ public class HotelRequestDto {
         private String info; //기본정보
         private String distance;
         private String photo;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class PatchImage {
+        private int hotelId;
+        private MultipartFile image;
     }
 }

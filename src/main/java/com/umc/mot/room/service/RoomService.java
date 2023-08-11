@@ -49,7 +49,7 @@ public class RoomService{
         Optional.ofNullable(room.getPrice()).ifPresent(findRoom::setPrice);
         Optional.ofNullable(room.getInfo()).ifPresent(findRoom::setInfo);
         Optional.ofNullable(room.getRoomType()).ifPresent(findRoom::setRoomType);
-        Optional.ofNullable(room.getPhoto()).ifPresent(findRoom::setPhoto);
+        Optional.ofNullable(room.getPhotos()).ifPresent(findRoom::setPhotos);
 
 
 

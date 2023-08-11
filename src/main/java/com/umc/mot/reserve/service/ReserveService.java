@@ -9,13 +9,16 @@ import com.umc.mot.packagee.service.PackageService;
 import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import com.umc.mot.purchaseMember.service.PurchaseMemberService;
 import com.umc.mot.reserve.controller.ReserveController;
+import com.umc.mot.reserve.dto.ReserveRequestDto;
 import com.umc.mot.reserve.entity.Reserve;
 import com.umc.mot.reserve.repository.ReserveRepository;
 import com.umc.mot.room.entity.Room;
 import com.umc.mot.room.service.RoomService;
 import com.umc.mot.token.service.TokenService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -26,6 +29,7 @@ public class ReserveService {
     private final ReserveRepository reserveRepository;
     private final TokenService tokenService;
     private final HotelService hotelService;
+    private final RoomService roomService;
 
     public List<Hotel> findHotels(){ // 예약된 호텔 리스트 찾기
         PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
@@ -61,28 +65,66 @@ public class ReserveService {
         }
         return reservePackages;
     }
+/*
+1. 예약 생성시 들어간 호텔 아이디를 이용해서 객실/패키지 찾기
+2. 해당 객실의 예약식별아이디를 지금 예약아이디로 수정
+* */
 
-    //        if((reserve.getCheckIn().isBefore(post.getCheckIn()) && reserve.getCheckOut().isBefore(post.getCheckOut()))
-//                || (reserve.getCheckIn().isBefore(post.getCheckIn()) && reserve.getCheckOut().isAfter(post.getCheckOut()))
-//                || (reserve.getCheckIn().isAfter(post.getCheckIn()) && reserve.getCheckOut().isBefore(post.getCheckOut()))
-//                || (reserve.getCheckIn().isAfter(post.getCheckIn()) && reserve.getCheckOut().isAfter(post.getCheckOut()))){
-//            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);}
-//        else{
-//            return new ResponseEntity<>(response, HttpStatus.CREATED);
-//        }
     //Create
-    public Reserve createReserve(Reserve reserve, int hotelId) {
+    public Reserve createReserve(Reserve reserve, int hotelId, Integer packageId, Integer  roomId) {
         PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
         Hotel hotel = hotelService.verifiedHotel(hotelId);
+        if(packageId != 0){
+            for(Package packages : hotel.getPackages()){
+                if(packages.getHotel() == hotel){
+                    packages.setReserve(reserve);
+                }
+            }
+        }
+        if(roomId != 0){
+            for(Room room : hotel.getRooms()){
+                if(room.getHotel() == hotel){
+                    room.setReserve(reserve);
+                }
+            }
+        }
         reserve.setPurchaseMember(purchaseMember);
         reserve.setHotel(hotel);
         return reserveRepository.save(reserve);
     }
 
 
+/*
+1. 객실 패키지 테이블에서 호텔 아이디가 같은걸 찾음
+2. 객실 테이블에서 그 예약 식별자를 가져옴
+3. 체크인 아웃을 비교
+* */
+    public boolean checkReserve(ReserveRequestDto.Post post){
+        Hotel hotel = hotelService.findHotel(post.getHotelId()); //호텔 정보를 가져옴
+        if(post.getRoomId() != 0){ // 객실을 예약할때
+            Room room = roomService.findRoomId(post.getRoomId());
+            if(room.getReserve() == null) {return true;}
+            else{
+                if(room.getReserve().getCheckIn().isEqual(post.getCheckIn())) {return false;}
+                else{
+                    if(room.getReserve().getCheckIn().isEqual(post.getCheckOut())
+                            || room.getReserve().getCheckOut().isEqual(post.getCheckIn())
+                            || room.getReserve().getCheckIn().isAfter(post.getCheckOut())
+                            || room.getReserve().getCheckOut().isBefore(post.getCheckIn())){
+                        return true;
+                    } else{
+                        return false;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+
     // Read
-    public Reserve findReserveId(int roomId){
-        Reserve reserve = verifiedReserve(roomId);
+    public Reserve findReserve(int reserveId){
+        Reserve reserve = verifiedReserve(reserveId);
         return reserve;
     }
 

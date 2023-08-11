@@ -27,21 +27,21 @@ public class ReserveController {
     private TokenService tokenService;
 
     // Create
-//    @PostMapping
-//    public ResponseEntity postReserve(@Valid @RequestBody ReserveRequestDto.Post post) {
-//        Reserve reserve = reserveService.createReserve(reserveMapper.ReserveRequestDtoPostToReserve(post), post.getHotelId());
-//        ReserveResponseDto.Response response = reserveMapper.ReserveToReserveResponseDto(reserve);
-//
-//        return new ResponseEntity<>(response, HttpStatus.CREATED);
-//    }
-//
-//    // Read
-//    @GetMapping
-//    public ResponseEntity getReserve(@Positive @RequestParam int reserveId) {
-//        Reserve reserve = reserveService.findReserveId(reserveId);
-//        ReserveResponseDto.Response response=reserveMapper.ReserveToReserveResponseDto(reserve);
-//        return new ResponseEntity<>(response, HttpStatus.OK);
-//    }
+    @PostMapping
+    public ResponseEntity postReserve(@Valid @RequestBody ReserveRequestDto.Post post) {
+        Reserve reserve = reserveService.createReserve(reserveMapper.ReserveRequestDtoPostToReserve(post), post.getHotelId());
+        ReserveResponseDto.Response response = reserveMapper.ReserveToReserveResponseDto(reserve);
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    // Read
+    @GetMapping
+    public ResponseEntity getReserve(@Positive @RequestParam int reserveId) {
+        Reserve reserve = reserveService.findReserveId(reserveId);
+        ReserveResponseDto.Response response=reserveMapper.ReserveToReserveResponseDto(reserve);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
     // Update
     @PatchMapping("/{reserve-id}")

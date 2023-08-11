@@ -40,6 +40,15 @@ public class Reserve extends Auditable {
     @Column
     private int peopleNum; //예약인원
 
+    @Column
+    @ElementCollection
+    private List<Integer> roomsId = new ArrayList<>(); // 예약된 객실 식별자
+
+    @Column
+    @ElementCollection
+    private List<Integer> packagesId = new ArrayList<>(); // 예약된 패지키 식별자
+
+
     @ManyToOne
     @JoinColumn(name = "PURCHASE_MEMBER_ID")
     private PurchaseMember purchaseMember;
@@ -47,10 +56,4 @@ public class Reserve extends Auditable {
     @ManyToOne
     @JoinColumn(name = "HOTEL_ID")
     private Hotel hotel;
-
-    @OneToMany(mappedBy = "reserve", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<Package> packages = new ArrayList<>();
-
-    @OneToMany(mappedBy = "reserve", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<Room> rooms = new ArrayList<>();
 }

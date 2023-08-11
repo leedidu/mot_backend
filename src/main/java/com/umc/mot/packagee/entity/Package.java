@@ -49,16 +49,11 @@ public class Package extends Auditable { //패키지
 
     @Column
     @ElementCollection
-    private List<String> photo = new ArrayList<>();
-
+    private List<String> photos = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "HOTEL_ID")
     private Hotel hotel;
-
-    @ManyToOne
-    @JoinColumn(name = "RESERVE_ID")
-    private Reserve reserve;
 
     @OneToMany(mappedBy = "packages", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<RoomPackage> roomPackages = new ArrayList<>();

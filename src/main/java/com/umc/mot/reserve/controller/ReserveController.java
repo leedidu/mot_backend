@@ -26,6 +26,7 @@ import java.util.List;
 public class ReserveController {
     private final ReserveService reserveService;
     private final ReserveMapper reserveMapper;
+    private TokenService tokenService;
 
     // Create
     @PostMapping

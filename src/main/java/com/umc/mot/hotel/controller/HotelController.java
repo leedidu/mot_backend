@@ -11,13 +11,17 @@ import com.umc.mot.sellMember.entity.SellMember;
 import com.umc.mot.sellMember.mapper.SellMemberMapper;
 import com.umc.mot.sellMember.service.SellMemberService;
 import lombok.AllArgsConstructor;
+import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import retrofit2.http.Path;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -53,9 +57,19 @@ public class HotelController {
                                       @RequestBody HotelRequestDto.Patch patch) {
         patch.setId(hotelId);
         Hotel hotel = hotelService.patchHotel(hotelMapper.HotelRequestDtoPatchToHotel(patch));
-       HotelResponseDto.Response response =hotelMapper.HotelToHotelResponseDto(hotel);
+        HotelResponseDto.Response response =hotelMapper.HotelToHotelResponseDto(hotel);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    // 호텔 사진 업로드 API
+    @PatchMapping(value = "/upload-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    public ResponseEntity patchImageHotel(@RequestBody HotelRequestDto.PatchImage patchImage) throws IOException {
+    public ResponseEntity patchImageHotel(HotelRequestDto.PatchImage patchImage) throws IOException {
+        Hotel hotel = hotelService.uploadHotelImage(patchImage.getHotelId(), patchImage.getImage());
+        HotelResponseDto.Response response =hotelMapper.HotelToHotelResponseDto(hotel);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @GetMapping("/search")
     public ResponseEntity findHotel(@RequestParam("name") String name,@RequestParam(value = "people",defaultValue="0") int people){
         List<Hotel> hotel = hotelService.findHotels(name,people);

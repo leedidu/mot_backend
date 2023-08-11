@@ -34,6 +34,7 @@ public class HotelService {
     //Create
     public Hotel createHotel(Hotel hotel) {
         SellMember sellM = tokenService.getLoginSellMember();
+        hotel.setSellMember(sellM);
         return hotelRepository.save(hotel);
 
     }

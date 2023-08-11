@@ -18,4 +18,14 @@ public class RoomPackageResponseDto {
         private List<RoomResponseDto.Response> room;
 
     }
+
+    @Setter
+    @Getter
+    @AllArgsConstructor
+    public static class createResponse {
+        private PackageResponseDto.Response packages;
+        private List<RoomResponseDto.Response> room;
+
+    }
+
 }

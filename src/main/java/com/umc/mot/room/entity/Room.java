@@ -45,15 +45,11 @@ public class Room extends Auditable {
 
     @Column
     @ElementCollection
-    private List<String> photo = new ArrayList<>(); //사진
+    private List<String> photos = new ArrayList<>(); //사진
 
     @ManyToOne
     @JoinColumn(name = "HOTEL_ID")
     private Hotel hotel;
-
-    @ManyToOne
-    @JoinColumn(name = "RESERVE_ID")
-    private Reserve reserve;
 
     @OneToMany(mappedBy = "room", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<RoomPackage> roomPackages = new ArrayList<>();

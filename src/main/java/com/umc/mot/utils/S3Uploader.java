@@ -73,7 +73,7 @@ public class S3Uploader {
         ListObjectsV2Result listObjectsV2Result = amazonS3.listObjectsV2(bucket);
         List<S3ObjectSummary> objectSummaries = listObjectsV2Result.getObjectSummaries();
 
-        for (S3ObjectSummary object: objectSummaries) {
+        for (S3ObjectSummary object : objectSummaries) {
             System.out.println("object = " + object.toString());
         }
         return amazonS3.getUrl(bucket, fileName).toString();
@@ -81,20 +81,13 @@ public class S3Uploader {
 
     // S3에 이미지 삭제
     public void deleteFile(String imageUrl) {
-        try{
-            String fileKey = imageUrl.substring(58);
-            String key = fileKey; // 폴더/파일.확장자
-            final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(region).build();
-
-            try {
-                s3.deleteObject(bucket, key);
-            } catch (AmazonServiceException e) {
-                System.err.println(e.getErrorMessage());
-                System.exit(1);
-            }
-
-            System.out.println(String.format("[%s] deletion complete", key));
-
+        try {
+            String key = imageUrl.split(".com/")[1];
+            System.out.println("!! imageurl : " + key);
+            amazonS3.deleteObject(bucket, key);
+        } catch (AmazonServiceException e) {
+            System.err.println(e.getErrorMessage());
+//            System.exit(1); // 종료
         } catch (Exception exception) {
             throw new BusinessLogicException(ExceptionCode.S3_DELETE_ERROR);
         }

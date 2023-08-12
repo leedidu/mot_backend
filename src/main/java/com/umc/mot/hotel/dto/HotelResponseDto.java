@@ -24,6 +24,5 @@ public class HotelResponseDto {
         private String info; //기본정보
         private String distance;
         private String photo;
-        private List hotelImage;
     }
 }

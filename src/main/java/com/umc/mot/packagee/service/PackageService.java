@@ -46,7 +46,7 @@ public class PackageService {
         Optional.ofNullable(pa.getMaxPeople()).ifPresent(findPackage::setMaxPeople);
         Optional.ofNullable(pa.getPrice()).ifPresent(findPackage::setPrice);
         Optional.ofNullable(pa.getRoomType()).ifPresent(findPackage::setRoomType);
-        Optional.ofNullable(pa.getPhoto()).ifPresent(findPackage::setPhoto);
+        Optional.ofNullable(pa.getPhotos()).ifPresent(findPackage::setPhotos);
 
 
         return packageRepository.save(findPackage);

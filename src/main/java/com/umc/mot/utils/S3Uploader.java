@@ -4,7 +4,10 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
+import com.umc.mot.exception.BusinessLogicException;
+import com.umc.mot.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,8 +27,13 @@ import java.util.Optional;
 public class S3Uploader {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
+
+    @Value("${cloud.aws.region.static}")
+    private String region;
+
     private final AmazonS3 amazonS3;
 
+    // S3에 이미지 등록
     public String uploadFile(MultipartFile multipartFile) throws IOException {
         String fileName = multipartFile.getOriginalFilename();
 
@@ -69,5 +77,26 @@ public class S3Uploader {
             System.out.println("object = " + object.toString());
         }
         return amazonS3.getUrl(bucket, fileName).toString();
+    }
+
+    // S3에 이미지 삭제
+    public void deleteFile(String imageUrl) {
+        try{
+            String fileKey = imageUrl.substring(58);
+            String key = fileKey; // 폴더/파일.확장자
+            final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(region).build();
+
+            try {
+                s3.deleteObject(bucket, key);
+            } catch (AmazonServiceException e) {
+                System.err.println(e.getErrorMessage());
+                System.exit(1);
+            }
+
+            System.out.println(String.format("[%s] deletion complete", key));
+
+        } catch (Exception exception) {
+            throw new BusinessLogicException(ExceptionCode.S3_DELETE_ERROR);
+        }
     }
 }

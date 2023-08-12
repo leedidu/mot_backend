@@ -6,10 +6,12 @@ import com.umc.mot.reserve.service.ReserveService;
 import com.umc.mot.reserve.dto.ReserveRequestDto;
 import com.umc.mot.reserve.dto.ReserveResponseDto;
 import com.umc.mot.reserve.entity.Reserve;
+import com.umc.mot.room.service.RoomService;
 import com.umc.mot.token.service.TokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,21 +26,24 @@ import java.util.List;
 public class ReserveController {
     private final ReserveService reserveService;
     private final ReserveMapper reserveMapper;
-    private TokenService tokenService;
 
     // Create
     @PostMapping
     public ResponseEntity postReserve(@Valid @RequestBody ReserveRequestDto.Post post) {
-        Reserve reserve = reserveService.createReserve(reserveMapper.ReserveRequestDtoPostToReserve(post), post.getHotelId());
-        ReserveResponseDto.Response response = reserveMapper.ReserveToReserveResponseDto(reserve);
-
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        boolean checkReserve = reserveService.checkReserve(post);
+        if(checkReserve){
+            Reserve reserve = reserveService.createReserve(reserveMapper.ReserveRequestDtoPostToReserve(post), post.getHotelId(), post.getPackageId(), post.getRoomId());
+            ReserveResponseDto.Response response = reserveMapper.ReserveToReserveResponseDto(reserve);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } else{
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     // Read
     @GetMapping
     public ResponseEntity getReserve(@Positive @RequestParam int reserveId) {
-        Reserve reserve = reserveService.findReserveId(reserveId);
+        Reserve reserve = reserveService.findReserve(reserveId);
         ReserveResponseDto.Response response=reserveMapper.ReserveToReserveResponseDto(reserve);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

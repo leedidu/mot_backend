@@ -1,8 +1,10 @@
 package com.umc.mot.sellMember.entity;
 
 
+import com.umc.mot.account.entity.Account;
 import com.umc.mot.auditable.Auditable;
 import com.umc.mot.hotel.entity.Hotel;
+import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import com.umc.mot.token.entity.Token;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,9 +42,18 @@ public class SellMember extends Auditable {
     @Column
     private String accountNumber; //계좌번호
 
+
+
+    @OneToOne(mappedBy = "sellMember", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private Account account;
+
+
     @OneToMany(mappedBy = "sellMember", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Hotel> hotels = new ArrayList<>();
 
     @OneToOne(mappedBy = "sellMember", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Token token;
+
+
+
 }

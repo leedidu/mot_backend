@@ -11,4 +11,8 @@ import java.util.List;
 public interface HotelRepository extends JpaRepository<Hotel, Integer> {
     @Query("SELECT h FROM Hotel h WHERE (h.name LIKE %:post% or h.address Like %:post%) and (h.minPeople<=:people and h.maxPeople>=:people)")
     ArrayList<Hotel> findByName(String post,int people);
+
+
+
+
 }

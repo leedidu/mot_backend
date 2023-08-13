@@ -1,6 +1,7 @@
 package com.umc.mot.account.dto;
 
 import com.umc.mot.category.dto.CategoryResponseDto;
+import com.umc.mot.sellMember.entity.SellMember;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -14,7 +15,7 @@ public class AccountResponseDto {
         private String name;
         private String bank;
         private String number;
-        private String sellMemberId; //판매자 아이디 보이게 하기
+        //private SellMember sellMember; //판매자 아이디 보이게 하기
 
     }
 }

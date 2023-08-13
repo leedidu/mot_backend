@@ -20,8 +20,8 @@ public class ReserveRequestDto {
         private int peopleNum; //예약인원
         private String paymentPrice; // 지불금액
         private int hotelId; //호텔 식별자
-        private int roomId; // 객실 식별자
-        private int packageId; //패키지 식별자
+        private Integer roomId; // 객실 식별자
+        private Integer packageId; //패키지 식별자
     }
 
     @Getter

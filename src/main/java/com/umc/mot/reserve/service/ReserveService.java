@@ -67,52 +67,83 @@ public class ReserveService {
         PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
         Hotel hotel = hotelService.verifiedHotel(hotelId);
         if(packageId != 0){
-            for(Package packages : hotel.getPackages()){
-                if(packages.getHotel() == hotel){
-//                    packages.setReserve(reserve);
-                }
-            }
+            reserve.getPackagesId().add(packageId);
         }
-//        if(roomId != 0){
-//            for(Room room : hotel.getRooms()){
-//                if(room.getHotel() == hotel){
-//                    room.setReserve(reserve);
-//                }
-//            }
-//        }
+        if(roomId != 0){
+            reserve.getRoomsId().add(roomId);
+        }
         reserve.setPurchaseMember(purchaseMember);
         reserve.setHotel(hotel);
         return reserveRepository.save(reserve);
     }
 
-
-/*
-1. 객실 패키지 테이블에서 호텔 아이디가 같은걸 찾음
-2. 객실 테이블에서 그 예약 식별자를 가져옴
-3. 체크인 아웃을 비교
-* */
-    public boolean checkReserve(ReserveRequestDto.Post post){
-        Hotel hotel = hotelService.findHotel(post.getHotelId()); //호텔 정보를 가져옴
-        if(post.getRoomId() != 0){ // 객실을 예약할때
-            Room room = roomService.findRoomId(post.getRoomId());
-//            if(room.getReserve() == null) {return true;}
-//            else{
-//                if(room.getReserve().getCheckIn().isEqual(post.getCheckIn())) {return false;}
-//                else{
-//                    if(room.getReserve().getCheckIn().isEqual(post.getCheckOut())
-//                            || room.getReserve().getCheckOut().isEqual(post.getCheckIn())
-//                            || room.getReserve().getCheckIn().isAfter(post.getCheckOut())
-//                            || room.getReserve().getCheckOut().isBefore(post.getCheckIn())){
-//                        return true;
-//                    } else{
-//                        return false;
-//                    }
-//                }
-//            }
+    public List<Reserve> getReserve(Integer hotelId, Integer roomId, Integer packageId){
+        Hotel hotel = hotelService.findHotel(hotelId); //호텔 정보를 가져옴
+        List<Reserve> reservations = new ArrayList<>();
+        if(!roomId.equals(null)){
+            for(Reserve reserve : hotel.getReserves()){
+                if(reserve.getRoomsId().contains(roomId)){
+                    reservations.add(reserve);
+                }
+            }
         }
-        return false;
+        if(!packageId.equals(null)){
+            for(Reserve reserve : hotel.getReserves()){
+                if(reserve.getPackagesId().contains(packageId)){
+                    reservations.add(reserve);
+                }
+            }
+        }
+        return reservations;
     }
 
+    public boolean checkReserve(ReserveRequestDto.Post post){
+        List<Reserve> reserves = getReserve(post.getHotelId(), post.getRoomId(), post.getPackageId()); // 현재 예약하고자 하는 방의 모든 예약정보를 담고있음
+        List<Boolean> check = new ArrayList<>();
+        if(reserves.isEmpty()){
+            return true;
+        } else {
+            if (!post.getRoomId().equals(null)) { // 객실을 예약할 경우
+                for(int i = 0; i < reserves.size(); i++){
+                    for(int j = 0; j < reserves.get(i).getRoomsId().size(); j++){
+                        if(reserves.get(i).getRoomsId().get(j) == post.getRoomId()){
+                            if(!checkDate(reserves.get(i).getCheckIn(), reserves.get(i).getCheckOut(), post.getCheckIn(), post.getCheckOut())){
+                                check.add(false);
+                            } else{
+                                check.add(true);
+                            }
+                        }
+                    }
+                }
+            }
+            if(!post.getPackageId().equals(null)){
+                for(int i = 0; i < reserves.size(); i++){
+                    for(int j = 0; j < reserves.get(i).getRoomsId().size(); j++){
+                        if(reserves.get(i).getRoomsId().get(j) == post.getRoomId()){
+                            if(!checkDate(reserves.get(i).getCheckIn(), reserves.get(i).getCheckOut(), post.getCheckIn(), post.getCheckOut())){
+                                check.add(false);
+                            } else{
+                                check.add(true);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if(check.contains(false)){
+            return false;
+        } else{
+            return true;
+        }
+    }
+
+    public boolean checkDate (LocalDate reserveCheckIn, LocalDate reserveCheckOut, LocalDate postCheckIn, LocalDate postCheckOut){
+        if(reserveCheckIn.isEqual(postCheckOut) || reserveCheckOut.isEqual(postCheckIn) || reserveCheckIn.isAfter(postCheckOut) || reserveCheckOut.isBefore(postCheckIn)){
+            return true;
+        } else{
+            return false;
+        }
+    }
 
     // Read
     public Reserve findReserve(int reserveId){

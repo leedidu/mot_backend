@@ -77,12 +77,6 @@ public class ReserveService {
         return reserveRepository.save(reserve);
     }
 
-
-/*
-1. 객실 패키지 테이블에서 호텔 아이디가 같은걸 찾음
-2. 객실 테이블에서 그 예약 식별자를 가져옴
-3. 체크인 아웃을 비교
-* */
     public List<Reserve> getReserve(Integer hotelId, Integer roomId, Integer packageId){
         Hotel hotel = hotelService.findHotel(hotelId); //호텔 정보를 가져옴
         List<Reserve> reservations = new ArrayList<>();
@@ -110,6 +104,19 @@ public class ReserveService {
             return true;
         } else {
             if (!post.getRoomId().equals(null)) { // 객실을 예약할 경우
+                for(int i = 0; i < reserves.size(); i++){
+                    for(int j = 0; j < reserves.get(i).getRoomsId().size(); j++){
+                        if(reserves.get(i).getRoomsId().get(j) == post.getRoomId()){
+                            if(!checkDate(reserves.get(i).getCheckIn(), reserves.get(i).getCheckOut(), post.getCheckIn(), post.getCheckOut())){
+                                check.add(false);
+                            } else{
+                                check.add(true);
+                            }
+                        }
+                    }
+                }
+            }
+            if(!post.getPackageId().equals(null)){
                 for(int i = 0; i < reserves.size(); i++){
                     for(int j = 0; j < reserves.get(i).getRoomsId().size(); j++){
                         if(reserves.get(i).getRoomsId().get(j) == post.getRoomId()){

@@ -104,53 +104,39 @@ public class ReserveService {
     }
 
     public boolean checkReserve(ReserveRequestDto.Post post){
-        Hotel hotel = hotelService.findHotel(post.getHotelId()); //호텔 정보를 가져옴
-        List<Reserve> reserves = getReserve(post.getHotelId(), post.getRoomId(), post.getPackageId()); // 현재 예약하고자 하는 방의 식별아이디 담고있음
+        List<Reserve> reserves = getReserve(post.getHotelId(), post.getRoomId(), post.getPackageId()); // 현재 예약하고자 하는 방의 모든 예약정보를 담고있음
+        List<Boolean> check = new ArrayList<>();
         if(reserves.isEmpty()){
             return true;
         } else {
             if (!post.getRoomId().equals(null)) { // 객실을 예약할 경우
-                for(Reserve reserve : reserves){
-                    for(int i = 0; i < reserves.size(); i++){
-                        if(reserve.getRoomsId().contains(post.getRoomId())){ // 예약한 객실의 내용을 담고 있다면 -> 예약한적이 있음
-                            Reserve reserve1 = findReserve(reserve.getId());
-                            if(reserve1.getCheckIn().isEqual(post.getCheckOut())
-                                    || reserve1.getCheckOut().isEqual(post.getCheckIn())
-                                    || reserve1.getCheckIn().isAfter(post.getCheckOut())
-                                    || reserve1.getCheckOut().isBefore(post.getCheckIn())){
-                                return true;
+                for(int i = 0; i < reserves.size(); i++){
+                    for(int j = 0; j < reserves.get(i).getRoomsId().size(); j++){
+                        if(reserves.get(i).getRoomsId().get(j) == post.getRoomId()){
+                            if(!checkDate(reserves.get(i).getCheckIn(), reserves.get(i).getCheckOut(), post.getCheckIn(), post.getCheckOut())){
+                                check.add(false);
+                            } else{
+                                check.add(true);
                             }
                         }
                     }
                 }
             }
         }
-
-        return false;
+        if(check.contains(false)){
+            return false;
+        } else{
+            return true;
+        }
     }
 
-    //        if(!post.getPackageId().equals(null)) { // 패키지 예약할때
-//            for(Reserve reserve : hotel.getReserves()){
-//                if(reserve.getPackagesId().contains(post.getPackageId())){ // 예약된 방의 아이디를 가지고 잇으면
-//                    for(Reserve reserve1:reserve.getHotel().getReserves()){
-//                        if(reserve1.getCheckIn() == null){
-//                            return true;
-//                        } else{
-//                            if(reserve1.getCheckIn().isEqual(post.getCheckOut())
-//                                    || reserve1.getCheckOut().isEqual(post.getCheckIn())
-//                                    || reserve1.getCheckIn().isAfter(post.getCheckOut())
-//                                    || reserve1.getCheckOut().isBefore(post.getCheckIn())){
-//                                return true;
-//                            } else{
-//                                return false;
-//                            }
-//                        }
-//                    }
-//                } else{
-//                    return true;
-//                }
-//            }
-//        }
+    public boolean checkDate (LocalDate reserveCheckIn, LocalDate reserveCheckOut, LocalDate postCheckIn, LocalDate postCheckOut){
+        if(reserveCheckIn.isEqual(postCheckOut) || reserveCheckOut.isEqual(postCheckIn) || reserveCheckIn.isAfter(postCheckOut) || reserveCheckOut.isBefore(postCheckIn)){
+            return true;
+        } else{
+            return false;
+        }
+    }
 
     // Read
     public Reserve findReserve(int reserveId){

@@ -73,7 +73,8 @@ public class HotelController {
     @GetMapping("/search")
     public ResponseEntity findHotel(@RequestParam("name") String name,@RequestParam(value = "people",defaultValue="0") int people){
         List<Hotel> hotel = hotelService.findHotels(name,people);
-        return new ResponseEntity<>(hotel, HttpStatus.OK);
+        List<HotelResponseDto.Response> response = hotelMapper.HotelToListHotelResponseDto(hotel);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 

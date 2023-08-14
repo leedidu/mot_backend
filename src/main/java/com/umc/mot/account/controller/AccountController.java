@@ -27,7 +27,8 @@ public class AccountController {
     @PostMapping
     public ResponseEntity postAccount(@Valid @RequestBody AccountRequestDto.Post post){
         Account account = accountService.createAccount(accountMapper.AccountRequestDtoPostToAccount(post));
-        AccountResponseDto.Response response=accountMapper.AccountToAccountResponseDto(account);
+        int memberId = account.getSellMember().getSellMemberId();
+        AccountResponseDto.Response response=accountMapper.AccountToAccountResponseDto(account,memberId);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -37,7 +38,8 @@ public class AccountController {
     @GetMapping
     public ResponseEntity getAccount(@Positive @RequestParam int accountId){
         Account account = accountService.findAccount(accountId);
-        AccountResponseDto.Response response = accountMapper.AccountToAccountResponseDto(account);
+        int memberId = account.getSellMember().getSellMemberId();
+        AccountResponseDto.Response response = accountMapper.AccountToAccountResponseDto(account,memberId);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
@@ -48,7 +50,8 @@ public class AccountController {
                                        @RequestBody AccountRequestDto.Patch patch) {
         patch.setId(accountId);
         Account account = accountService.patchAccount(accountMapper.AccountRequestDtoPatchToAccount(patch));
-        AccountResponseDto.Response response =accountMapper.AccountToAccountResponseDto(account);
+        int memberId = account.getSellMember().getSellMemberId();
+        AccountResponseDto.Response response =accountMapper.AccountToAccountResponseDto(account,memberId);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

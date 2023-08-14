@@ -15,7 +15,7 @@ public class AccountResponseDto {
         private String name;
         private String bank;
         private String number;
-        //private SellMember sellMember; //판매자 아이디 보이게 하기
+        private int sellMemberId; //판매자 아이디 보이게 하기
 
     }
 }

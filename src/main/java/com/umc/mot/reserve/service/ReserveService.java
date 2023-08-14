@@ -46,37 +46,26 @@ public class ReserveService {
         return hotellist;
     }
 
-    public Map<Reserve, List<Room>> findRooms(){ //예약 정보 중 객실 정보
-        PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
-        Map<Reserve, List<Room>> reserveRooms = new HashMap<>();
-        List<Room> rooms = new ArrayList<>();
-        for(Reserve reserve : purchaseMember.getReserves()){
-            for(int i = 0; i < reserve.getRoomsId().size(); i++){
-                rooms.add(roomService.verifiedRoom(reserve.getRoomsId().get(i)));
-            }
-            reserveRooms.put(reserve, rooms);
-        }
-        return reserveRooms;
-    }
-
-    public Map<Reserve, List<Package>> findPackages(){ //예약 정보 중 객실 정보
-        PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
-        Map<Reserve, List<Package>> reserveRooms = new HashMap<>();
-        List<Package> packages = new ArrayList<>();
-        for(Reserve reserve : purchaseMember.getReserves()){
-            for(int i = 0; i < reserve.getPackagesId().size(); i++){
-                packages.add(packageService.verifiedPackage(reserve.getPackagesId().get(i)));
-            }
-            reserveRooms.put(reserve, packages);
-        }
-        return reserveRooms;
-    }
-
     // Read
     public List<Reserve> findReserve(){
         PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
-        List<Reserve> reserves = purchaseMember.getReserves();
-        return reserves;
+        for(Reserve reserve : purchaseMember.getReserves()){
+            if(!(reserve.getRoomsId().isEmpty() && reserve.getPackagesId().isEmpty())){ //둘다 가지고있을경우 -> 패키지 예약으로 인해 객실까지 예약된경우
+
+            } else{ // 둘중에 하나만 예약한 경우 -> 객실만 한거겠지
+                if(!reserve.getRoomsId().isEmpty()){
+
+                }
+          }
+        }
+        return null;
+    }
+
+
+    public void reserveMapping(int reserveId){
+        Reserve reserve = verifiedReserve(reserveId);
+        List<Integer> reserveRoomId = reserve.getRoomsId();
+        List<Integer> reservePackageId = reserve.getPackagesId();
     }
 
     //Create
@@ -86,8 +75,8 @@ public class ReserveService {
         List<Room> rooms = roomPackageService.findRoomPackage(packageId);
         if(packageId != 0){
             reserve.getPackagesId().add(packageId);
-            for(Room room : rooms){
-                createReserve(reserve, hotelId, 0, room.getId()); // 패키지 예약할 경우 방까지 모두 예약된 상태로 변경
+            for(Room room : rooms){ // 패키지 예약할 경우 방까지 모두 예약된 상태로 변경
+                createReserve(reserve, hotelId, 0, room.getId());
             }
         }
         if(roomId != 0){

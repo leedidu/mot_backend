@@ -17,22 +17,34 @@ public class ReserveResponseDto {
         private int peopleNum; //예약인원
     }
 
-//    @Getter
-//    @AllArgsConstructor
-//    public static class Get{
-//        private List reservation;
-//    }
-
     @Getter
     @AllArgsConstructor
     public static class Get{
-        private String hotelName;
-        private int star;
-        private int commentCount;
+        private List<Hotel> hotelInfo;
         private LocalDate checkIn;
         private LocalDate checkOut;
-        private String roomName;
-        private String packageName;
+        private List<Room> roomInfo;
+        private List<Package> packageInfo;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class Room{
+        private String name;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class Package{
+        private String name;
         private String roomType;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class Hotel{
+        private String name;
+        private int star;
+        private int commentCount;
     }
 }

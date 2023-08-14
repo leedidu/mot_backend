@@ -7,11 +7,15 @@ import com.umc.mot.hotel.repository.HotelRepository;
 import com.umc.mot.hotel.service.HotelService;
 import com.umc.mot.packagee.entity.Package;
 import com.umc.mot.packagee.repository.PackageRepository;
+import com.umc.mot.room.entity.Room;
 import com.umc.mot.sellMember.entity.SellMember;
 import com.umc.mot.token.service.TokenService;
+import com.umc.mot.utils.S3Uploader;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,6 +25,7 @@ public class PackageService {
     private final PackageRepository packageRepository;
     private final HotelService hotelService;
     private final TokenService tokenService;
+    private final S3Uploader s3Uploader;
 
     //Create
     public Package createPackage(Package pa,int hotelId) {
@@ -63,6 +68,16 @@ public class PackageService {
     public Package verifiedPackage(int packageId) {
         Optional<Package> pa = packageRepository.findById(packageId);
         return pa.orElseThrow(() -> new BusinessLogicException(ExceptionCode.PACKAGE_NOT_FOUND));
+    }
 
+    // 사진 업로드
+    public Package uploadRoomImage(int packageId, List<MultipartFile> multipartFiles) {
+        Package aPackage = verifiedPackage(packageId);
+
+        // 이미지 파일 이름만 추출
+        List<String> saveImages = s3Uploader.autoImagesUploadAndDelete(aPackage.getPhotos(), multipartFiles);
+
+        aPackage.setPhotos(saveImages);
+        return packageRepository.save(aPackage);
     }
 }

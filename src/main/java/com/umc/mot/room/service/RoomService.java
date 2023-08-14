@@ -10,22 +10,28 @@ import com.umc.mot.room.repository.RoomRepository;
 import com.umc.mot.sellMember.entity.SellMember;
 import com.umc.mot.sellMember.repository.SellMemberRepository;
 import com.umc.mot.token.service.TokenService;
+import com.umc.mot.utils.S3Uploader;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class RoomService{
+public class RoomService {
 
     private final RoomRepository roomRepository;
     private final HotelService hotelService;
     private final TokenService tokenService;
+    private final S3Uploader s3Uploader;
 //    private final ReserveService reserveService;
 
     //Create
-    public Room createRoom(Room room,int hotelId) {
+    public Room createRoom(Room room, int hotelId) {
         SellMember sellM = tokenService.getLoginSellMember();
         Hotel hotel = hotelService.verifiedHotel(hotelId);
         room.setHotel(hotel);
@@ -33,7 +39,7 @@ public class RoomService{
     }
 
     // Read
-    public Room findRoomId(int roomId){
+    public Room findRoomId(int roomId) {
         Room room = verifiedRoom(roomId);
         return room;
     }
@@ -52,7 +58,6 @@ public class RoomService{
         Optional.ofNullable(room.getPhotos()).ifPresent(findRoom::setPhotos);
 
 
-
         return roomRepository.save(findRoom);
     }
 
@@ -67,6 +72,16 @@ public class RoomService{
     public Room verifiedRoom(int roomId) {
         Optional<Room> member = roomRepository.findById(roomId);
         return member.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ROOM_NOT_FOUND));
+    }
 
+    // 사진 업로드
+    public Room uploadRoomImage(int roomId, List<MultipartFile> multipartFiles) {
+        Room room = verifiedRoom(roomId);
+
+        // 이미지 파일 이름만 추출
+        List<String> saveImages = s3Uploader.autoImagesUploadAndDelete(room.getPhotos(), multipartFiles);
+
+        room.setPhotos(saveImages);
+        return roomRepository.save(room);
     }
 }

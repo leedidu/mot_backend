@@ -5,6 +5,9 @@ import com.umc.mot.packagee.dto.PackageResponseDto;
 import com.umc.mot.packagee.entity.Package;
 import com.umc.mot.packagee.mapper.PackageMapper;
 import com.umc.mot.packagee.service.PackageService;
+import com.umc.mot.room.dto.RoomRequestDto;
+import com.umc.mot.room.dto.RoomResponseDto;
+import com.umc.mot.room.entity.Room;
 import com.umc.mot.sellMember.dto.SellMemberRequestDto;
 import com.umc.mot.sellMember.dto.SellMemberResponseDto;
 import com.umc.mot.sellMember.entity.SellMember;
@@ -12,6 +15,7 @@ import com.umc.mot.sellMember.mapper.SellMemberMapper;
 import com.umc.mot.sellMember.service.SellMemberService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -56,7 +60,15 @@ public class PackageController {
 
         patch.setId(packageId);
         Package pa = packageService.patchPackage(packageMapper.PackageRequestDtoPatchToPackage(patch));
-        PackageResponseDto.Response response=packageMapper.PackageToPackageResponseDto(pa);
+        PackageResponseDto.Response response = packageMapper.PackageToPackageResponseDto(pa);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    // 객실 사진들 업로드 API
+    @PatchMapping(value = "/upload-images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity patchImagesPackage(PackageRequestDto.PatchImage patchImage) {
+        Package aPackage = packageService.uploadRoomImage(patchImage.getPackageId(), patchImage.getImages());
+        PackageResponseDto.Response response = packageMapper.PackageToPackageResponseDto(aPackage);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

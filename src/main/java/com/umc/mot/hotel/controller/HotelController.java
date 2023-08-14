@@ -57,7 +57,7 @@ public class HotelController {
                                       @RequestBody HotelRequestDto.Patch patch) {
         patch.setId(hotelId);
         Hotel hotel = hotelService.patchHotel(hotelMapper.HotelRequestDtoPatchToHotel(patch));
-        HotelResponseDto.Response response =hotelMapper.HotelToHotelResponseDto(hotel);
+        HotelResponseDto.Response response = hotelMapper.HotelToHotelResponseDto(hotel);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -66,7 +66,7 @@ public class HotelController {
 //    public ResponseEntity patchImageHotel(@RequestBody HotelRequestDto.PatchImage patchImage) throws IOException {
     public ResponseEntity patchImageHotel(HotelRequestDto.PatchImage patchImage) throws IOException {
         Hotel hotel = hotelService.uploadHotelImage(patchImage.getHotelId(), patchImage.getImage());
-        HotelResponseDto.Response response =hotelMapper.HotelToHotelResponseDto(hotel);
+        HotelResponseDto.Response response = hotelMapper.HotelToHotelResponseDto(hotel);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

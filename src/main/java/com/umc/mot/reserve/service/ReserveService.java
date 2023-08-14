@@ -10,7 +10,9 @@ import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import com.umc.mot.purchaseMember.service.PurchaseMemberService;
 import com.umc.mot.reserve.controller.ReserveController;
 import com.umc.mot.reserve.dto.ReserveRequestDto;
+import com.umc.mot.reserve.dto.ReserveResponseDto;
 import com.umc.mot.reserve.entity.Reserve;
+import com.umc.mot.reserve.mapper.ReserveMapper;
 import com.umc.mot.reserve.repository.ReserveRepository;
 import com.umc.mot.room.entity.Room;
 import com.umc.mot.room.service.RoomService;
@@ -32,11 +34,14 @@ public class ReserveService {
     private final TokenService tokenService;
     private final HotelService hotelService;
     private final RoomPackageService roomPackageService;
+    private final RoomService roomService;
+    private final PackageService packageService;
 
     public List<Hotel> findHotels(){ // 예약된 호텔 리스트 찾기
         PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
         List<Hotel> hotellist = new ArrayList();
         for(Reserve reserve : purchaseMember.getReserves()) { // 예약 된거 확인
+            hotellist.add(reserve.getHotel()); // 호텔 정보 추가
         }
         return hotellist;
     }
@@ -44,25 +49,35 @@ public class ReserveService {
     public Map<Reserve, List<Room>> findRooms(){ //예약 정보 중 객실 정보
         PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
         Map<Reserve, List<Room>> reserveRooms = new HashMap<>();
+        List<Room> rooms = new ArrayList<>();
         for(Reserve reserve : purchaseMember.getReserves()){
-//            reserveRooms.put(reserve, reserve.getRooms());
+            for(int i = 0; i < reserve.getRoomsId().size(); i++){
+                rooms.add(roomService.verifiedRoom(reserve.getRoomsId().get(i)));
+            }
+            reserveRooms.put(reserve, rooms);
         }
         return reserveRooms;
     }
 
-    public Map<Reserve, List<Package>> findPackages(){ //예약 정보 중 패키지 정보
+    public Map<Reserve, List<Package>> findPackages(){ //예약 정보 중 객실 정보
         PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
-        Map<Reserve, List<Package>> reservePackages = new HashMap<>();
+        Map<Reserve, List<Package>> reserveRooms = new HashMap<>();
+        List<Package> packages = new ArrayList<>();
         for(Reserve reserve : purchaseMember.getReserves()){
-//            reservePackages.put(reserve, reserve.getPackages());
+            for(int i = 0; i < reserve.getPackagesId().size(); i++){
+                packages.add(packageService.verifiedPackage(reserve.getPackagesId().get(i)));
+            }
+            reserveRooms.put(reserve, packages);
         }
-        return reservePackages;
+        return reserveRooms;
     }
 
-/*
-1. 예약 생성시 들어간 호텔 아이디를 이용해서 객실/패키지 찾기
-2. 해당 객실의 예약식별아이디를 지금 예약아이디로 수정
-* */
+    // Read
+    public List<Reserve> findReserve(){
+        PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
+        List<Reserve> reserves = purchaseMember.getReserves();
+        return reserves;
+    }
 
     //Create
     public Reserve createReserve(Reserve reserve, int hotelId, Integer packageId, Integer  roomId) {
@@ -150,12 +165,6 @@ public class ReserveService {
         } else{
             return false;
         }
-    }
-
-    // Read
-    public Reserve findReserve(int reserveId){
-        Reserve reserve = verifiedReserve(reserveId);
-        return reserve;
     }
 
 

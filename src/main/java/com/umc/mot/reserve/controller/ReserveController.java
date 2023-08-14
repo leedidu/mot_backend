@@ -42,9 +42,9 @@ public class ReserveController {
 
     // Read
     @GetMapping
-    public ResponseEntity getReserve(@Positive @RequestParam int reserveId) {
-        Reserve reserve = reserveService.findReserve(reserveId);
-        ReserveResponseDto.Response response=reserveMapper.ReserveToReserveResponseDto(reserve);
+    public ResponseEntity getReserve() {
+        List<Reserve> reserve = reserveService.findReserve();
+        List<ReserveResponseDto.Get> response=reserveMapper.ReservesResponseDto(reserve);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

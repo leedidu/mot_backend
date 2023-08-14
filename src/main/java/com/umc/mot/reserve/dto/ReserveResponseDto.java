@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class ReserveResponseDto {
     @Getter
@@ -16,6 +17,12 @@ public class ReserveResponseDto {
         private int peopleNum; //예약인원
     }
 
+//    @Getter
+//    @AllArgsConstructor
+//    public static class Get{
+//        private List reservation;
+//    }
+
     @Getter
     @AllArgsConstructor
     public static class Get{
@@ -24,8 +31,8 @@ public class ReserveResponseDto {
         private int commentCount;
         private LocalDate checkIn;
         private LocalDate checkOut;
-        private String packageName;
         private String roomName;
+        private String packageName;
+        private String roomType;
     }
-
 }

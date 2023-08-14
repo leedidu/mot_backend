@@ -5,8 +5,10 @@ import com.umc.mot.room.dto.RoomResponseDto;
 import com.umc.mot.room.entity.Room;
 import com.umc.mot.room.mapper.RoomMapper;
 import com.umc.mot.room.service.RoomService;
+import io.jsonwebtoken.io.IOException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -50,6 +52,14 @@ public class RoomController {
         Room room = roomService.patchRoom(roomMapper.roomRequestDtoPatchToRoom(patch));
         RoomResponseDto.Response response = roomMapper.roomToRoomResponseDto(room);
 
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    // 객실 사진들 업로드 API
+    @PatchMapping(value = "/upload-images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity patchImagesRoom(RoomRequestDto.PatchImage patchImage) {
+        Room room = roomService.uploadRoomImage(patchImage.getRoomId(), patchImage.getImages());
+        RoomResponseDto.Response response = roomMapper.roomToRoomResponseDto(room);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

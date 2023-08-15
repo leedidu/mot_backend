@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +25,7 @@ public class Comment extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column
+    @Column(nullable = false, length = 50)
     private String context;
 
     @Column
@@ -31,7 +33,9 @@ public class Comment extends Auditable {
     private List<String> photos = new ArrayList<>();
 
     @Column
-    private int star;
+    @Min(0)
+    @Max(5)
+    private double star=5.0;
 
     @Column
     private boolean visible = true; // true : 보임, false : 안보임

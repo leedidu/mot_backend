@@ -16,4 +16,5 @@ public class CommentResponseDto {
         private List<String> photos;
         private boolean visible; // true : 보임, false : 안보임
     }
+
 }

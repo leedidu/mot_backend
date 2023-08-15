@@ -44,7 +44,7 @@ public class Hotel extends Auditable { // 숙소
     private String name; //숙소이름
 
     @Column
-    private int star; //별점
+    private double star; //별점
 
     @Column(length = 100)
     private String map; //지도

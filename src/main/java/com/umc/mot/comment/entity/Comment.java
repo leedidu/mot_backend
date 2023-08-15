@@ -4,6 +4,7 @@ import com.umc.mot.auditable.Auditable;
 import com.umc.mot.hotel.entity.Hotel;
 import com.umc.mot.message.entity.Message;
 import com.umc.mot.purchaseMember.entity.PurchaseMember;
+import com.umc.mot.reserve.entity.Reserve;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -45,5 +46,9 @@ public class Comment extends Auditable {
     @ManyToOne
     @JoinColumn(name = "HOTEL_ID")
     private Hotel hotel;
+
+    @OneToOne
+    @JoinColumn(name = "RESERVE_ID")
+    private Reserve reserve;
 }
 

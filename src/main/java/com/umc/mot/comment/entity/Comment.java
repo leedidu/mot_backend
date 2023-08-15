@@ -4,9 +4,12 @@ import com.umc.mot.auditable.Auditable;
 import com.umc.mot.hotel.entity.Hotel;
 import com.umc.mot.message.entity.Message;
 import com.umc.mot.purchaseMember.entity.PurchaseMember;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -18,6 +21,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
+@DynamicInsert
 public class Comment extends Auditable {
 
     @Id
@@ -38,7 +42,8 @@ public class Comment extends Auditable {
     @Column
     private int memberId;
 
-    @Column
+
+    @ColumnDefault("TRUE")
     private boolean visible; // true : 보임, false : 안보임
 
     @OneToMany(mappedBy = "comment", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})

@@ -12,8 +12,10 @@ public class CommentResponseDto {
         private String context;
         private String imageUrl;
         private int star;
-        private int memberId;
-        private boolean visible; // true : 보임, false : 안보임
+        private boolean visible;// true : 보임, false : 안보임
+        private int PURCHASE_MEMBER_ID;
+        private int HOTEL_ID;
+
     }
 
 }

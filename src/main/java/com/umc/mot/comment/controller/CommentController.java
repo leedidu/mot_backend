@@ -32,8 +32,11 @@ public class CommentController {
     @PostMapping
     public ResponseEntity postComment(@Valid @RequestBody CommentRequestDto.Post post,
                                       @Positive @RequestParam int reserveId){
+
         Comment comment = commentService.createComment(commentMapper.CommentRequestDtoPostToComment(post),reserveId);
-        CommentResponseDto.Response response=commentMapper.CommentToCommentResponseDto(comment);
+        int memberId=comment.getPurchaseMember().getPurchaseMemberId();
+        int hotelId=comment.getHotel().getId();
+        CommentResponseDto.Response response=commentMapper.CommentToCommentResponseDto(comment,memberId,hotelId);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -45,7 +48,9 @@ public class CommentController {
     @GetMapping
     public ResponseEntity getComment(@Positive @RequestParam int commentId){
         Comment comment = commentService.findComment(commentId);
-        CommentResponseDto.Response response = commentMapper.CommentToCommentResponseDto(comment);
+        int memberId=comment.getPurchaseMember().getPurchaseMemberId();
+        int hotelId=comment.getHotel().getId();
+        CommentResponseDto.Response response = commentMapper.CommentToCommentResponseDto(comment,memberId,hotelId);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
@@ -58,7 +63,9 @@ public class CommentController {
                                      @RequestBody CommentRequestDto.Patch patch) {
         patch.setId(commentId);
         Comment comment = commentService.patchComment(commentMapper.CommentRequestDtoPatchToComment(patch));
-        CommentResponseDto.Response response =commentMapper.CommentToCommentResponseDto(comment);
+        int memberId=comment.getPurchaseMember().getPurchaseMemberId();
+        int hotelId=comment.getHotel().getId();
+        CommentResponseDto.Response response =commentMapper.CommentToCommentResponseDto(comment,memberId,hotelId);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

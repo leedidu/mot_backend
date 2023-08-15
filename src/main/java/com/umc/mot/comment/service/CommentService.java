@@ -38,6 +38,7 @@ public class CommentService {
         if(LocalDate.now().isAfter(reserve.getCheckOut())){
             comment.setHotel(reserve.getHotel());
             comment.setPurchaseMember(purchaseMember);
+            comment.setVisible(true);
             return commentRepository.save(comment);
         }
         else{
@@ -54,21 +55,18 @@ public class CommentService {
 
     // Update
     public Comment patchComment(Comment comment) {
+        tokenService.getLoginPurchaseMember();
         Comment findComment = verifiedComment(comment.getId());
-        Optional.ofNullable(comment.getId()).ifPresent(findComment::setId);
         Optional.ofNullable(comment.getContext()).ifPresent(findComment::setContext);
         Optional.ofNullable(comment.getImageUrl()).ifPresent(findComment::setImageUrl);
         Optional.ofNullable(comment.getStar()).ifPresent(findComment::setStar);
-        Optional.ofNullable(comment.getMemberId()).ifPresent(findComment::setMemberId);
-        Optional.ofNullable(comment.isVisible()).ifPresent(findComment::setVisible);
-
-
 
         return commentRepository.save(findComment);
     }
 
     // Delete
     public void deleteComment(int commentId) {
+        tokenService.getLoginPurchaseMember();
         Comment comment = verifiedComment(commentId);
         commentRepository.delete(comment);
     }

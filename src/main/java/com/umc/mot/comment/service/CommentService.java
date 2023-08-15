@@ -4,7 +4,6 @@ import com.umc.mot.comment.repository.CommentRepository;
 import com.umc.mot.exception.BusinessLogicException;
 import com.umc.mot.exception.ExceptionCode;
 import com.umc.mot.comment.entity.Comment;
-import com.umc.mot.utils.S3Uploader;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,12 +16,10 @@ import java.util.Optional;
 public class CommentService {
     
     private final CommentRepository commentRepository;
-    private final S3Uploader s3Uploader;
 
     //Create
     public Comment createComment(Comment comment) {
-        // 지현님 -> comment 생성되었을 때, 호텔의 star 값도 변경해주세요!
-        comment.setVisible(true);
+
         return commentRepository.save(comment);
     }
 
@@ -36,9 +33,14 @@ public class CommentService {
     // Update
     public Comment patchComment(Comment comment) {
         Comment findComment = verifiedComment(comment.getId());
+        Optional.ofNullable(comment.getId()).ifPresent(findComment::setId);
         Optional.ofNullable(comment.getContext()).ifPresent(findComment::setContext);
-        Optional.ofNullable(comment.getPhotos()).ifPresent(findComment::setPhotos);
-        if(comment.getStar() != 0) findComment.setStar(comment.getStar());
+        Optional.ofNullable(comment.getImageUrl()).ifPresent(findComment::setImageUrl);
+        Optional.ofNullable(comment.getStar()).ifPresent(findComment::setStar);
+        Optional.ofNullable(comment.getMemberId()).ifPresent(findComment::setMemberId);
+        Optional.ofNullable(comment.isVisible()).ifPresent(findComment::setVisible);
+
+
 
         return commentRepository.save(findComment);
     }

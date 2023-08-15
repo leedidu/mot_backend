@@ -50,13 +50,13 @@ public class RoomService {
         SellMember sellM = tokenService.getLoginSellMember();
         Room findRoom = verifiedRoom(room.getId());
         Optional.ofNullable(room.getName()).ifPresent(findRoom::setName);
-        Optional.ofNullable(room.getMinPeople()).ifPresent(findRoom::setMinPeople);
-        Optional.ofNullable(room.getMaxPeople()).ifPresent(findRoom::setMaxPeople);
-        Optional.ofNullable(room.getPrice()).ifPresent(findRoom::setPrice);
         Optional.ofNullable(room.getInfo()).ifPresent(findRoom::setInfo);
         Optional.ofNullable(room.getRoomType()).ifPresent(findRoom::setRoomType);
         Optional.ofNullable(room.getPhotos()).ifPresent(findRoom::setPhotos);
 
+        if(room.getMinPeople() != 0) findRoom.setMinPeople(room.getMinPeople());
+        if(room.getMaxPeople() != 0) findRoom.setMaxPeople(room.getMaxPeople());
+        if(room.getPrice() != 0) findRoom.setPrice(room.getPrice());
 
         return roomRepository.save(findRoom);
     }

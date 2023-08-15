@@ -3,13 +3,11 @@ package com.umc.mot.comment.controller;
 import com.umc.mot.comment.dto.CommentRequestDto;
 import com.umc.mot.comment.mapper.CommentMapper;
 import com.umc.mot.comment.service.CommentService;
-import com.umc.mot.comment.dto.CommentRequestDto;
 import com.umc.mot.comment.dto.CommentResponseDto;
 import com.umc.mot.comment.entity.Comment;
-import com.umc.mot.comment.mapper.CommentMapper;
-import com.umc.mot.comment.service.CommentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +17,7 @@ import javax.validation.constraints.Positive;
 
 
 @RestController
-@RequestMapping("/comment")
+@RequestMapping("/PurchaseMember/comment")
 @Validated
 @AllArgsConstructor
 public class CommentController {
@@ -55,6 +53,14 @@ public class CommentController {
         Comment comment = commentService.patchComment(commentMapper.CommentRequestDtoPatchToComment(patch));
         CommentResponseDto.Response response =commentMapper.CommentToCommentResponseDto(comment);
 
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    // 후기 사진들 업로드 API
+    @PatchMapping(value = "/upload-images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity patchImagesRoom(CommentRequestDto.PatchImage patchImage) {
+        Comment comment = commentService.uploadRoomImage(patchImage.getCommentId(), patchImage.getImages());
+        CommentResponseDto.Response response = commentMapper.CommentToCommentResponseDto(comment);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

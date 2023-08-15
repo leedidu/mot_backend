@@ -26,16 +26,14 @@ public class Comment extends Auditable {
     private String context;
 
     @Column
-    private String imageUrl;
+    @ElementCollection
+    private List<String> photos = new ArrayList<>();
 
     @Column
     private int star;
 
     @Column
-    private int memberId;
-
-    @Column
-    private boolean visible; // true : 보임, false : 안보임
+    private boolean visible = true; // true : 보임, false : 안보임
 
     @OneToMany(mappedBy = "comment", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Message> messages = new ArrayList<>();

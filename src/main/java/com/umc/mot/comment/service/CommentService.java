@@ -4,6 +4,8 @@ import com.umc.mot.comment.repository.CommentRepository;
 import com.umc.mot.exception.BusinessLogicException;
 import com.umc.mot.exception.ExceptionCode;
 import com.umc.mot.comment.entity.Comment;
+import com.umc.mot.reserve.service.ReserveService;
+import com.umc.mot.token.service.TokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +17,13 @@ import java.util.Optional;
 public class CommentService {
     
     private final CommentRepository commentRepository;
-
+    private final TokenService tokenService;
+    private final ReserveService reserveService;
     //Create
     public Comment createComment(Comment comment) {
+        tokenService.getLoginPurchaseMember();
+
+
 
         return commentRepository.save(comment);
     }

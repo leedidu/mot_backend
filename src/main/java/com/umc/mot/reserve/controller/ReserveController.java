@@ -32,6 +32,7 @@ public class ReserveController {
     @PostMapping
     public ResponseEntity postReserve(@Valid @RequestBody ReserveRequestDto.Post post) {
         boolean checkReserve = reserveService.checkReserve(post);
+
         if(checkReserve){
             Reserve reserve = reserveService.createReserve(reserveMapper.ReserveRequestDtoPostToReserve(post), post.getHotelId(), post.getPackageId(), post.getRoomId());
             ReserveResponseDto.Response response = reserveMapper.ReserveToReserveResponseDto(reserve);

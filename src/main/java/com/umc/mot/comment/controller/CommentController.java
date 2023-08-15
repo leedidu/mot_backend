@@ -38,10 +38,20 @@ public class CommentController {
     }
 
 
+
+
     // Read
     @GetMapping
     public ResponseEntity getComment(@Positive @RequestParam int commentId){
         Comment comment = commentService.findComment(commentId);
+        CommentResponseDto.Response response = commentMapper.CommentToCommentResponseDto(comment);
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+
+    @GetMapping("/getReserveList")
+    public ResponseEntity getCommentReserveList(){
+
         CommentResponseDto.Response response = commentMapper.CommentToCommentResponseDto(comment);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }

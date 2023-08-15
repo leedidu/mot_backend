@@ -15,4 +15,5 @@ public class CommentResponseDto {
         private int memberId;
         private boolean visible; // true : 보임, false : 안보임
     }
+
 }

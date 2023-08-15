@@ -10,14 +10,10 @@ import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import com.umc.mot.purchaseMember.service.PurchaseMemberService;
 import com.umc.mot.reserve.controller.ReserveController;
 import com.umc.mot.reserve.dto.ReserveRequestDto;
-import com.umc.mot.reserve.dto.ReserveResponseDto;
 import com.umc.mot.reserve.entity.Reserve;
-import com.umc.mot.reserve.mapper.ReserveMapper;
 import com.umc.mot.reserve.repository.ReserveRepository;
 import com.umc.mot.room.entity.Room;
 import com.umc.mot.room.service.RoomService;
-import com.umc.mot.roomPackage.entity.RoomPackage;
-import com.umc.mot.roomPackage.service.RoomPackageService;
 import com.umc.mot.token.service.TokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.parameters.P;
@@ -166,6 +162,13 @@ public class ReserveService {
             return false;
         }
     }
+
+    // Read
+    public Reserve findReserve(int reserveId){
+        Reserve reserve = verifiedReserve(reserveId);
+        return reserve;
+    }
+
 
 
     // Update

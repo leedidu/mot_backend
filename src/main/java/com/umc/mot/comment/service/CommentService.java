@@ -4,13 +4,24 @@ import com.umc.mot.comment.repository.CommentRepository;
 import com.umc.mot.exception.BusinessLogicException;
 import com.umc.mot.exception.ExceptionCode;
 import com.umc.mot.comment.entity.Comment;
+import com.umc.mot.heart.entity.Heart;
+import com.umc.mot.hotel.entity.Hotel;
+import com.umc.mot.packagee.service.PackageService;
+import com.umc.mot.purchaseMember.entity.PurchaseMember;
+import com.umc.mot.reserve.entity.Reserve;
+import com.umc.mot.reserve.repository.ReserveRepository;
 import com.umc.mot.reserve.service.ReserveService;
+import com.umc.mot.room.entity.Room;
+import com.umc.mot.room.service.RoomService;
 import com.umc.mot.token.service.TokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.swing.text.html.Option;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,13 +31,20 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final TokenService tokenService;
     private final ReserveService reserveService;
-    //Create
-    public Comment createComment(Comment comment) {
-        tokenService.getLoginPurchaseMember();
 
+    //후기작성
+    public Comment createComment(Comment comment,int reserveId){
+        PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
+        Reserve reserve = reserveService.findReserve(reserveId);
+        if(LocalDate.now().isAfter(reserve.getCheckOut())){
+            comment.setHotel(reserve.getHotel());
+            comment.setPurchaseMember(purchaseMember);
+            return commentRepository.save(comment);
+        }
+        else{
+            throw new IllegalArgumentException("체크아웃날짜 이후에 후기를 작성할 수 있습니다.");
+        }
 
-
-        return commentRepository.save(comment);
     }
 
     // Read

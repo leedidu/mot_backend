@@ -4,7 +4,6 @@ import com.umc.mot.auditable.Auditable;
 import com.umc.mot.hotel.entity.Hotel;
 import com.umc.mot.message.entity.Message;
 import com.umc.mot.purchaseMember.entity.PurchaseMember;
-import com.umc.mot.reserve.entity.Reserve;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +18,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
+@DynamicInsert
 public class Comment extends Auditable {
 
     @Id

@@ -13,7 +13,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface CommentMapper {
-    CommentResponseDto.Response CommentToCommentResponseDto(Comment comment);
+    CommentResponseDto.Response CommentToCommentResponseDto(Comment comment,int PURCHASE_MEMBER_ID,int HOTEL_ID);
     Comment CommentRequestDtoPostToComment(CommentRequestDto.Post post);
     Comment CommentRequestDtoPatchToComment(CommentRequestDto.Patch patch);
 

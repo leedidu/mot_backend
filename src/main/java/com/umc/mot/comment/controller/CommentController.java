@@ -30,9 +30,13 @@ public class CommentController {
 
     // Create
     @PostMapping("/PurchaseMember")
-    public ResponseEntity postComment(@Valid @RequestBody CommentRequestDto.Post post){
-        Comment comment = commentService.createComment(commentMapper.CommentRequestDtoPostToComment(post));
-        CommentResponseDto.Response response=commentMapper.CommentToCommentResponseDto(comment);
+    public ResponseEntity postComment(@Valid @RequestBody CommentRequestDto.Post post,
+                                      @Positive @RequestParam int reserveId){
+
+        Comment comment = commentService.createComment(commentMapper.CommentRequestDtoPostToComment(post),reserveId);
+        int memberId=comment.getPurchaseMember().getPurchaseMemberId();
+        int hotelId=comment.getHotel().getId();
+        CommentResponseDto.Response response=commentMapper.CommentToCommentResponseDto(comment,memberId,hotelId);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -63,7 +67,9 @@ public class CommentController {
                                      @RequestBody CommentRequestDto.Patch patch) {
         patch.setId(commentId);
         Comment comment = commentService.patchComment(commentMapper.CommentRequestDtoPatchToComment(patch));
-        CommentResponseDto.Response response =commentMapper.CommentToCommentResponseDto(comment);
+        int memberId=comment.getPurchaseMember().getPurchaseMemberId();
+        int hotelId=comment.getHotel().getId();
+        CommentResponseDto.Response response =commentMapper.CommentToCommentResponseDto(comment,memberId,hotelId);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

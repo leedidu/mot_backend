@@ -11,12 +11,4 @@ import java.util.Optional;
 
 public interface ReserveRepository extends JpaRepository<Reserve, Integer> {
 
-    @Query("select reserve.roomsId from Reserve reserve where reserve.id=:reserveId")
-    Optional<Integer> findRoomByReserveId(int reserveId);
-
-    @Query("select reserve.packagesId from Reserve reserve where reserve.id=:reserveId")
-    Optional<Integer> findPackageByReserveId(int reserveId);
-
-    @Query("select r from Reserve r where r.purchaseMember.purchaseMemberId=:purchaseMemberId")
-    List<Reserve> findReserveByPurchaseMember(int purchaseMemberId);
 }

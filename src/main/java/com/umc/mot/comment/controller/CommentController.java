@@ -30,8 +30,9 @@ public class CommentController {
 
     // Create
     @PostMapping
-    public ResponseEntity postComment(@Valid @RequestBody CommentRequestDto.Post post){
-        Comment comment = commentService.createComment(commentMapper.CommentRequestDtoPostToComment(post));
+    public ResponseEntity postComment(@Valid @RequestBody CommentRequestDto.Post post,
+                                      @Positive @RequestParam int reserveId){
+        Comment comment = commentService.createComment(commentMapper.CommentRequestDtoPostToComment(post),reserveId);
         CommentResponseDto.Response response=commentMapper.CommentToCommentResponseDto(comment);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -49,12 +50,6 @@ public class CommentController {
     }
 
 
-    @GetMapping("/getReserveList")
-    public ResponseEntity getCommentReserveList(){
-
-        CommentResponseDto.Response response = commentMapper.CommentToCommentResponseDto(comment);
-        return new ResponseEntity<>(response,HttpStatus.OK);
-    }
 
 
     // Update

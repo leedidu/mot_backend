@@ -29,7 +29,6 @@ public class ReserveService {
     private final ReserveRepository reserveRepository;
     private final TokenService tokenService;
     private final HotelService hotelService;
-    private final RoomService roomService;
 
     public List<Hotel> findHotels(){ // 예약된 호텔 리스트 찾기
         PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();

@@ -17,7 +17,7 @@ import javax.validation.constraints.Positive;
 
 
 @RestController
-@RequestMapping("/PurchaseMember/comment")
+@RequestMapping("/comment")
 @Validated
 @AllArgsConstructor
 public class CommentController {
@@ -27,7 +27,7 @@ public class CommentController {
     private final CommentMapper commentMapper;
 
     // Create
-    @PostMapping
+    @PostMapping("/PurchaseMember")
     public ResponseEntity postComment(@Valid @RequestBody CommentRequestDto.Post post){
         Comment comment = commentService.createComment(commentMapper.CommentRequestDtoPostToComment(post));
         CommentResponseDto.Response response=commentMapper.CommentToCommentResponseDto(comment);
@@ -37,7 +37,7 @@ public class CommentController {
 
 
     // Read
-    @GetMapping
+    @GetMapping("/PurchaseMember")
     public ResponseEntity getComment(@Positive @RequestParam int commentId){
         Comment comment = commentService.findComment(commentId);
         CommentResponseDto.Response response = commentMapper.CommentToCommentResponseDto(comment);
@@ -46,7 +46,7 @@ public class CommentController {
 
 
     // Update
-    @PatchMapping("/{comment-id}")
+    @PatchMapping("/PurchaseMember/{comment-id}")
     public ResponseEntity patchComment(@Positive @PathVariable("comment-id") int commentId,
                                      @RequestBody CommentRequestDto.Patch patch) {
         patch.setId(commentId);
@@ -56,8 +56,8 @@ public class CommentController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    // 후기 사진들 업로드 API
-    @PatchMapping(value = "/upload-images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    // 구매자 - 후기 사진들 업로드 API
+    @PatchMapping(value = "/PurchaseMember/upload-images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity patchImagesRoom(CommentRequestDto.PatchImage patchImage) {
         Comment comment = commentService.uploadRoomImage(patchImage.getCommentId(), patchImage.getImages());
         CommentResponseDto.Response response = commentMapper.CommentToCommentResponseDto(comment);
@@ -66,7 +66,7 @@ public class CommentController {
 
 
     // Delete
-    @DeleteMapping("/{comment-id}")
+    @DeleteMapping("/PurchaseMember/{comment-id}")
     public ResponseEntity deleteComment(@Positive @PathVariable("comment-id") int commentId) {
         commentService.deleteComment(commentId);
 

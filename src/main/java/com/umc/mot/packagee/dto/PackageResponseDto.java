@@ -21,7 +21,7 @@ public class PackageResponseDto {
         private int price;
         private String info;
         private String roomType; //객실방종류
-        private List<String> photo;
+        private List<String> photos;
     }
 
 }

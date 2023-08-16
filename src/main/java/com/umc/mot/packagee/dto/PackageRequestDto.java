@@ -3,6 +3,7 @@ package com.umc.mot.packagee.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -37,5 +38,13 @@ public class PackageRequestDto {
         private String info;
         private String roomType; //객실방종류
         private List<String> photo;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class PatchImage {
+        private int packageId;
+        private List<MultipartFile> images;
     }
 }

@@ -3,6 +3,8 @@ package com.umc.mot.comment.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.List;
+
 public class CommentResponseDto {
 
     @Getter
@@ -10,9 +12,8 @@ public class CommentResponseDto {
     public static class Response {
         private int id;
         private String context;
-        private String imageUrl;
         private int star;
-        private int memberId;
+        private List<String> photos;
         private boolean visible; // true : 보임, false : 안보임
     }
 }

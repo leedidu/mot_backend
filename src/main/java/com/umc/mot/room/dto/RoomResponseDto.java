@@ -16,6 +16,6 @@ public class RoomResponseDto {
         private int price; //비용
         private String info; //기본정보
         private String roomType; //객실방종류
-        private List<String> photo; //사진
+        private List<String> photos; //사진
     }
 }

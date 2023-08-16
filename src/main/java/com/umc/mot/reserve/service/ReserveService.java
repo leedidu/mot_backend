@@ -14,6 +14,7 @@ import com.umc.mot.reserve.entity.Reserve;
 import com.umc.mot.reserve.repository.ReserveRepository;
 import com.umc.mot.room.entity.Room;
 import com.umc.mot.room.service.RoomService;
+import com.umc.mot.roomPackage.service.RoomPackageService;
 import com.umc.mot.token.service.TokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.parameters.P;

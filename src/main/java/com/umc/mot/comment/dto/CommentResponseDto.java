@@ -2,7 +2,11 @@ package com.umc.mot.comment.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class CommentResponseDto {
@@ -13,11 +17,12 @@ public class CommentResponseDto {
         private int id;
         private String context;
         private int star;
-        private boolean visible;// true : 보임, false : 안보임
-        private int PURCHASE_MEMBER_ID;
-        private int HOTEL_ID;
-
         private List<String> photos;
+        private boolean visible;// true : 보임, false : 안보임
+        private
     }
+
+
+
 
 }

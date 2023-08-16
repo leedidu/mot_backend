@@ -10,8 +10,10 @@ import com.umc.mot.room.repository.RoomRepository;
 import com.umc.mot.sellMember.entity.SellMember;
 import com.umc.mot.sellMember.repository.SellMemberRepository;
 import com.umc.mot.token.service.TokenService;
+import com.umc.mot.utils.S3Uploader;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;

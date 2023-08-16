@@ -24,4 +24,12 @@ public class PackageResponseDto {
         private List<String> photos;
     }
 
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class Package {
+        private String name; //패키지 이름
+        private String roomType; //객실방종류
+    }
+
 }

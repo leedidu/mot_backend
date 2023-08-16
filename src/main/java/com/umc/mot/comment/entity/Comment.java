@@ -8,7 +8,6 @@ import com.umc.mot.reserve.entity.Reserve;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -38,7 +37,10 @@ public class Comment extends Auditable {
     private double star=5.0;
 
     @Column
-    private boolean visible = true; // true : 보임, false : 안보임
+    private int memberId;
+
+    @Column
+    private boolean visible; // true : 보임, false : 안보임
 
     @OneToMany(mappedBy = "comment", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Message> messages = new ArrayList<>();

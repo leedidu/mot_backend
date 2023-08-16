@@ -20,6 +20,8 @@ import com.umc.mot.roomPackage.entity.RoomPackage;
 import com.umc.mot.roomPackage.service.RoomPackageService;
 import com.umc.mot.token.service.TokenService;
 import com.umc.mot.utils.S3Uploader;
+import com.umc.mot.purchaseMember.entity.PurchaseMember;
+import com.umc.mot.reserve.entity.Reserve;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -128,7 +130,6 @@ public class CommentService {
 
     // Delete
     public void deleteComment(int commentId) {
-        tokenService.getLoginPurchaseMember();
         Comment comment = verifiedComment(commentId);
         commentRepository.delete(comment);
     }
@@ -139,18 +140,4 @@ public class CommentService {
         return comment.orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
 
     }
-
-    // 사진 업로드
-    public Comment uploadRoomImage(int commentId, List<MultipartFile> multipartFiles) {
-        Comment comment = verifiedComment(commentId);
-
-        // 이미지 파일 이름만 추출
-        List<String> saveImages = s3Uploader.autoImagesUploadAndDelete(comment.getPhotos(), multipartFiles);
-
-        comment.setPhotos(saveImages);
-        return commentRepository.save(comment);
-    }
-
-
-
 }

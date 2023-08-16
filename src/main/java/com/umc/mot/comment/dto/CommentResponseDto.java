@@ -16,13 +16,9 @@ public class CommentResponseDto {
     public static class Response {
         private int id;
         private String context;
+        private String imageUrl;
         private int star;
         private List<String> photos;
         private boolean visible;// true : 보임, false : 안보임
-        private
     }
-
-
-
-
 }

@@ -11,14 +11,12 @@ import com.umc.mot.comment.service.CommentService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -34,11 +32,9 @@ public class CommentController {
     private final CommentMapper commentMapper;
 
     // Create
-    @PostMapping("/PurchaseMember")
-    public ResponseEntity postComment(@Valid @RequestBody CommentRequestDto.Post post,
-                                      @Positive @RequestParam int reserveId){
-
-        Comment comment = commentService.createComment(commentMapper.CommentRequestDtoPostToComment(post),reserveId);
+    @PostMapping
+    public ResponseEntity postComment(@Valid @RequestBody CommentRequestDto.Post post){
+        Comment comment = commentService.createComment(commentMapper.CommentRequestDtoPostToComment(post));
         CommentResponseDto.Response response=commentMapper.CommentToCommentResponseDto(comment);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -65,7 +61,7 @@ public class CommentController {
 
 
     // Update
-    @PatchMapping("/PurchaseMember/{comment-id}")
+    @PatchMapping("/{comment-id}")
     public ResponseEntity patchComment(@Positive @PathVariable("comment-id") int commentId,
                                      @RequestBody CommentRequestDto.Patch patch) {
         patch.setId(commentId);

@@ -28,11 +28,13 @@ import java.util.List;
 public class ReserveController {
     private final ReserveService reserveService;
     private final ReserveMapper reserveMapper;
+    private TokenService tokenService;
 
     // Create
     @PostMapping
     public ResponseEntity postReserve(@Valid @RequestBody ReserveRequestDto.Post post) {
         boolean checkReserve = reserveService.checkReserve(post);
+
         if(checkReserve){
             Reserve reserve = reserveService.createReserve(reserveMapper.ReserveRequestDtoPostToReserve(post), post.getHotelId(), post.getPackageId(), post.getRoomId());
             ReserveResponseDto.Response response = reserveMapper.ReserveToReserveResponseDto(reserve);
@@ -44,9 +46,9 @@ public class ReserveController {
 
     // Read
     @GetMapping
-    public ResponseEntity getReserve() {
-        List<Reserve> reserves = reserveService.findReserve();
-        List<ReserveResponseDto.Get> response=reserveMapper.ReservesResponseDto(reserves);
+    public ResponseEntity getReserve(@Positive @RequestParam int reserveId) {
+        Reserve reserve = reserveService.findReserve(reserveId);
+        ReserveResponseDto.Response response=reserveMapper.ReserveToReserveResponseDto(reserve);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

@@ -1,12 +1,10 @@
 package com.umc.mot.reserve.entity;
 
 import com.umc.mot.auditable.Auditable;
-import com.umc.mot.comment.entity.Comment;
 import com.umc.mot.hotel.entity.Hotel;
 import com.umc.mot.packagee.entity.Package;
 import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import com.umc.mot.room.entity.Room;
-import com.umc.mot.token.entity.Token;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -50,8 +48,6 @@ public class Reserve extends Auditable {
     @ElementCollection
     private List<Integer> packagesId = new ArrayList<>(); // 예약된 패지키 식별자
 
-    @OneToOne(mappedBy = "reserve", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private Comment comment;
 
     @ManyToOne
     @JoinColumn(name = "PURCHASE_MEMBER_ID")

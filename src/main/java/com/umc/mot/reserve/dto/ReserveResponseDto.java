@@ -1,5 +1,8 @@
 package com.umc.mot.reserve.dto;
 
+import com.umc.mot.hotel.dto.HotelResponseDto;
+import com.umc.mot.packagee.dto.PackageResponseDto;
+import com.umc.mot.room.dto.RoomResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -20,31 +23,31 @@ public class ReserveResponseDto {
     @Getter
     @AllArgsConstructor
     public static class Get{
-        private List<Hotel> hotelInfo;
+        private List<HotelResponseDto.Hotel> hotelInfo;
         private LocalDate checkIn;
         private LocalDate checkOut;
-        private List<Room> roomInfo;
-        private List<Package> packageInfo;
+        private List<RoomResponseDto.Room> roomInfo;
+        private List<PackageResponseDto.Package> packageInfo;
     }
 
-    @Getter
-    @AllArgsConstructor
-    public static class Room{
-        private String name;
-    }
-
-    @Getter
-    @AllArgsConstructor
-    public static class Package{
-        private String name;
-        private String roomType;
-    }
-
-    @Getter
-    @AllArgsConstructor
-    public static class Hotel{
-        private String name;
-        private int star;
-        private int commentCount;
-    }
+//    @Getter
+//    @AllArgsConstructor
+//    public static class Room{
+//        private String name;
+//    }
+//
+//    @Getter
+//    @AllArgsConstructor
+//    public static class Package{
+//        private String name;
+//        private String roomType;
+//    }
+//
+//    @Getter
+//    @AllArgsConstructor
+//    public static class Hotel{
+//        private String name;
+//        private int star;
+//        private int commentCount;
+//    }
 }

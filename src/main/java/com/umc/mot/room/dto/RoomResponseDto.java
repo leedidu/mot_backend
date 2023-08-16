@@ -18,4 +18,10 @@ public class RoomResponseDto {
         private String roomType; //객실방종류
         private List<String> photos; //사진
     }
+
+    @Getter
+    @AllArgsConstructor
+    public static class Room {
+        private String name; //객실 이름
+    }
 }

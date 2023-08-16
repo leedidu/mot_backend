@@ -25,4 +25,12 @@ public class HotelResponseDto {
         private String distance;
         private String photo;
     }
+
+    @Getter
+    @AllArgsConstructor
+    public static class Hotel{
+        private String name; //숙소이름
+        private int star; //별점
+        private String photo;
+    }
 }

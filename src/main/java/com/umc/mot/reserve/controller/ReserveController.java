@@ -1,5 +1,7 @@
 package com.umc.mot.reserve.controller;
 
+import com.umc.mot.hotel.entity.Hotel;
+import com.umc.mot.hotel.service.HotelService;
 import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import com.umc.mot.reserve.mapper.ReserveMapper;
 import com.umc.mot.reserve.service.ReserveService;
@@ -36,15 +38,15 @@ public class ReserveController {
             ReserveResponseDto.Response response = reserveMapper.ReserveToReserveResponseDto(reserve);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } else{
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new IllegalArgumentException("You can't make a reservation for that date because it's already booked.");
         }
     }
 
     // Read
     @GetMapping
     public ResponseEntity getReserve() {
-        List<Reserve> reserve = reserveService.findReserve();
-        List<ReserveResponseDto.Get> response=reserveMapper.ReservesResponseDto(reserve);
+        List<Reserve> reserves = reserveService.findReserve();
+        List<ReserveResponseDto.Get> response=reserveMapper.ReservesResponseDto(reserves);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

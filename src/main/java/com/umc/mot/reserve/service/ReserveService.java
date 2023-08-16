@@ -46,26 +46,43 @@ public class ReserveService {
         return hotellist;
     }
 
+    public List<Room> findRooms(){ // 예약된 호텔 리스트 찾기
+        PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
+        List<Room> roomList = new ArrayList();
+        for(Reserve reserve : purchaseMember.getReserves()) { // 예약 된거 확인
+            Room room = roomService.verifiedRoom(reserve.getRoomsId().get(0));
+            roomList.add(room);
+        }
+        return roomList;
+    }
+
+    public List<Package> findPackages(){ // 예약된 호텔 리스트 찾기
+        PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
+        List<Package> packageList = new ArrayList();
+        for(Reserve reserve : purchaseMember.getReserves()) { // 예약 된거 확인
+            Package packagee = packageService.verifiedPackage(reserve.getPackagesId().get(0));
+            packageList.add(packagee);
+        }
+        return packageList;
+    }
+
     // Read
     public List<Reserve> findReserve(){
         PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
+        List<Reserve> reserveList = new ArrayList<>();
         for(Reserve reserve : purchaseMember.getReserves()){
-            if(!(reserve.getRoomsId().isEmpty() && reserve.getPackagesId().isEmpty())){ //둘다 가지고있을경우 -> 패키지 예약으로 인해 객실까지 예약된경우
-
-            } else{ // 둘중에 하나만 예약한 경우 -> 객실만 한거겠지
-                if(!reserve.getRoomsId().isEmpty()){
-
-                }
-          }
+            reserveList.add(reserve);
         }
-        return null;
+        return reserveList;
     }
 
 
-    public void reserveMapping(int reserveId){
-        Reserve reserve = verifiedReserve(reserveId);
-        List<Integer> reserveRoomId = reserve.getRoomsId();
-        List<Integer> reservePackageId = reserve.getPackagesId();
+    public void reserveMapping(List<Reserve> reserves){
+        List<Reserve> reserveList = reserves;
+        for(Reserve reserve : reserveList){
+            if(!(reserve.getPackagesId().isEmpty() && reserve.getRoomsId().isEmpty())){
+            }
+        }
     }
 
     //Create

@@ -15,23 +15,19 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class RoomService {
+public class RoomService{
 
     private final RoomRepository roomRepository;
     private final HotelService hotelService;
     private final TokenService tokenService;
-    private final S3Uploader s3Uploader;
-//    private final ReserveService reserveService;
 
     //Create
-    public Room createRoom(Room room, int hotelId) {
+    public Room createRoom(Room room,int hotelId) {
         SellMember sellM = tokenService.getLoginSellMember();
         Hotel hotel = hotelService.verifiedHotel(hotelId);
         room.setHotel(hotel);
@@ -39,7 +35,7 @@ public class RoomService {
     }
 
     // Read
-    public Room findRoomId(int roomId) {
+    public Room findRoomId(int roomId){
         Room room = verifiedRoom(roomId);
         return room;
     }
@@ -50,6 +46,9 @@ public class RoomService {
         SellMember sellM = tokenService.getLoginSellMember();
         Room findRoom = verifiedRoom(room.getId());
         Optional.ofNullable(room.getName()).ifPresent(findRoom::setName);
+        Optional.ofNullable(room.getMinPeople()).ifPresent(findRoom::setMinPeople);
+        Optional.ofNullable(room.getMaxPeople()).ifPresent(findRoom::setMaxPeople);
+        Optional.ofNullable(room.getPrice()).ifPresent(findRoom::setPrice);
         Optional.ofNullable(room.getInfo()).ifPresent(findRoom::setInfo);
         Optional.ofNullable(room.getRoomType()).ifPresent(findRoom::setRoomType);
         Optional.ofNullable(room.getPhotos()).ifPresent(findRoom::setPhotos);

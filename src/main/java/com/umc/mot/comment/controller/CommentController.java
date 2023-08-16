@@ -3,23 +3,28 @@ package com.umc.mot.comment.controller;
 import com.umc.mot.comment.dto.CommentRequestDto;
 import com.umc.mot.comment.mapper.CommentMapper;
 import com.umc.mot.comment.service.CommentService;
+import com.umc.mot.comment.dto.CommentRequestDto;
 import com.umc.mot.comment.dto.CommentResponseDto;
 import com.umc.mot.comment.entity.Comment;
+import com.umc.mot.comment.mapper.CommentMapper;
+import com.umc.mot.comment.service.CommentService;
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.util.List;
 
 
 @RestController
 @RequestMapping("/comment")
 @Validated
 @AllArgsConstructor
+@Log4j2
 public class CommentController {
     
     
@@ -27,7 +32,7 @@ public class CommentController {
     private final CommentMapper commentMapper;
 
     // Create
-    @PostMapping("/PurchaseMember")
+    @PostMapping
     public ResponseEntity postComment(@Valid @RequestBody CommentRequestDto.Post post){
         Comment comment = commentService.createComment(commentMapper.CommentRequestDtoPostToComment(post));
         CommentResponseDto.Response response=commentMapper.CommentToCommentResponseDto(comment);
@@ -36,17 +41,27 @@ public class CommentController {
     }
 
 
+
+
     // Read
     @GetMapping("/PurchaseMember")
-    public ResponseEntity getComment(@Positive @RequestParam int commentId){
-        Comment comment = commentService.findComment(commentId);
-        CommentResponseDto.Response response = commentMapper.CommentToCommentResponseDto(comment);
+    public ResponseEntity getComment(){
+        List<Comment> comment = commentService.findCommentList();
+        List<CommentResponseDto.ListResponse> list = new ArrayList<>();
+
+        for(int i=0;i<comment.size();i++){
+            CommentResponseDto.ListResponse listResponse = new CommentResponseDto.ListResponse();
+
+
+
+        }
+        List<CommentResponseDto.Response> response = commentMapper.commentToCommentResponseDtoList(comment);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
 
     // Update
-    @PatchMapping("/PurchaseMember/{comment-id}")
+    @PatchMapping("/{comment-id}")
     public ResponseEntity patchComment(@Positive @PathVariable("comment-id") int commentId,
                                      @RequestBody CommentRequestDto.Patch patch) {
         patch.setId(commentId);

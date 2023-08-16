@@ -9,14 +9,10 @@ import com.umc.mot.packagee.service.PackageService;
 import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import com.umc.mot.purchaseMember.service.PurchaseMemberService;
 import com.umc.mot.reserve.controller.ReserveController;
-import com.umc.mot.reserve.dto.ReserveRequestDto;
-import com.umc.mot.reserve.dto.ReserveResponseDto;
 import com.umc.mot.reserve.entity.Reserve;
-import com.umc.mot.reserve.mapper.ReserveMapper;
 import com.umc.mot.reserve.repository.ReserveRepository;
 import com.umc.mot.room.entity.Room;
 import com.umc.mot.room.service.RoomService;
-import com.umc.mot.roomPackage.entity.RoomPackage;
 import com.umc.mot.roomPackage.service.RoomPackageService;
 import com.umc.mot.token.service.TokenService;
 import lombok.AllArgsConstructor;
@@ -55,6 +51,7 @@ public class ReserveService {
                 rooms.add(roomService.verifiedRoom(reserve.getRoomsId().get(i)));
             }
             reserveRooms.put(reserve, rooms);
+//            reserveRooms.put(reserve, reserve.getRooms());
         }
         return reserveRooms;
     }
@@ -68,6 +65,7 @@ public class ReserveService {
                 packages.add(packageService.verifiedPackage(reserve.getPackagesId().get(i)));
             }
             reserveRooms.put(reserve, packages);
+//            reservePackages.put(reserve, reserve.getPackages());
         }
         return reserveRooms;
     }
@@ -79,6 +77,11 @@ public class ReserveService {
         return reserves;
     }
 
+/*
+1. 예약 생성시 들어간 호텔 아이디를 이용해서 객실/패키지 찾기
+2. 해당 객실의 예약식별아이디를 지금 예약아이디로 수정
+* */
+
     //Create
     public Reserve createReserve(Reserve reserve, int hotelId, Integer packageId, Integer  roomId) {
         PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
@@ -89,6 +92,12 @@ public class ReserveService {
             for(Room room : rooms){
                 createReserve(reserve, hotelId, 0, room.getId()); // 패키지 예약할 경우 방까지 모두 예약된 상태로 변경
             }
+        }
+        if(roomId != 0){
+            reserve.getRoomsId().add(roomId);
+        }
+        if(packageId != 0){
+            reserve.getPackagesId().add(packageId);
         }
         if(roomId != 0){
             reserve.getRoomsId().add(roomId);
@@ -166,6 +175,13 @@ public class ReserveService {
             return false;
         }
     }
+
+    // Read
+    public Reserve findReserve(int reserveId){
+        Reserve reserve = verifiedReserve(reserveId);
+        return reserve;
+    }
+
 
 
     // Update

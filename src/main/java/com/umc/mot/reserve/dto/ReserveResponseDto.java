@@ -52,4 +52,15 @@ public class ReserveResponseDto {
         private int star;
         private int commentCount;
     }
+
+    @Getter
+    @AllArgsConstructor
+    public static class ReserveInfo{
+        private int id;
+        private int peopleNum;
+        private LocalDate checkIn;
+        private LocalDate checkOut;
+        private RoomInfo roomInfo;
+        private PackageInfo packageInfo;
+    }
 }

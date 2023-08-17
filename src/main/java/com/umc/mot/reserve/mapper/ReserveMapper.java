@@ -27,4 +27,5 @@ public interface ReserveMapper {
     ReserveResponseDto.HotelInfo ResponseToHotel(Hotel hotel);
     ReserveResponseDto.PackageInfo ResponseToPackage(Package packagee);
     ReserveResponseDto.RoomInfo ResponseToRoom(Room room);
+    ReserveResponseDto.ReserveInfo ResponseToReserve(Reserve reserve, ReserveResponseDto.PackageInfo packageInfo, ReserveResponseDto.RoomInfo roomInfo);
 }

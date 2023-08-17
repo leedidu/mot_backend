@@ -13,6 +13,7 @@ import com.umc.mot.reserve.repository.ReserveRepository;
 import com.umc.mot.room.entity.Room;
 import com.umc.mot.room.service.RoomService;
 import com.umc.mot.roomPackage.service.RoomPackageService;
+import com.umc.mot.sellMember.entity.SellMember;
 import com.umc.mot.token.service.TokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -182,4 +183,46 @@ public class ReserveService {
         Optional<Reserve> member = reserveRepository.findById(reserveId);
         return member.orElseThrow(() -> new BusinessLogicException(ExceptionCode.RESERVE_NOT_FOUND));
     }
+
+    //판매자 입장 - 기간 내 예약조회
+    public List<Reserve> getPeriodreserve(int hotelId, LocalDate checkIn, LocalDate checkOut){
+        tokenService.getLoginSellMember(); // 판매자 로그인 가져옴
+        Hotel hotel = hotelService.verifiedHotel(hotelId); // 호텔을 가져옴
+        // 호텔에 딸린 예약 내역을 가져 온 다음 -> 체크인 체크아웃 비교
+        // 패키지또는객실이름, 기간, 패키지일 경우 룸타입, 인원
+        List<Reserve> reserveList = new ArrayList<>();
+        for(Reserve reserve : hotel.getReserves()){
+            if(!(reserve.getCheckIn().isEqual(checkOut) || reserve.getCheckOut().isEqual(checkIn) || reserve.getCheckIn().isAfter(checkOut) || reserve.getCheckOut().isBefore(checkIn))){
+                reserveList.add(reserve);
+            }
+        }
+        return reserveList;
+    }
+
+    public Map<Reserve, Package> getPeriodPackage(List<Reserve> reserves){
+        tokenService.getLoginSellMember();
+        Map<Reserve, Package> packages = new HashMap<>();
+        for(Reserve reserve : reserves) {
+            if (!reserve.getPackagesId().isEmpty()) {
+                Package packagee = packageService.verifiedPackage(reserve.getPackagesId().get(0));
+                packages.put(reserve, packagee);
+            }
+        }
+        return packages;
+    }
+
+    public Map<Reserve, Room> getPeriodRoom(List<Reserve> reserves){
+        tokenService.getLoginSellMember();
+        Map<Reserve, Room> rooms = new HashMap<>();
+        for(Reserve reserve : reserves){
+            if(!reserve.getRoomsId().isEmpty()){
+                Room room = roomService.verifiedRoom(reserve.getRoomsId().get(0));
+                rooms.put(reserve, room);
+            }
+        }
+        return rooms;
+    }
+
+    // 판매자 입장 - 예약 상세보기
+    // 이름, 기간, 번호, 객실
 }

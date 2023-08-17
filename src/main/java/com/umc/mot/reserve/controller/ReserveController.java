@@ -9,13 +9,16 @@ import com.umc.mot.reserve.dto.ReserveResponseDto;
 import com.umc.mot.reserve.entity.Reserve;
 import com.umc.mot.room.entity.Room;
 import lombok.AllArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -85,5 +88,30 @@ public class ReserveController {
     public ResponseEntity deleteMember(@Positive @PathVariable("reserve-id") int reserveId) {
         reserveService.deleteReserve((reserveId));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    //판매자 입장
+    @GetMapping("/check/{hotel-id}")
+    public ResponseEntity getPeriodreserve(@Positive @PathVariable("hotel-id") int hotelId,
+                                           @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate checkIn,
+                                           @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate checkOut){
+        List<Reserve> reserves = reserveService.getPeriodreserve(hotelId, checkIn, checkOut);
+        Map<Reserve, Package> packages = reserveService.getPeriodPackage(reserves);
+        Map<Reserve, Room> rooms = reserveService.getPeriodRoom(reserves);
+        List<ReserveResponseDto.ReserveInfo> reserveInfoList = new ArrayList<>();
+        for(Reserve reserve : reserves){
+            Package packagee = packages.get(reserve);
+            Room room = rooms.get(reserve);
+            if(packagee != null){ // 패키지를 예약한 경우
+                ReserveResponseDto.PackageInfo packageResponse = reserveMapper.ResponseToPackage(packagee);
+                ReserveResponseDto.ReserveInfo getResponse = reserveMapper.ResponseToReserve(reserve, packageResponse, null);
+                reserveInfoList.add(getResponse);
+            } else if(room != null){ // 객실을 에약한 경우
+                ReserveResponseDto.RoomInfo roomInfo = reserveMapper.ResponseToRoom(room);
+                ReserveResponseDto.ReserveInfo getResponse = reserveMapper.ResponseToReserve(reserve, null, roomInfo);
+                reserveInfoList.add(getResponse);
+            }
+        }
+        return new ResponseEntity<>(reserveInfoList, HttpStatus.OK);
     }
 }

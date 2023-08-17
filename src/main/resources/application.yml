@@ -36,6 +36,11 @@ logging:
       springframework:
         orm:
           jpa: DEBUG
+    com: # 서버 관련 오류
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
+
 server:
   servlet:
     encoding:

@@ -26,16 +26,15 @@ public class MessageController {
     // Create
     @PostMapping
     public ResponseEntity postMessage(@Valid @RequestBody MessageRequestDto.Post post) {
-        Message message = messageService.createMessage(messageMapper.MessageRequestDtoPostToMessage(post));
+        Message message = messageService.createMessage(messageMapper.MessageRequestDtoPostToMessage(post), post.getCommentId());
         MessageResponseDto.Response response = messageMapper.MessageToMessageResponseDto(message);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     // Read
-    @GetMapping
-    public ResponseEntity getMessage(@Positive @RequestParam int messageId) {
-
+    @GetMapping("/{message-id}")
+    public ResponseEntity getMessage(@Positive @PathVariable("message-id") int messageId) {
         Message message=messageService.findMessage(messageId);
         MessageResponseDto.Response response = messageMapper.MessageToMessageResponseDto((message));
         return new ResponseEntity<>(response, HttpStatus.OK);

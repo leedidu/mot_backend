@@ -10,5 +10,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ReserveRepository extends JpaRepository<Reserve, Integer> {
-
+    List<Reserve> findAll(); // 모든 예약 정보 가져오기
 }

@@ -22,24 +22,24 @@ public class ReserveResponseDto {
     @Setter
     @AllArgsConstructor
     public static class Get{
-        private Hotel hotelInfo;
+        private HotelInfo hotelInfo;
         private LocalDate checkIn;
         private LocalDate checkOut;
-        private List<Room> roomInfo;
-        private Package packageInfo;
+        private RoomInfo roomInfo;
+        private PackageInfo packageInfo;
     }
 
     @Setter
     @Getter
     @AllArgsConstructor
-    public static class Room{
+    public static class RoomInfo{
         private String name;
     }
 
     @Setter
     @Getter
     @AllArgsConstructor
-    public static class Package{
+    public static class PackageInfo{
         private String name;
         private String roomType;
     }
@@ -47,7 +47,7 @@ public class ReserveResponseDto {
     @Setter
     @Getter
     @AllArgsConstructor
-    public static class Hotel{
+    public static class HotelInfo{
         private String name;
         private int star;
         private int commentCount;

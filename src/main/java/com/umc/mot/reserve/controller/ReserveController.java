@@ -54,19 +54,17 @@ public class ReserveController {
             Hotel hotel = findHotel.get(reserve1);
             Room room = findRooms.get(reserve1);
             Package packagee = findPackages.get(reserve1);
-            ReserveResponseDto.Hotel hotelResponse = reserveMapper.ResponseToHotel(hotel); // 호텔 매핑
-
+            ReserveResponseDto.HotelInfo hotelResponse = reserveMapper.ResponseToHotel(hotel); // 호텔 매핑
             if(packagee != null){
-                ReserveResponseDto.Package packageResponse = reserveMapper.ResponseToPackage(packagee);
-                ReserveResponseDto.Get getResponse = (reserveMapper.ReserveToGetResponseDto(reserve1, hotelResponse, null, packageResponse));
+                ReserveResponseDto.PackageInfo packageResponse = reserveMapper.ResponseToPackage(packagee);
+                ReserveResponseDto.Get getResponse = reserveMapper.ReserveToGetResponseDto(reserve1, hotelResponse, null, packageResponse);
                 gets.add(getResponse);
             } else if (room != null) {
-                ReserveResponseDto.Room roomResponse = reserveMapper.ResponseToRoom(room);
-                ReserveResponseDto.Get getResponse = (reserveMapper.ReserveToGetResponseDto(reserve1, hotelResponse, roomResponse, null));
+                ReserveResponseDto.RoomInfo roomResponse = reserveMapper.ResponseToRoom(room);
+                ReserveResponseDto.Get getResponse = reserveMapper.ReserveToGetResponseDto(reserve1, hotelResponse, roomResponse, null);
                 gets.add(getResponse);
             }
         }
-
         return new ResponseEntity<>(gets, HttpStatus.OK);
     }
 

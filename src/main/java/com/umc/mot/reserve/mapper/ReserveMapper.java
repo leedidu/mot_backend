@@ -23,8 +23,8 @@ public interface ReserveMapper {
     Reserve ReserveRequestDtoPostToReserve(ReserveRequestDto.Post post);
     Reserve ReserveRequestDtoPatchToReserve(ReserveRequestDto.Patch patch);
 
-    ReserveResponseDto.Get ReserveToGetResponseDto(Reserve reserve, ReserveResponseDto.Hotel hotel, ReserveResponseDto.Room room, ReserveResponseDto.Package packagee);
-    ReserveResponseDto.Hotel ResponseToHotel(Hotel hotel);
-    ReserveResponseDto.Package ResponseToPackage(Package packagee);
-    ReserveResponseDto.Room ResponseToRoom(Room room);
+    ReserveResponseDto.Get ReserveToGetResponseDto(Reserve reserve, ReserveResponseDto.HotelInfo hotelInfo, ReserveResponseDto.RoomInfo roomInfo, ReserveResponseDto.PackageInfo packageInfo);
+    ReserveResponseDto.HotelInfo ResponseToHotel(Hotel hotel);
+    ReserveResponseDto.PackageInfo ResponseToPackage(Package packagee);
+    ReserveResponseDto.RoomInfo ResponseToRoom(Room room);
 }

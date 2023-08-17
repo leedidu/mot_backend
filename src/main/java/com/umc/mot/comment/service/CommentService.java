@@ -140,4 +140,15 @@ public class CommentService {
         return comment.orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
 
     }
+
+    // 사진 업로드
+    public Comment uploadRoomImage(int commentId, List<MultipartFile> multipartFiles) {
+        Comment comment = verifiedComment(commentId);
+
+        // 이미지 파일 이름만 추출
+        List<String> saveImages = s3Uploader.autoImagesUploadAndDelete(comment.getPhotos(), multipartFiles);
+
+        comment.setPhotos(saveImages);
+        return commentRepository.save(comment);
+    }
 }

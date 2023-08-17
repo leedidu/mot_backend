@@ -1,5 +1,7 @@
 package com.umc.mot.message.service;
 
+import com.umc.mot.comment.entity.Comment;
+import com.umc.mot.comment.service.CommentService;
 import com.umc.mot.exception.BusinessLogicException;
 import com.umc.mot.exception.ExceptionCode;
 import com.umc.mot.message.entity.Message;
@@ -16,9 +18,12 @@ public class MessageService {
 
 
     private final MessageRepository messageRepository;
+    private final CommentService commentService;
 
     //Create
-    public Message createMessage(Message message) {
+    public Message createMessage(Message message, int commentId) {
+        Comment comment = commentService.verifiedComment(commentId);
+        message.setComment(comment);
 
         return messageRepository.save(message);
     }
@@ -33,9 +38,7 @@ public class MessageService {
     // Update
     public Message patchMessage(Message message) {
         Message findMessage = verifiedMessage(message.getId());
-        Optional.ofNullable(message.getId()).ifPresent(findMessage::setId);
         Optional.ofNullable(message.getContent()).ifPresent(findMessage::setContent);
-
 
         return messageRepository.save(findMessage);
     }

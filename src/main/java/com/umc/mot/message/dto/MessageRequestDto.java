@@ -10,15 +10,15 @@ public class MessageRequestDto {
     @Getter
     @AllArgsConstructor
     public static class Post {
-        private int id; //답글아이디
-        private String content; //내용
+        private int commentId; // 댓글 아이디
+        private String content; // 내용
     }
 
     @Getter
     @Setter
     @AllArgsConstructor
     public static class Patch {
-        private int id; //답글아이디
-        private String content; //내용
+        private int id; // 답글 아이디
+        private String content; // 내용
     }
 }

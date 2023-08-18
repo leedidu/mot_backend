@@ -43,14 +43,14 @@ public class CommentService {
 
 
     //후기작성
-    public Comment createComment(Comment comment){
+    public Comment createComment(Comment comment,int reserveId){
         PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
-        int reserveId = comment.getReserve().getId();
         Reserve reserve = reserveService.findReserve(reserveId);
         if(LocalDate.now().isAfter(reserve.getCheckOut())){
             comment.setHotel(reserve.getHotel());
             comment.setPurchaseMember(purchaseMember);
             comment.setVisible(true);
+            comment.setReserve(reserve);
             Hotel hotel  = hotelService.findHotel(comment.getHotel().getId());
             //호텔 comment 개수
             int comm = hotel.getCommentCount();
@@ -99,6 +99,15 @@ public class CommentService {
         List<Room> room = roomPackageService.findRoomPackage(packageId);
 
         return room;
+
+    }
+
+    //코멘트에 해당되는 룸 가져오기
+
+    public String findHotelName(int hotelId){
+        Hotel hotel = hotelService.findHotel(hotelId);
+        String name = hotel.getName();
+        return name;
 
     }
 

@@ -36,8 +36,9 @@ public class CommentController {
 
     // Create
     @PostMapping
-    public ResponseEntity postComment(@Valid @RequestBody CommentRequestDto.Post post){
-        Comment comment = commentService.createComment(commentMapper.CommentRequestDtoPostToComment(post));
+    public ResponseEntity postComment(@Valid @RequestBody CommentRequestDto.Post post,
+                                      @Positive @RequestParam int reserveId){
+        Comment comment = commentService.createComment(commentMapper.CommentRequestDtoPostToComment(post),reserveId);
         CommentResponseDto.Response response=commentMapper.CommentToCommentResponseDto(comment);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -53,27 +54,14 @@ public class CommentController {
         List<String> HotelName=new ArrayList<>();
         List<String> RoomName = new ArrayList<>();
         List<String> PackageName = new ArrayList<>();
-        String n = null;
+
 
         for(int i=0;i<comment.size();i++){
             Comment comment1 = comment.get(i);
-            log.info("-----------------------확인1111----------------------");
-            log.info(comment.get(0).getReserve().getRoomsId());
-            String hotelName = comment1.getHotel().getName();
-            log.info(hotelName);
-            log.info("-----------------------확인1111----------------------");
+            int hotelId = comment1.getHotel().getId();
+            String hotelName = commentService.findHotelName(hotelId);
             HotelName.add(hotelName);
-            if(comment1.getReserve().getPackagesId().isEmpty()){
-                int roomId = comment1.getReserve().getRoomsId().get(0);
-                List<Room> rooms = commentService.findRoom(roomId);
-                String roomName = rooms.get(i).getName();
-                RoomName.add(roomName);
-                PackageName.add(n);
-                log.info(RoomName.get(i));
-                log.info(PackageName.get(i));
-                log.info("-----------------------확인222----------------------");
-
-            }else{
+            if(!comment1.getReserve().getPackagesId().isEmpty()){
                 List<Integer> packageIds= comment1.getReserve().getPackagesId();
                 int packageId = packageIds.get(0);
                 List<Room> rooms = commentService.findRoomPackage(packageId);
@@ -83,13 +71,16 @@ public class CommentController {
                 }
                 String combinedRooms = String.join(" ", roomNames);
                 PackageName.add(combinedRooms);
+                String n = null;
                 RoomName.add(n);
+            }else{
 
-                log.info(RoomName.get(i));
-                log.info(PackageName.get(i));
-                log.info("-----------------------확인333----------------------");
-
-
+                int roomId = comment1.getReserve().getRoomsId().get(0);
+                List<Room> rooms = commentService.findRoom(roomId);
+                String roomName = rooms.get(0).getName();
+                RoomName.add(roomName);
+                String n = null;
+                PackageName.add(n);
             }
 
 

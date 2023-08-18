@@ -63,4 +63,15 @@ public class ReserveResponseDto {
         private RoomInfo roomInfo;
         private PackageInfo packageInfo;
     }
+
+    @Getter
+    @AllArgsConstructor
+    public static class DetailInfo{
+        private LocalDate checkIn;
+        private LocalDate checkOut;
+        private String name;
+        private String phone;
+        private RoomInfo roomInfo;
+        private PackageInfo packageInfo;
+    }
 }

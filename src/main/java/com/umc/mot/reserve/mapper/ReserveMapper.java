@@ -5,6 +5,7 @@ import com.umc.mot.category.entity.Category;
 import com.umc.mot.hotel.entity.Hotel;
 import com.umc.mot.packagee.dto.PackageResponseDto;
 import com.umc.mot.packagee.entity.Package;
+import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import com.umc.mot.reserve.dto.ReserveRequestDto;
 import com.umc.mot.reserve.dto.ReserveResponseDto;
 import com.umc.mot.reserve.entity.Reserve;
@@ -28,4 +29,7 @@ public interface ReserveMapper {
     ReserveResponseDto.PackageInfo ResponseToPackage(Package packagee);
     ReserveResponseDto.RoomInfo ResponseToRoom(Room room);
     ReserveResponseDto.ReserveInfo ResponseToReserve(Reserve reserve, ReserveResponseDto.PackageInfo packageInfo, ReserveResponseDto.RoomInfo roomInfo);
+    @Mapping(source = "purchaseMember.name", target = "name")
+    @Mapping(source = "reserve.phone", target = "phone")
+    ReserveResponseDto.DetailInfo ResponseToDetail(Reserve reserve, PurchaseMember purchaseMember, ReserveResponseDto.PackageInfo packageInfo, ReserveResponseDto.RoomInfo roomInfo);
 }

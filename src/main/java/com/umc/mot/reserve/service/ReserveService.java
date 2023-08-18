@@ -225,4 +225,11 @@ public class ReserveService {
 
     // 판매자 입장 - 예약 상세보기
     // 이름, 기간, 번호, 객실
+    public Map<Reserve, PurchaseMember> getDetailInfo(int reserveId){
+        tokenService.getLoginSellMember();
+        Map<Reserve, PurchaseMember> detailInfo = new HashMap<>();
+        Reserve reserve = verifiedReserve(reserveId);
+        detailInfo.put(reserve, reserve.getPurchaseMember());
+        return detailInfo;
+    }
 }

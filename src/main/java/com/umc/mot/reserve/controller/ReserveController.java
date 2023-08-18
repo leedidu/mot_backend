@@ -2,12 +2,15 @@ package com.umc.mot.reserve.controller;
 
 import com.umc.mot.hotel.entity.Hotel;
 import com.umc.mot.packagee.entity.Package;
+import com.umc.mot.packagee.service.PackageService;
+import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import com.umc.mot.reserve.mapper.ReserveMapper;
 import com.umc.mot.reserve.service.ReserveService;
 import com.umc.mot.reserve.dto.ReserveRequestDto;
 import com.umc.mot.reserve.dto.ReserveResponseDto;
 import com.umc.mot.reserve.entity.Reserve;
 import com.umc.mot.room.entity.Room;
+import com.umc.mot.room.service.RoomService;
 import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -30,6 +33,8 @@ import java.util.Map;
 public class ReserveController {
     private final ReserveService reserveService;
     private final ReserveMapper reserveMapper;
+    private final PackageService packageService;
+    private final RoomService roomService;
 
     // Create
     @PostMapping
@@ -113,5 +118,23 @@ public class ReserveController {
             }
         }
         return new ResponseEntity<>(reserveInfoList, HttpStatus.OK);
+    }
+
+    @GetMapping("/detail/{reserve-id}")
+    public ResponseEntity getDetailInfo(@Positive @PathVariable("reserve-id") int reserveId){
+        Map<Reserve, PurchaseMember> detail = reserveService.getDetailInfo(reserveId);
+        Reserve reserve = reserveService.verifiedReserve(reserveId);
+        if(!reserve.getPackagesId().isEmpty()){
+            Package packagee = packageService.verifiedPackage(reserve.getPackagesId().get(0));
+            ReserveResponseDto.PackageInfo packageResponse = reserveMapper.ResponseToPackage(packagee);
+            ReserveResponseDto.DetailInfo detailInfo = reserveMapper.ResponseToDetail(reserve, detail.get(reserve), packageResponse, null);
+            return new ResponseEntity<>(detailInfo, HttpStatus.OK);
+        } else if(!reserve.getRoomsId().isEmpty()){
+            Room room = roomService.verifiedRoom(reserve.getRoomsId().get(0));
+            ReserveResponseDto.RoomInfo roomInfo = reserveMapper.ResponseToRoom(room);
+            ReserveResponseDto.DetailInfo detailInfo = reserveMapper.ResponseToDetail(reserve, detail.get(reserve), null, roomInfo);
+            return new ResponseEntity<>(detailInfo, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

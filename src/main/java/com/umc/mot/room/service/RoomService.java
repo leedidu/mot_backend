@@ -25,6 +25,7 @@ public class RoomService{
     private final RoomRepository roomRepository;
     private final HotelService hotelService;
     private final TokenService tokenService;
+    private S3Uploader s3Uploader;
 
     //Create
     public Room createRoom(Room room,int hotelId) {

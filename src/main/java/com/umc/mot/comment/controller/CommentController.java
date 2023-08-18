@@ -8,6 +8,7 @@ import com.umc.mot.comment.dto.CommentResponseDto;
 import com.umc.mot.comment.entity.Comment;
 import com.umc.mot.comment.mapper.CommentMapper;
 import com.umc.mot.comment.service.CommentService;
+import com.umc.mot.room.entity.Room;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -49,15 +50,53 @@ public class CommentController {
     @GetMapping("/PurchaseMember")
     public ResponseEntity getComment(){
         List<Comment> comment = commentService.findCommentList();
-        List<CommentResponseDto.ListResponse> list = new ArrayList<>();
+        List<String> HotelName=new ArrayList<>();
+        List<String> RoomName = new ArrayList<>();
+        List<String> PackageName = new ArrayList<>();
+        String n = null;
 
         for(int i=0;i<comment.size();i++){
-            CommentResponseDto.ListResponse listResponse = new CommentResponseDto.ListResponse();
+            Comment comment1 = comment.get(i);
+            log.info("-----------------------확인1111----------------------");
+            log.info(comment.get(0).getReserve().getRoomsId());
+            String hotelName = comment1.getHotel().getName();
+            log.info(hotelName);
+            log.info("-----------------------확인1111----------------------");
+            HotelName.add(hotelName);
+            if(comment1.getReserve().getPackagesId().isEmpty()){
+                int roomId = comment1.getReserve().getRoomsId().get(0);
+                List<Room> rooms = commentService.findRoom(roomId);
+                String roomName = rooms.get(i).getName();
+                RoomName.add(roomName);
+                PackageName.add(n);
+                log.info(RoomName.get(i));
+                log.info(PackageName.get(i));
+                log.info("-----------------------확인222----------------------");
 
+            }else{
+                List<Integer> packageIds= comment1.getReserve().getPackagesId();
+                int packageId = packageIds.get(0);
+                List<Room> rooms = commentService.findRoomPackage(packageId);
+                List<String> roomNames = new ArrayList<>();
+                for (Room room : rooms) {
+                    roomNames.add(room.getName());
+                }
+                String combinedRooms = String.join(" ", roomNames);
+                PackageName.add(combinedRooms);
+                RoomName.add(n);
+
+                log.info(RoomName.get(i));
+                log.info(PackageName.get(i));
+                log.info("-----------------------확인333----------------------");
+
+
+            }
 
 
         }
-        List<CommentResponseDto.Response> response = commentMapper.commentToCommentResponseDtoList(comment);
+
+
+        List<CommentResponseDto.ListResponse> response = commentMapper.commentToCommentResponseDtoList(comment,HotelName,RoomName,PackageName);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 

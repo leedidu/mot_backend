@@ -31,6 +31,7 @@ public class CommentResponseDto {
     @NoArgsConstructor
     public static class ListResponse {
         private int id;
+        private double hotelStar;
         private String context;
         private String imageUrl;
         private double star;

@@ -16,7 +16,7 @@ import java.util.List;
 public interface CommentMapper {
     CommentResponseDto.Response CommentToCommentResponseDto(Comment comment);
 
-    default List<CommentResponseDto.ListResponse> commentToCommentResponseDtoList(List<Comment> commentList,List<String> HotelName,List<String> roomName,List<String> PackageName){
+    default List<CommentResponseDto.ListResponse> commentToCommentResponseDtoList(List<Comment> commentList,List<String> HotelName,List<String> roomName,List<String> PackageName,List<Double> hotelStar){
         List<CommentResponseDto.ListResponse> list = new ArrayList<>();
 
         for(int i=0;i<commentList.size();i++){
@@ -26,10 +26,13 @@ public interface CommentMapper {
             listResponse.setStar(commentList.get(i).getStar());
             listResponse.setHotelName(HotelName.get(i));
             listResponse.setPhotos(commentList.get(i).getPhotos());
+            listResponse.setVisible(commentList.get(i).isVisible());
             listResponse.setPackageName(PackageName.get(i));
             listResponse.setRoomName(roomName.get(i));
             listResponse.setModifiedAt(commentList.get(i).getModifiedAt());
+            listResponse.setHotelStar(hotelStar.get(i));
             list.add(listResponse);
+
         }
         return list;
 

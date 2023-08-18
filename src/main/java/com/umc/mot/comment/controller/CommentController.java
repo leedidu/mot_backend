@@ -8,6 +8,8 @@ import com.umc.mot.comment.dto.CommentResponseDto;
 import com.umc.mot.comment.entity.Comment;
 import com.umc.mot.comment.mapper.CommentMapper;
 import com.umc.mot.comment.service.CommentService;
+import com.umc.mot.packagee.entity.Package;
+import com.umc.mot.packagee.service.PackageService;
 import com.umc.mot.room.entity.Room;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -33,6 +35,7 @@ public class CommentController {
     
     private final CommentService commentService;
     private final CommentMapper commentMapper;
+    private final PackageService packageService;
 
     // Create
     @PostMapping
@@ -54,6 +57,7 @@ public class CommentController {
         List<String> HotelName=new ArrayList<>();
         List<String> RoomName = new ArrayList<>();
         List<String> PackageName = new ArrayList<>();
+        List<Double> hotelStar = new ArrayList<>();
 
 
         for(int i=0;i<comment.size();i++){
@@ -61,16 +65,21 @@ public class CommentController {
             int hotelId = comment1.getHotel().getId();
             String hotelName = commentService.findHotelName(hotelId);
             HotelName.add(hotelName);
+            Double Star = commentService.findHotelStar(hotelId);
+            hotelStar.add(Star);
             if(!comment1.getReserve().getPackagesId().isEmpty()){
                 List<Integer> packageIds= comment1.getReserve().getPackagesId();
                 int packageId = packageIds.get(0);
                 List<Room> rooms = commentService.findRoomPackage(packageId);
+                Package pa = packageService.findPackage(packageId);
+                String PaName = pa.getName();
                 List<String> roomNames = new ArrayList<>();
                 for (Room room : rooms) {
                     roomNames.add(room.getName());
                 }
-                String combinedRooms = String.join(" ", roomNames);
-                PackageName.add(combinedRooms);
+                String combinedRooms = String.join(", ", roomNames);
+                String combinedResult = PaName + "/" + combinedRooms;
+                PackageName.add(combinedResult);
                 String n = null;
                 RoomName.add(n);
             }else{
@@ -87,7 +96,7 @@ public class CommentController {
         }
 
 
-        List<CommentResponseDto.ListResponse> response = commentMapper.commentToCommentResponseDtoList(comment,HotelName,RoomName,PackageName);
+        List<CommentResponseDto.ListResponse> response = commentMapper.commentToCommentResponseDtoList(comment,HotelName,RoomName,PackageName,hotelStar);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 

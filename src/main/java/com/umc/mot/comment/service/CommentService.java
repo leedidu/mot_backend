@@ -54,7 +54,8 @@ public class CommentService {
             Hotel hotel  = hotelService.findHotel(comment.getHotel().getId());
             //호텔 comment 개수
             int comm = hotel.getCommentCount();
-            hotel.setCommentCount(comm+=1);
+            comm = comm + 1 ;
+            hotel.setCommentCount(comm);
             //호텔 별점
             double star = hotel.getStar();
             double commentStar = comment.getStar();
@@ -63,7 +64,7 @@ public class CommentService {
             //호텔 별점 가져와서 계산한 후 저장
             double account;
             if (commentCount > 0) {
-                account = (star * commentCount + commentStar) / (commentCount + 1);
+                account = ((star * (commentCount - 1)) + commentStar) / commentCount;
             } else {
                 account = commentStar; // 호텔에 아직 댓글이 없는 경우
             }
@@ -110,13 +111,32 @@ public class CommentService {
         return name;
 
     }
+    //호텔 평점
+    public Double findHotelStar(int hotelId){
+        Hotel hotel = hotelService.findHotel(hotelId);
+        Double hotelStar = hotel.getStar();
+        return hotelStar;
+    }
+
+
+
 
     // Update
     public Comment patchComment(Comment comment) {
         tokenService.getLoginPurchaseMember();
         Comment findComment = verifiedComment(comment.getId());
+        double star = findComment.getStar(); //기존값
         Optional.ofNullable(comment.getContext()).ifPresent(findComment::setContext);
         Optional.ofNullable(comment.getStar()).ifPresent(findComment::setStar);
+        double newStar  = findComment.getStar(); //새로운값
+        Hotel hotel  = hotelService.findHotel(findComment.getHotel().getId());
+        double hotelStar = hotel.getStar(); //기존 평균값
+        int hotelCount = hotel.getCommentCount();
+
+        double newS = (hotelStar * hotelCount) - star + newStar;
+        double newAverage = newS / hotelCount;
+        hotel.setStar(newAverage);
+        hotelRepository.save(hotel);
 
         return commentRepository.save(findComment);
     }

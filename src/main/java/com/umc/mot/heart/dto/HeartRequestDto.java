@@ -8,7 +8,8 @@ public class HeartRequestDto {
     @Getter
     @AllArgsConstructor
     public static class Post {
-        private int id; //좋아요식별아이디
+
+
     }
 
     @Getter

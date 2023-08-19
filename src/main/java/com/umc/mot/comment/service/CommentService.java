@@ -1,33 +1,26 @@
 package com.umc.mot.comment.service;
 
-import com.umc.mot.comment.dto.CommentResponseDto;
 import com.umc.mot.comment.repository.CommentRepository;
 import com.umc.mot.exception.BusinessLogicException;
 import com.umc.mot.exception.ExceptionCode;
 import com.umc.mot.comment.entity.Comment;
-import com.umc.mot.heart.entity.Heart;
 import com.umc.mot.hotel.entity.Hotel;
 import com.umc.mot.hotel.repository.HotelRepository;
 import com.umc.mot.hotel.service.HotelService;
-import com.umc.mot.packagee.entity.Package;
 import com.umc.mot.packagee.service.PackageService;
 import com.umc.mot.purchaseMember.entity.PurchaseMember;
 import com.umc.mot.reserve.entity.Reserve;
 import com.umc.mot.reserve.service.ReserveService;
 import com.umc.mot.room.entity.Room;
 import com.umc.mot.room.service.RoomService;
-import com.umc.mot.roomPackage.entity.RoomPackage;
 import com.umc.mot.roomPackage.service.RoomPackageService;
 import com.umc.mot.token.service.TokenService;
 import com.umc.mot.utils.S3Uploader;
-import com.umc.mot.purchaseMember.entity.PurchaseMember;
-import com.umc.mot.reserve.entity.Reserve;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.swing.text.html.Option;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,10 +50,12 @@ public class CommentService {
             comment.setHotel(reserve.getHotel());
             comment.setPurchaseMember(purchaseMember);
             comment.setVisible(true);
+            comment.setReserve(reserve);
             Hotel hotel  = hotelService.findHotel(comment.getHotel().getId());
             //호텔 comment 개수
             int comm = hotel.getCommentCount();
-            hotel.setCommentCount(comm+=1);
+            comm = comm + 1 ;
+            hotel.setCommentCount(comm);
             //호텔 별점
             double star = hotel.getStar();
             double commentStar = comment.getStar();
@@ -69,7 +64,7 @@ public class CommentService {
             //호텔 별점 가져와서 계산한 후 저장
             double account;
             if (commentCount > 0) {
-                account = (star * commentCount + commentStar) / (commentCount + 1);
+                account = ((star * (commentCount - 1)) + commentStar) / commentCount;
             } else {
                 account = commentStar; // 호텔에 아직 댓글이 없는 경우
             }
@@ -88,15 +83,6 @@ public class CommentService {
         PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
         int MemberId=purchaseMember.getPurchaseMemberId();
         List<Comment> commentList=commentRepository.findCommentByPurchaseMember(MemberId);
-        for(int i=0;i<commentList.size();i++){
-            Comment com = commentList.get(i);
-            List<Integer> romid = com.getReserve().getRoomsId();
-
-            int romId = romid.get(0);
-
-            List<Room> rom = findRoom();
-        }
-
         return commentList;
     }
     //룸찾기
@@ -104,12 +90,11 @@ public class CommentService {
         Room room = roomService.findRoomId(roomId);
         List<Room> room2 = new ArrayList<>();
         room2.add(room);
-
         return room2;
 
     }
 
-    //패키지 찾기
+    //패키지에 해당되는 룸들 가져오기
     public List<Room> findRoomPackage(int packageId){
 
         List<Room> room = roomPackageService.findRoomPackage(packageId);
@@ -118,12 +103,40 @@ public class CommentService {
 
     }
 
+    //코멘트에 해당되는 룸 가져오기
+
+    public String findHotelName(int hotelId){
+        Hotel hotel = hotelService.findHotel(hotelId);
+        String name = hotel.getName();
+        return name;
+
+    }
+    //호텔 평점
+    public Double findHotelStar(int hotelId){
+        Hotel hotel = hotelService.findHotel(hotelId);
+        Double hotelStar = hotel.getStar();
+        return hotelStar;
+    }
+
+
+
+
     // Update
     public Comment patchComment(Comment comment) {
         tokenService.getLoginPurchaseMember();
         Comment findComment = verifiedComment(comment.getId());
+        double star = findComment.getStar(); //기존값
         Optional.ofNullable(comment.getContext()).ifPresent(findComment::setContext);
         Optional.ofNullable(comment.getStar()).ifPresent(findComment::setStar);
+        double newStar  = findComment.getStar(); //새로운값
+        Hotel hotel  = hotelService.findHotel(findComment.getHotel().getId());
+        double hotelStar = hotel.getStar(); //기존 평균값
+        int hotelCount = hotel.getCommentCount();
+
+        double newS = (hotelStar * hotelCount) - star + newStar;
+        double newAverage = newS / hotelCount;
+        hotel.setStar(newAverage);
+        hotelRepository.save(hotel);
 
         return commentRepository.save(findComment);
     }

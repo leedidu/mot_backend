@@ -40,4 +40,12 @@ public class CommentRequestDto {
         private int commentId;
         private List<MultipartFile> images;
     }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class PatchVisible {
+        private int commentId;
+        private boolean visible;
+    }
 }

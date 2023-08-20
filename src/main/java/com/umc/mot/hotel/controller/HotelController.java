@@ -5,6 +5,7 @@ import com.umc.mot.hotel.dto.HotelResponseDto;
 import com.umc.mot.hotel.entity.Hotel;
 import com.umc.mot.hotel.mapper.HotelMapper;
 import com.umc.mot.hotel.service.HotelService;
+import com.umc.mot.hotelCategory.entity.HotelCategory;
 import com.umc.mot.sellMember.dto.SellMemberRequestDto;
 import com.umc.mot.sellMember.dto.SellMemberResponseDto;
 import com.umc.mot.sellMember.entity.SellMember;
@@ -22,6 +23,8 @@ import retrofit2.http.Path;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -69,12 +72,27 @@ public class HotelController {
         HotelResponseDto.Response response = hotelMapper.HotelToHotelResponseDto(hotel);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
     @GetMapping("/search")
-    public ResponseEntity findHotel(@RequestParam("name") String name,@RequestParam(value = "people",defaultValue="0") int people){
-        List<Hotel> hotel = hotelService.findHotels(name,people);
+    public ResponseEntity findHotel(@RequestParam("name") String name){
+        //  this.name=name;
+        List<Hotel> hotel = hotelService.findHotels(name);
         List<HotelResponseDto.Response> response = hotelMapper.HotelToListHotelResponseDto(hotel);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("/search/peopleandday")
+    public ResponseEntity findHotelPeopleDay(@RequestParam("name") String name, @RequestParam("checkin") String checkin,@RequestParam("checkout") String checkout, @RequestParam(value = "people",defaultValue="0") int people){
+        LocalDate checkindate = LocalDate.parse(checkin, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        LocalDate checkoutdate = LocalDate.parse(checkout, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        List<Hotel> hotel = hotelService.findHotelPeopleDay(name,checkindate,checkoutdate,people);
+        List<HotelResponseDto.Response> response = hotelMapper.HotelToListHotelResponseDto(hotel);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @PostMapping("/category/{hotel-id}")
+    public ResponseEntity categoryHotel(@PathVariable("hotel-id") int hotelId,@RequestParam List<String> categorylist){
+        List<HotelCategory> hotelCategory=hotelService.createCategory(hotelId,categorylist);
+        //HotelResponseDto.Response response=hotelMapper.HotelToHotelResponseDto(hotelCategory);
+        //수정이 필요함
+        return new ResponseEntity<>(hotelCategory, HttpStatus.CREATED);
     }
 
 

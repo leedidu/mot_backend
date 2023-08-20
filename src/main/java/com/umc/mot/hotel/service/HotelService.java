@@ -1,10 +1,14 @@
 package com.umc.mot.hotel.service;
 
+import com.umc.mot.category.entity.Category;
+import com.umc.mot.category.repository.CategoryRepository;
 import com.umc.mot.exception.BusinessLogicException;
 import com.umc.mot.exception.ExceptionCode;
 import com.umc.mot.hotel.dto.HotelRequestDto;
 import com.umc.mot.hotel.entity.Hotel;
 import com.umc.mot.hotel.repository.HotelRepository;
+import com.umc.mot.hotelCategory.entity.HotelCategory;
+import com.umc.mot.hotelCategory.repository.HotelCategoryRepository;
 import com.umc.mot.message.entity.Message;
 import com.umc.mot.message.repository.MessageRepository;
 import com.umc.mot.sellMember.entity.SellMember;
@@ -17,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +35,8 @@ public class HotelService {
     private final SellMemberService sellMemberService;
     private final TokenService tokenService;
     private final S3Uploader s3Uploader;
+    private final HotelCategoryRepository hotelCategoryRepository;
+    private final CategoryRepository categoryRepository;
 
     //Create
     public Hotel createHotel(Hotel hotel) {
@@ -45,10 +52,30 @@ public class HotelService {
         return hotel;
     }
 
-    public List<Hotel> findHotels(String post,int people) {
-      //  System.out.println("#########"+post);
-        List<Hotel> hotels=hotelRepository.findByName(post,people);
+    public List<Hotel> findHotels(String post) {
+        List<Hotel> hotels = hotelRepository.findByName(post);
+
         return hotels;
+    }
+    public List<Hotel> findHotelPeopleDay(String name, LocalDate checkin, LocalDate checkout, int people) {
+        List<Hotel> hotels = hotelRepository.findByPeopleDay(name, checkin, checkout, people);
+
+        return hotels;
+    }
+
+    public List<HotelCategory> createCategory(int hotelId, List<String> categorylist) {
+        HotelCategory hotelCategory=new HotelCategory();
+        List<HotelCategory> hotelCategoryList=new ArrayList<>();
+        for (String categorylists: categorylist) {
+            Category category=categoryRepository.findByName(categorylists);
+            Optional<Hotel> hotel=hotelRepository.findById(hotelId);
+            hotelCategory.setHotel(hotel.get());
+            hotelCategory.setCategory(category);
+            hotelCategoryRepository.save(hotelCategory);
+            hotelCategoryList.add(hotelCategory);
+            //이부분 mapper로 dto수정후 해야할듯..
+        }
+        return hotelCategoryList;
     }
 
 

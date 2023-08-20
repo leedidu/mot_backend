@@ -7,7 +7,7 @@ public class MessageResponseDto {
     @Getter
     @AllArgsConstructor
     public static class Response {
-        private int messageId; //답글아이디
+        private int id; //답글아이디
         private String content; //내용
     }
 }

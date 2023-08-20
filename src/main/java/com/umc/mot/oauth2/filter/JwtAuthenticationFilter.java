@@ -151,7 +151,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // Token를 UserResponseDto로 변환
         MemberResopnse userResponse = new MemberResopnse(
                 token.getPurchaseMember() != null ? token.getPurchaseMember().getName() : token.getSellMember().getName(), // 이름
-                token.getLoginId() // 아이디
+                token.getLoginId(), // 아이디
+                token.getPurchaseMember() != null ? true : false
         );
 
         // json 형식으로 변환
@@ -187,6 +188,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Getter
     public class MemberResopnse {
         private String name; // 이름
-        private String LoginId; // 로그인 아이디
+        private String loginId; // 로그인 아이디
+        private boolean isPurchaseMember; // true : 구매자, false : 판매자
     }
 }

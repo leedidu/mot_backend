@@ -64,9 +64,9 @@ public class HotelService {
     }
 
     public List<HotelCategory> createCategory(int hotelId, List<String> categorylist) {
-        HotelCategory hotelCategory=new HotelCategory();
         List<HotelCategory> hotelCategoryList=new ArrayList<>();
         for (String categorylists: categorylist) {
+            HotelCategory hotelCategory=new HotelCategory();
             Category category=categoryRepository.findByName(categorylists);
             Optional<Hotel> hotel=hotelRepository.findById(hotelId);
             hotelCategory.setHotel(hotel.get());

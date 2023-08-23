@@ -24,12 +24,13 @@ public interface ReserveMapper {
     Reserve ReserveRequestDtoPostToReserve(ReserveRequestDto.Post post);
     Reserve ReserveRequestDtoPatchToReserve(ReserveRequestDto.Patch patch);
 
-    ReserveResponseDto.Get ReserveToGetResponseDto(Reserve reserve, ReserveResponseDto.HotelInfo hotelInfo, ReserveResponseDto.RoomInfo roomInfo, ReserveResponseDto.PackageInfo packageInfo);
+    ReserveResponseDto.Get ReserveToGetResponseDto(Reserve reserve, ReserveResponseDto.HotelInfo hotelInfo, List<ReserveResponseDto.RoomInfo> roomInfo, List<ReserveResponseDto.PackageInfo> packageInfo);
     ReserveResponseDto.HotelInfo ResponseToHotel(Hotel hotel);
     ReserveResponseDto.PackageInfo ResponseToPackage(Package packagee);
     ReserveResponseDto.RoomInfo ResponseToRoom(Room room);
-    ReserveResponseDto.ReserveInfo ResponseToReserve(Reserve reserve, ReserveResponseDto.PackageInfo packageInfo, ReserveResponseDto.RoomInfo roomInfo);
+    @Mapping(source = "reserve.id", target = "id")
+    ReserveResponseDto.ReserveInfo ResponseToReserve(Reserve reserve, List<ReserveResponseDto.PackageInfo> packageInfo, List<ReserveResponseDto.RoomInfo> roomInfo, Hotel hotel);
     @Mapping(source = "purchaseMember.name", target = "name")
     @Mapping(source = "reserve.phone", target = "phone")
-    ReserveResponseDto.DetailInfo ResponseToDetail(Reserve reserve, PurchaseMember purchaseMember, ReserveResponseDto.PackageInfo packageInfo, ReserveResponseDto.RoomInfo roomInfo);
+    ReserveResponseDto.DetailInfo ResponseToDetail(Reserve reserve, PurchaseMember purchaseMember, List<ReserveResponseDto.PackageInfo> packageInfo, List<ReserveResponseDto.RoomInfo> roomInfo);
 }

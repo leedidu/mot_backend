@@ -1,6 +1,7 @@
 package com.umc.mot.reserve.controller;
 
 import com.umc.mot.hotel.entity.Hotel;
+import com.umc.mot.hotel.service.HotelService;
 import com.umc.mot.packagee.entity.Package;
 import com.umc.mot.packagee.service.PackageService;
 import com.umc.mot.purchaseMember.entity.PurchaseMember;
@@ -35,6 +36,7 @@ public class ReserveController {
     private final ReserveMapper reserveMapper;
     private final PackageService packageService;
     private final RoomService roomService;
+    private final HotelService hotelService;
 
     // Create
     @PostMapping
@@ -54,24 +56,31 @@ public class ReserveController {
     @GetMapping
     public ResponseEntity getReserve() {
         List<Reserve> reserve = reserveService.findReservelist();
-        Map<Reserve, Room> findRooms = reserveService.findRooms();
-        Map<Reserve, Package> findPackages = reserveService.findPackages();
+        Map<Reserve, List<Room>> findRooms = reserveService.findRooms();
+        Map<Reserve, List<Package>> findPackages = reserveService.findPackages();
         Map<Reserve, Hotel> findHotel = reserveService.findHotels();
         List<ReserveResponseDto.Get> gets = new ArrayList<>();
         for(Reserve reserve1 : reserve){
             Hotel hotel = findHotel.get(reserve1);
-            Room room = findRooms.get(reserve1);
-            Package packagee = findPackages.get(reserve1);
+            List<Room> room = findRooms.get(reserve1);
+            List<Package> packagee = findPackages.get(reserve1);
+            List<ReserveResponseDto.PackageInfo> packagelist = new ArrayList<>();
+            List<ReserveResponseDto.RoomInfo> roomList = new ArrayList<>();
             ReserveResponseDto.HotelInfo hotelResponse = reserveMapper.ResponseToHotel(hotel); // 호텔 매핑
             if(packagee != null){
-                ReserveResponseDto.PackageInfo packageResponse = reserveMapper.ResponseToPackage(packagee);
-                ReserveResponseDto.Get getResponse = reserveMapper.ReserveToGetResponseDto(reserve1, hotelResponse, null, packageResponse);
-                gets.add(getResponse);
-            } else if (room != null) {
-                ReserveResponseDto.RoomInfo roomResponse = reserveMapper.ResponseToRoom(room);
-                ReserveResponseDto.Get getResponse = reserveMapper.ReserveToGetResponseDto(reserve1, hotelResponse, roomResponse, null);
-                gets.add(getResponse);
+                for(int i = 0; i < packagee.size(); i++) {
+                    ReserveResponseDto.PackageInfo packageResponse = reserveMapper.ResponseToPackage(packagee.get(i));
+                    packagelist.add(packageResponse);
+                }
             }
+            if (room != null) {
+                for(int i = 0; i < room.size(); i++){
+                    ReserveResponseDto.RoomInfo roomResponse = reserveMapper.ResponseToRoom(room.get(i));
+                    roomList.add(roomResponse);
+                }
+            }
+            ReserveResponseDto.Get getResponse = reserveMapper.ReserveToGetResponseDto(reserve1, hotelResponse, roomList, packagelist);
+            gets.add(getResponse);
         }
         return new ResponseEntity<>(gets, HttpStatus.OK);
     }
@@ -101,19 +110,28 @@ public class ReserveController {
                                            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate checkIn,
                                            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate checkOut){
         List<Reserve> reserves = reserveService.getPeriodreserve(hotelId, checkIn, checkOut);
-        Map<Reserve, Package> packages = reserveService.getPeriodPackage(reserves);
-        Map<Reserve, Room> rooms = reserveService.getPeriodRoom(reserves);
+        Map<Reserve, List<Package>> packages = reserveService.getPeriodPackage(reserves);
+        Map<Reserve, List<Room>> rooms = reserveService.getPeriodRoom(reserves);
         List<ReserveResponseDto.ReserveInfo> reserveInfoList = new ArrayList<>();
+        Hotel hotel = hotelService.verifiedHotel(hotelId);
         for(Reserve reserve : reserves){
-            Package packagee = packages.get(reserve);
-            Room room = rooms.get(reserve);
+            List<Package> packagee = packages.get(reserve);
+            List<Room> room = rooms.get(reserve);
+            List<ReserveResponseDto.PackageInfo> packagelist = new ArrayList<>();
+            List<ReserveResponseDto.RoomInfo> roomList = new ArrayList<>();
             if(packagee != null){ // 패키지를 예약한 경우
-                ReserveResponseDto.PackageInfo packageResponse = reserveMapper.ResponseToPackage(packagee);
-                ReserveResponseDto.ReserveInfo getResponse = reserveMapper.ResponseToReserve(reserve, packageResponse, null);
+                for(int i = 0; i < packagee.size(); i++) {
+                    ReserveResponseDto.PackageInfo packageResponse = reserveMapper.ResponseToPackage(packagee.get(i));
+                    packagelist.add(packageResponse);
+                }
+                ReserveResponseDto.ReserveInfo getResponse = reserveMapper.ResponseToReserve(reserve, packagelist, null, hotel);
                 reserveInfoList.add(getResponse);
             } else if(room != null){ // 객실을 에약한 경우
-                ReserveResponseDto.RoomInfo roomInfo = reserveMapper.ResponseToRoom(room);
-                ReserveResponseDto.ReserveInfo getResponse = reserveMapper.ResponseToReserve(reserve, null, roomInfo);
+                for(int i = 0; i < room.size(); i++) {
+                    ReserveResponseDto.RoomInfo roomInfo = reserveMapper.ResponseToRoom(room.get(i));
+                    roomList.add(roomInfo);
+                }
+                ReserveResponseDto.ReserveInfo getResponse = reserveMapper.ResponseToReserve(reserve, null, roomList, hotel);
                 reserveInfoList.add(getResponse);
             }
         }
@@ -125,14 +143,22 @@ public class ReserveController {
         Map<Reserve, PurchaseMember> detail = reserveService.getDetailInfo(reserveId);
         Reserve reserve = reserveService.verifiedReserve(reserveId);
         if(!reserve.getPackagesId().isEmpty()){
-            Package packagee = packageService.verifiedPackage(reserve.getPackagesId().get(0));
-            ReserveResponseDto.PackageInfo packageResponse = reserveMapper.ResponseToPackage(packagee);
-            ReserveResponseDto.DetailInfo detailInfo = reserveMapper.ResponseToDetail(reserve, detail.get(reserve), packageResponse, null);
+            List<ReserveResponseDto.PackageInfo> packagelist = new ArrayList<>();
+            for(int i = 0; i < reserve.getPackagesId().size(); i++){
+                Package packagee = packageService.verifiedPackage(reserve.getPackagesId().get(i));
+                ReserveResponseDto.PackageInfo packageResponse = reserveMapper.ResponseToPackage(packagee);
+                packagelist.add(packageResponse);
+            }
+            ReserveResponseDto.DetailInfo detailInfo = reserveMapper.ResponseToDetail(reserve, detail.get(reserve), packagelist, null);
             return new ResponseEntity<>(detailInfo, HttpStatus.OK);
         } else if(!reserve.getRoomsId().isEmpty()){
-            Room room = roomService.verifiedRoom(reserve.getRoomsId().get(0));
-            ReserveResponseDto.RoomInfo roomInfo = reserveMapper.ResponseToRoom(room);
-            ReserveResponseDto.DetailInfo detailInfo = reserveMapper.ResponseToDetail(reserve, detail.get(reserve), null, roomInfo);
+            List<ReserveResponseDto.RoomInfo> roomList = new ArrayList<>();
+            for(int i = 0; i < reserve.getRoomsId().size(); i++){
+                Room room = roomService.verifiedRoom(reserve.getRoomsId().get(i));
+                ReserveResponseDto.RoomInfo roomInfo = reserveMapper.ResponseToRoom(room);
+                roomList.add(roomInfo);
+            }
+            ReserveResponseDto.DetailInfo detailInfo = reserveMapper.ResponseToDetail(reserve, detail.get(reserve), null, roomList);
             return new ResponseEntity<>(detailInfo, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

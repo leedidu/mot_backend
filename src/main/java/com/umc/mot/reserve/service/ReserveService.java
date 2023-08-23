@@ -13,7 +13,6 @@ import com.umc.mot.reserve.repository.ReserveRepository;
 import com.umc.mot.room.entity.Room;
 import com.umc.mot.room.service.RoomService;
 import com.umc.mot.roomPackage.service.RoomPackageService;
-import com.umc.mot.sellMember.entity.SellMember;
 import com.umc.mot.token.service.TokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,37 +32,52 @@ public class ReserveService {
 
 
     //Create
-    public Reserve createReserve(Reserve reserve, int hotelId, Integer packageId, Integer  roomId) {
+    public Reserve createReserve(Reserve reserve, int hotelId, List<Integer> packageId, List<Integer> roomId) {
         PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
         Hotel hotel = hotelService.verifiedHotel(hotelId);
-        List<Room> rooms = roomPackageService.findRoomPackage(packageId);
-        if(packageId != 0){
-            reserve.getPackagesId().add(packageId);
-            for(Room room : rooms){ // 패키지 예약할 경우 방까지 모두 예약된 상태로 변경
-                createReserve(reserve, hotelId, 0, room.getId());
+        if(packageId != null){
+            for(int i = 0; i < packageId.size(); i++){
+                Package packagee = packageService.verifiedPackage(packageId.get(i));
+                if(packagee.getMinPeople() <= reserve.getPeopleNum() && reserve.getPeopleNum() <= packagee.getMaxPeople()){ // 인원체크
+                    reserve.getPackagesId().add(packageId.get(i));
+                    List<Room> rooms = roomPackageService.findRoomPackage(packageId.get(i));
+                    List<Integer> roomsId = new ArrayList<>();
+                    for(Room room : rooms){ // 패키지 예약할 경우 방까지 모두 예약된 상태로 변경
+                        roomsId.add(room.getId());
+                    }
+                    createReserve(reserve, hotelId, null, roomsId);
+                } else{
+                    throw new IllegalArgumentException("Check your peoplenum");
+                }
             }
-        }
-        if(roomId != 0){
-            reserve.getRoomsId().add(roomId);
+        } if(roomId != null){
+            for(int i = 0; i < roomId.size(); i++){
+                Room room = roomService.verifiedRoom(roomId.get(i));
+                if(room.getMinPeople() <= reserve.getPeopleNum() && reserve.getPeopleNum() <= room.getMaxPeople()){
+                    reserve.getRoomsId().add(roomId.get(i));
+                } else{
+                    throw new IllegalArgumentException("Check your peoplenum");
+                }
+            }
         }
         reserve.setPurchaseMember(purchaseMember);
         reserve.setHotel(hotel);
         return reserveRepository.save(reserve);
     }
 
-    public List<Reserve> getReserve(Integer hotelId, Integer roomId, Integer packageId){
+    public List<Reserve> getReserve(Integer hotelId, List<Integer> roomId, List<Integer> packageId){
         Hotel hotel = hotelService.findHotel(hotelId); //호텔 정보를 가져옴
         List<Reserve> reservations = new ArrayList<>();
-        if(!roomId.equals(null)){
+        if(packageId != null){
             for(Reserve reserve : hotel.getReserves()){
-                if(reserve.getRoomsId().contains(roomId)){
+                if(!Collections.disjoint(reserve.getPackagesId(), packageId)){
                     reservations.add(reserve);
                 }
             }
         }
-        if(!packageId.equals(null)){
+        if(roomId != null){
             for(Reserve reserve : hotel.getReserves()){
-                if(reserve.getPackagesId().contains(packageId)){
+                if(!Collections.disjoint(reserve.getRoomsId(), roomId)){
                     reservations.add(reserve);
                 }
             }
@@ -73,38 +87,43 @@ public class ReserveService {
 
     public boolean checkReserve(ReserveRequestDto.Post post){
         List<Reserve> reserves = getReserve(post.getHotelId(), post.getRoomId(), post.getPackageId()); // 현재 예약하고자 하는 방의 모든 예약정보를 담고있음
-        List<Boolean> check = new ArrayList<>();
+        List<Boolean> check = new ArrayList<>(); // 확인용
+        List<Room> reservedRoom = new ArrayList<>(); // 예약된 객실
+        List<Room> packageRoom = new ArrayList<>(); // 에약하고자 하는 객실
         if(reserves.isEmpty()){
             return true;
-        } else {
-            if (!post.getRoomId().equals(null)) { // 객실을 예약할 경우
-                for(int i = 0; i < reserves.size(); i++){
-                    for(int j = 0; j < reserves.get(i).getRoomsId().size(); j++){
-                        if(reserves.get(i).getRoomsId().get(j) == post.getRoomId()){
-                            if(!checkDate(reserves.get(i).getCheckIn(), reserves.get(i).getCheckOut(), post.getCheckIn(), post.getCheckOut())){
-                                check.add(false);
-                            } else{
-                                check.add(true);
-                            }
+        } else { // 현재 에약하고자 하는 객실 - 예약이 겹치는 객실들 비교
+            for(Reserve reserve : reserves){
+                if(!checkDate(reserve.getCheckIn(), reserve.getCheckOut(), post.getCheckIn(), post.getCheckOut())){ // 예약날짜가 겹치는 경우
+                    if(reserve.getRoomsId() != null){
+                        for(int i = 0; i < reserve.getRoomsId().size(); i++){
+                            reservedRoom.add(roomService.verifiedRoom(reserve.getRoomsId().get(i))); // 객실 예약일 경우 -> 각 객실을 모두 추가
+                        }
+                    }
+                    if(reserve.getPackagesId() != null){
+                        // 패키지를 예약할 때 .. 패키지의 아
+                        roomPackageService.findRoomPackage(reserve.getPackagesId().get(0));
+                        for(int i = 0; i < reserve.getPackagesId().size(); i++){
+                            reservedRoom.addAll(roomPackageService.findRoomPackage(reserve.getPackagesId().get(i))); // 패키지 예약일 경우 -> 해당 객실들을 모두 추가
                         }
                     }
                 }
             }
-            if(!post.getPackageId().equals(null)){ // 패키지를 예약할 경우
-                List<Room> rooms = roomPackageService.findRoomPackage(post.getPackageId());
-                for(int i = 0; i < reserves.size(); i++){
-                    for(int j = 0; j < reserves.get(i).getPackagesId().size(); j++){
-                        if(reserves.get(i).getPackagesId().get(j) == post.getPackageId()){
-                            if(!checkDate(reserves.get(i).getCheckIn(), reserves.get(i).getCheckOut(), post.getCheckIn(), post.getCheckOut())){
-                                check.add(false);
-                            } else{
-                                check.add(true);
-                            }
-                        }
-                    }
+            if(post.getPackageId() != null){ // 패키지 예약을 하고자 하는 경우
+                for(int i = 0; i < post.getPackageId().size(); i++){ // 예약하고자 하는 패키지에 딸린 객실들을 모두 추가
+                    packageRoom.addAll(roomPackageService.findRoomPackage(post.getPackageId().get(i))); //예약하고자 하는 패키지의 객실들
                 }
             }
+            if(post.getRoomId() != null){ // 객실 예약을 하고자 하는 경우
+                for(int i = 0; i < post.getRoomId().size(); i++){ // 예약하고자 하는 객실들을 모두 추가
+                    packageRoom.add(roomService.verifiedRoom(post.getRoomId().get(i)));
+                }
+            } // 예약 객실 전처리 완료
         }
+        System.out.println("패키지 번호 : " + packageRoom.size());
+        System.out.println("예약된 객실 번호 : " + reservedRoom.size());
+        check.add(Collections.disjoint(packageRoom, reservedRoom)); // 예약하고자 하는 객실 - 예약된 객실들 겹치는게 있을 경우 false 추가
+
         if(check.contains(false)){
             return false;
         } else{
@@ -129,6 +148,7 @@ public class ReserveService {
         PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
         return purchaseMember.getReserves();
     }
+
     public Map<Reserve, Hotel> findHotels(){ // 예약된 호텔 리스트 찾기
         PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
         Map<Reserve, Hotel> reserveHotel = new HashMap<>();
@@ -137,25 +157,34 @@ public class ReserveService {
         }
         return reserveHotel;
     }
-    public Map<Reserve, Room> findRooms(){ //예약 정보 중 객실 정보
+
+    public Map<Reserve, List<Room>> findRooms(){ //예약 정보 중 객실 정보
         PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
-        Map<Reserve, Room> reserveRooms = new HashMap<>();
+        Map<Reserve, List<Room>> reserveRooms = new HashMap<>();
         for(Reserve reserve : purchaseMember.getReserves()){
+            List<Room> roomList = new ArrayList<>();
             if(!reserve.getRoomsId().isEmpty()){
-                Room room = roomService.verifiedRoom(reserve.getRoomsId().get(0));
-                reserveRooms.put(reserve, room);
+                for(int i = 0; i < reserve.getRoomsId().size(); i++){
+                    Room room = roomService.verifiedRoom(reserve.getRoomsId().get(i));
+                    roomList.add(room);
+                }
+                reserveRooms.put(reserve, roomList);
             }
         }
         return reserveRooms;
     }
-    public Map<Reserve, Package> findPackages(){ //예약 정보 중 패키지 정보
+    public Map<Reserve, List<Package>> findPackages(){ //예약 정보 중 패키지 정보
         PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
-        Map<Reserve, Package> reservePackages = new HashMap<>();
+        Map<Reserve, List<Package>> reservePackages = new HashMap<>();
         for(Reserve reserve : purchaseMember.getReserves()){
+            List<Package> packageList = new ArrayList<>();
             if(!reserve.getPackagesId().isEmpty()){
-                Package packages = packageService.verifiedPackage(reserve.getPackagesId().get(0));
-                reservePackages.put(reserve, packages);
+                for(int i = 0; i < reserve.getPackagesId().size(); i++){
+                    Package packages = packageService.verifiedPackage(reserve.getPackagesId().get(i));
+                    packageList.add(packages);
+                }
             }
+            reservePackages.put(reserve, packageList);
         }
         return reservePackages;
     }
@@ -199,25 +228,33 @@ public class ReserveService {
         return reserveList;
     }
 
-    public Map<Reserve, Package> getPeriodPackage(List<Reserve> reserves){
+    public Map<Reserve, List<Package>> getPeriodPackage(List<Reserve> reserves){
         tokenService.getLoginSellMember();
-        Map<Reserve, Package> packages = new HashMap<>();
+        Map<Reserve, List<Package>> packages = new HashMap<>();
         for(Reserve reserve : reserves) {
             if (!reserve.getPackagesId().isEmpty()) {
-                Package packagee = packageService.verifiedPackage(reserve.getPackagesId().get(0));
-                packages.put(reserve, packagee);
+                List<Package> packageList = new ArrayList<>();
+                for(int i = 0; i < reserve.getPackagesId().size(); i++){
+                    Package packagee = packageService.verifiedPackage(reserve.getPackagesId().get(i));
+                    packageList.add(packagee);
+                }
+                packages.put(reserve, packageList);
             }
         }
         return packages;
     }
 
-    public Map<Reserve, Room> getPeriodRoom(List<Reserve> reserves){
+    public Map<Reserve, List<Room>> getPeriodRoom(List<Reserve> reserves){
         tokenService.getLoginSellMember();
-        Map<Reserve, Room> rooms = new HashMap<>();
+        Map<Reserve, List<Room>> rooms = new HashMap<>();
         for(Reserve reserve : reserves){
             if(!reserve.getRoomsId().isEmpty()){
-                Room room = roomService.verifiedRoom(reserve.getRoomsId().get(0));
-                rooms.put(reserve, room);
+                List<Room> roomList = new ArrayList<>();
+                for(int i = 0; i < reserve.getRoomsId().size(); i++){
+                    Room room = roomService.verifiedRoom(reserve.getRoomsId().get(i));
+                    roomList.add(room);
+                }
+                rooms.put(reserve, roomList);
             }
         }
         return rooms;

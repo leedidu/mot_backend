@@ -92,7 +92,7 @@ public class HotelController {
         List<HotelCategory> hotelCategory=hotelService.createCategory(hotelId,categorylist);
         //HotelResponseDto.Response response=hotelMapper.HotelToHotelResponseDto(hotelCategory);
         //수정이 필요함
-        return new ResponseEntity<>(hotelCategory, HttpStatus.CREATED);
+        return new ResponseEntity<>("저장완료", HttpStatus.CREATED);
     }
 
 

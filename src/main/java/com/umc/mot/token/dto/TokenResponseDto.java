@@ -41,4 +41,10 @@ public class TokenResponseDto {
     public static class Name {
         private String name;
     }
+
+    @Getter
+    @AllArgsConstructor
+    public static class HotelId {
+        private int hotelId;
+    }
 }

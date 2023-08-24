@@ -139,6 +139,16 @@ public class TokenController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    // 판매자가 관리하는 호텔 식별자 반환
+    @GetMapping("/findHotelId")
+    public ResponseEntity getToken() {
+        int hotelId = tokenService.findSellMemberHotelId();
+        TokenResponseDto.HotelId response = new TokenResponseDto.HotelId(hotelId);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
     // Update
     @PatchMapping("/{token-id}")
     public ResponseEntity patchToken(@Positive @PathVariable("token-id") int tokenId,

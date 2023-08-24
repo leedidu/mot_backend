@@ -35,9 +35,13 @@ public class ReserveService {
     public Reserve createReserve(Reserve reserve, int hotelId, List<Integer> packageId, List<Integer> roomId) {
         PurchaseMember purchaseMember = tokenService.getLoginPurchaseMember();
         Hotel hotel = hotelService.verifiedHotel(hotelId);
-        if(packageId != null){
+        System.out.println("!! id : " + packageId.get(0));
+        if(!packageId.isEmpty() && packageId.get(0) != 0){
             for(int i = 0; i < packageId.size(); i++){
                 Package packagee = packageService.verifiedPackage(packageId.get(i));
+                System.out.println("!! " + packagee.getMinPeople());
+                System.out.println("!! " + packagee.getMaxPeople());
+                System.out.println("!! " + reserve.getPeopleNum());
                 if(packagee.getMinPeople() <= reserve.getPeopleNum() && reserve.getPeopleNum() <= packagee.getMaxPeople()){ // 인원체크
                     reserve.getPackagesId().add(packageId.get(i));
                     List<Room> rooms = roomPackageService.findRoomPackage(packageId.get(i));
@@ -45,12 +49,12 @@ public class ReserveService {
                     for(Room room : rooms){ // 패키지 예약할 경우 방까지 모두 예약된 상태로 변경
                         roomsId.add(room.getId());
                     }
-                    createReserve(reserve, hotelId, null, roomsId);
+//                    createReserve(reserve, hotelId, null, roomsId);
                 } else{
                     throw new IllegalArgumentException("Check your peoplenum");
                 }
             }
-        } if(roomId != null){
+        } if(!roomId.isEmpty() && roomId.get(0) != 0){
             for(int i = 0; i < roomId.size(); i++){
                 Room room = roomService.verifiedRoom(roomId.get(i));
                 if(room.getMinPeople() <= reserve.getPeopleNum() && reserve.getPeopleNum() <= room.getMaxPeople()){

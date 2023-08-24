@@ -113,12 +113,12 @@ public class ReserveService {
                     }
                 }
             }
-            if(post.getPackageId() != null){ // 패키지 예약을 하고자 하는 경우
+            if(post.getPackageId() != null && post.getPackageId().get(0) != 0){ // 패키지 예약을 하고자 하는 경우
                 for(int i = 0; i < post.getPackageId().size(); i++){ // 예약하고자 하는 패키지에 딸린 객실들을 모두 추가
                     packageRoom.addAll(roomPackageService.findRoomPackage(post.getPackageId().get(i))); //예약하고자 하는 패키지의 객실들
                 }
             }
-            if(post.getRoomId() != null){ // 객실 예약을 하고자 하는 경우
+            if(post.getRoomId() != null && post.getRoomId().get(0) != 0){ // 객실 예약을 하고자 하는 경우
                 for(int i = 0; i < post.getRoomId().size(); i++){ // 예약하고자 하는 객실들을 모두 추가
                     packageRoom.add(roomService.verifiedRoom(post.getRoomId().get(i)));
                 }

@@ -224,4 +224,15 @@ public class TokenService {
 
         return token;
     }
+
+    public int findSellMemberHotelId() {
+        Token token = getLoginToken();
+        int hotelId = 0; // 판매자가 관리하는 호텔이 있을 때만 호텔 식별자 반환
+
+        if(token.getSellMember() != null && !token.getSellMember().getHotels().isEmpty()) {
+            hotelId = token.getSellMember().getHotels().get(0).getId();
+        }
+
+        return hotelId;
+    }
 }

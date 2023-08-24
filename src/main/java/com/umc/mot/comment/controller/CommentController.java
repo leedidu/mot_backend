@@ -67,29 +67,36 @@ public class CommentController {
             HotelName.add(hotelName);
             Double Star = commentService.findHotelStar(hotelId);
             hotelStar.add(Star);
-            if (!comment1.getReserve().getPackagesId().isEmpty()) {
+            if (!comment1.getReserve().getPackagesId().isEmpty()) { // package
                 List<Integer> packageIds = comment1.getReserve().getPackagesId();
-                int packageId = packageIds.get(0);
-                List<Room> rooms = commentService.findRoomPackage(packageId);
-                Package pa = packageService.findPackage(packageId);
-                String PaName = pa.getName();
-                List<String> roomNames = new ArrayList<>();
-                for (Room room : rooms) {
-                    roomNames.add(room.getName());
-                }
-                String combinedRooms = String.join(", ", roomNames);
-                String combinedResult = PaName + "/" + combinedRooms;
-                PackageName.add(combinedResult);
-                String n = null;
-                RoomName.add(n);
-            } else {
 
-                int roomId = comment1.getReserve().getRoomsId().get(0);
-                List<Room> rooms = commentService.findRoom(roomId);
-                String roomName = rooms.get(0).getName();
-                RoomName.add(roomName);
-                String n = null;
-                PackageName.add(n);
+                List<String> packageNames = new ArrayList<>();
+                for(int packageId : packageIds) {
+                    List<Room> rooms = commentService.findRoomPackage(packageId);
+                    Package pa = packageService.findPackage(packageId);
+                    String PaName = pa.getName();
+                    List<String> roomNames = new ArrayList<>();
+                    for (Room room : rooms) {
+                        roomNames.add(room.getName());
+                    }
+                    String combinedRooms = String.join(",", roomNames);
+                    String combinedResult = PaName + "/" + combinedRooms;
+                    packageNames.add(combinedResult);
+                }
+                PackageName.add(String.join(", ", packageNames));
+
+                RoomName.add(null);
+            } else { // room
+                List<Integer> roomIds = comment1.getReserve().getRoomsId();
+
+                List<String> roomNames = new ArrayList<>();
+                for(int roomId : roomIds) {
+                    String roomName = commentService.findRoom(roomId).get(0).getName();
+                    roomNames.add(roomName);
+                }
+                RoomName.add(String.join(", ", roomNames));
+
+                PackageName.add(null);
             }
 
 

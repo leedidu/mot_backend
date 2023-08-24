@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import java.time.LocalDate;
+import java.util.List;
 
 public class ReserveRequestDto {
     @Getter
@@ -20,8 +21,8 @@ public class ReserveRequestDto {
         private int peopleNum; //예약인원
         private String paymentPrice; // 지불금액
         private int hotelId; //호텔 식별자
-        private Integer roomId; // 객실 식별자
-        private Integer packageId; //패키지 식별자
+        private List<Integer> roomId; // 객실 식별자
+        private List<Integer> packageId; //패키지 식별자
     }
 
     @Getter

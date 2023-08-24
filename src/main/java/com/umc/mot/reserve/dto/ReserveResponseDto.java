@@ -25,8 +25,8 @@ public class ReserveResponseDto {
         private HotelInfo hotelInfo;
         private LocalDate checkIn;
         private LocalDate checkOut;
-        private RoomInfo roomInfo;
-        private PackageInfo packageInfo;
+        private List<RoomInfo> roomInfo;
+        private List<PackageInfo> packageInfo;
     }
 
     @Setter
@@ -42,6 +42,7 @@ public class ReserveResponseDto {
     public static class PackageInfo{
         private String name;
         private String roomType;
+        private String photo;
     }
 
     @Setter
@@ -51,6 +52,7 @@ public class ReserveResponseDto {
         private String name;
         private int star;
         private int commentCount;
+        private String photo; // 예약내역 -> 호텔 사진
     }
 
     @Getter
@@ -60,8 +62,9 @@ public class ReserveResponseDto {
         private int peopleNum;
         private LocalDate checkIn;
         private LocalDate checkOut;
-        private RoomInfo roomInfo;
-        private PackageInfo packageInfo;
+        private List<RoomInfo> roomInfo;
+        private List<PackageInfo> packageInfo;
+        private String photo; // 예약내역 -> 호텔 사진
     }
 
     @Getter
@@ -71,7 +74,7 @@ public class ReserveResponseDto {
         private LocalDate checkOut;
         private String name;
         private String phone;
-        private RoomInfo roomInfo;
-        private PackageInfo packageInfo;
+        private List<RoomInfo> roomInfo;
+        private List<PackageInfo> packageInfo;
     }
 }
